@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>raudialog</class>
+ <widget class="QDialog" name="raudialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>737</width>
+    <height>695</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Create Lamellen Profiles</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,0,0,0">
+   <item row="1" column="0" rowspan="10" colspan="3">
+    <widget class="QTableWidget" name="nodes_table">
+     <property name="editTriggers">
+      <set>QAbstractItemView::NoEditTriggers</set>
+     </property>
+     <property name="showDropIndicator" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="dragDropOverwriteMode">
+      <bool>false</bool>
+     </property>
+     <property name="alternatingRowColors">
+      <bool>true</bool>
+     </property>
+     <property name="selectionBehavior">
+      <enum>QAbstractItemView::SelectRows</enum>
+     </property>
+     <property name="sortingEnabled">
+      <bool>true</bool>
+     </property>
+     <property name="columnCount">
+      <number>4</number>
+     </property>
+     <attribute name="horizontalHeaderStretchLastSection">
+      <bool>true</bool>
+     </attribute>
+     <attribute name="verticalHeaderVisible">
+      <bool>false</bool>
+     </attribute>
+     <column>
+      <property name="text">
+       <string>Nodes</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Station</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>ID</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Schnitt</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+   <item row="1" column="4">
+    <widget class="QLineEdit" name="strickler">
+     <property name="maximumSize">
+      <size>
+       <width>120</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>35</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="4">
+    <widget class="QLineEdit" name="_smodus">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>120</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>ZS</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="4">
+    <widget class="QLineEdit" name="_modus">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>120</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>RS</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="4">
+    <widget class="QCheckBox" name="_schaltercheck">
+     <property name="text">
+      <string>Schalter Profil</string>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="4">
+    <widget class="QPushButton" name="cancel">
+     <property name="text">
+      <string>Cancel</string>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="3">
+    <widget class="QLabel" name="label_2">
+     <property name="maximumSize">
+      <size>
+       <width>180</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Anfangs Strickler Wert</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="3">
+    <widget class="QLabel" name="label_11">
+     <property name="text">
+      <string>Rauheitsprofil Modus</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="3" colspan="2">
+    <widget class="QLCDNumber" name="count"/>
+   </item>
+   <item row="3" column="3">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>QuerschnittsProfil Modus</string>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="3">
+    <widget class="QPushButton" name="ok">
+     <property name="text">
+      <string>Create</string>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="4">
+    <widget class="QLineEdit" name="_lmodus">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>120</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>H2</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="4" rowspan="2">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Fixed</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>400</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="7" column="3">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Schalterprofil Modus</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="2">
+    <widget class="QLabel" name="label_5">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>10</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Choose Nodes:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="3">
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>Anfangs Wert</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="4">
+    <widget class="QLineEdit" name="_swert">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>120</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>120</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
