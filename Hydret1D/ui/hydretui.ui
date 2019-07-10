@@ -1862,7 +1862,7 @@
               <property name="title">
                <string/>
               </property>
-              <layout class="QGridLayout" name="gridLayout_7" columnstretch="1,0">
+              <layout class="QGridLayout" name="gridLayout_7" columnstretch="1,1">
                <item row="1" column="0">
                 <widget class="QLabel" name="label_82">
                  <property name="text">
@@ -2054,7 +2054,10 @@
                   <number>-8</number>
                  </property>
                  <property name="editTriggers">
-                  <set>QAbstractItemView::SelectedClicked</set>
+                  <set>QAbstractItemView::NoEditTriggers</set>
+                 </property>
+                 <property name="showDropIndicator" stdset="0">
+                  <bool>false</bool>
                  </property>
                  <property name="dragDropOverwriteMode">
                   <bool>false</bool>
@@ -2066,7 +2069,7 @@
                   <enum>QAbstractItemView::ExtendedSelection</enum>
                  </property>
                  <property name="selectionBehavior">
-                  <enum>QAbstractItemView::SelectItems</enum>
+                  <enum>QAbstractItemView::SelectRows</enum>
                  </property>
                  <property name="columnCount">
                   <number>2</number>

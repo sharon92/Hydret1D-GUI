@@ -53,6 +53,8 @@ def edit_maxHeight(myapp):
 
 def delete_coords(myapp):
     myapp.changes +=1
+    row_c = myapp.coords_table.selectedIndexes()
+    row_c_idx = sorted(set([i.row() for i in row_c]))
     
     if myapp._rquer.isChecked():
         Node = myapp.Node.copy()
@@ -64,17 +66,17 @@ def delete_coords(myapp):
         Node = myapp.Node_S.copy()
         iloc = myapp.iloc_s
         
-    delx = np.round(np.delete(Node['X'], myapp.row_c_idx),2)
-    dely = np.round(np.delete(Node['Y'], myapp.row_c_idx),2)
+    delx = np.round(np.delete(Node['X'], row_c_idx),2)
+    dely = np.round(np.delete(Node['Y'], row_c_idx),2)
    
     myapp.df_copy.iat[iloc,6]       = delx
     myapp.df_copy.iat[iloc,7]       = dely
-    myapp.df_copy.iat[iloc,0] = len(delx)
+    myapp.df_copy.iat[iloc,0]       = len(delx)
     db_ = myapp.df_copy.copy()
     myapp.df_db.append(db_)
     
     myapp.undo.setEnabled(True)
-    myapp.idChange(i=myapp.iloc)
+    myapp.idChange(i=abs(myapp.iloc))
 
 
 def insert_coords(myapp):
@@ -121,7 +123,7 @@ def insert_coords(myapp):
     myapp.df_db.append(db_)
     
     myapp.undo.setEnabled(True)
-    myapp.idChange(i=myapp.iloc)
+    myapp.idChange(i=abs(myapp.iloc))
     
         
 def _handlecopy(myapp):

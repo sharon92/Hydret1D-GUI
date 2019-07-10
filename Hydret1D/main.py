@@ -47,7 +47,9 @@ from modules.plotting    import (plot,
 '''import pyqt5 modules'''
 import pyqtgraph as pg
 from PyQt5.QtGui         import (QFont,
-                                 QColor)
+                                 QColor,
+                                 QIcon,
+                                 QPixmap)
 from PyQt5.QtWidgets     import (QMainWindow,
                                  QMessageBox,
                                  QDialog,
@@ -63,37 +65,40 @@ from ui.hydretUI         import Ui_MainWindow
 from ui.dialog           import Ui_Dialog
 from ui.nodedialog       import Ui_nodeDialog
 from ui.raudialog        import Ui_raudialog
-from pyupdater.client import Client
-from client_config import ClientConfig
-
-APP_NAME = 'Hydret1D'
-APP_VERSION = '1.0.0'
-
-ASSET_NAME = 'Hydret1D'
-ASSET_VERSION = '1.0.0'
-
-def print_status_info(info):
-    total = info.get(u'total')
-    downloaded = info.get(u'downloaded')
-    status = info.get(u'status')
-    print(downloaded, total, status)
-    
-client = Client(ClientConfig())
-
-client = Client(ClientConfig(), refresh=True,
-                        progress_hooks=[print_status_info])
-
-app_update = client.update_check(APP_NAME, APP_VERSION)
-
-if app_update is not None:
-    app_update.download(background=True)
-    
-    if app_update.is_downloaded():
-        app_update.extract_restart()
+#from pyupdater.client import Client
+#from client_config import ClientConfig
+#
+#APP_NAME = 'Hydret1D'
+#APP_VERSION = '1.0.0'
+#
+#ASSET_NAME = 'Hydret1D'
+#ASSET_VERSION = '1.0.0'
+#
+#def print_status_info(info):
+#    total = info.get(u'total')
+#    downloaded = info.get(u'downloaded')
+#    status = info.get(u'status')
+#    print(downloaded, total, status)
+#
+#client = Client(ClientConfig(), refresh=True,
+#                        progress_hooks=[print_status_info])
+#
+#app_update = client.update_check(APP_NAME, APP_VERSION)
+#
+#if app_update is not None:
+#    app_update.download(background=True)
+#    
+#    if app_update.is_downloaded():
+#        app_update.extract_restart()
         
 pg.setConfigOption('background', 'w')
 pg.setConfigOption('foreground', 'k')
 _translate = QCoreApplication.translate
+
+SCRIPT_DIR = os.path.dirname(os.path.realpath(sys.argv[0]))
+
+global DOUBLECLICK_FILE
+DOUBLECLICK_FILE = False
 
 class nodeDuplicate(QDialog, Ui_nodeDialog):
     
@@ -189,9 +194,17 @@ class lamellen(QDialog,Ui_raudialog):
         self.initiate()
         self._schaltercheck.stateChanged.connect(self._schalter)
         self.nodes_table.itemSelectionChanged.connect(self.lcd)
+        self.del_.clicked.connect(self.update_m)
+        self.add.clicked.connect(self.update_a)
         self.ok.clicked.connect(self.accept)
         self.cancel.clicked.connect(self.reject)
     
+    def update_m(self):
+        self.samplerau.removeRow(self.samplerau.currentRow())
+
+    def update_a(self):
+        self.samplerau.insertRow(self.samplerau.currentRow())
+        
     def _schalter(self):
         if self._schaltercheck.checkState() == 2:
             self._swert.setEnabled(True)
@@ -201,18 +214,28 @@ class lamellen(QDialog,Ui_raudialog):
     def lcd(self):
         self.idx = sorted(set([i.row() for i in self.nodes_table.selectedIndexes()]))
         self.count.display(len(self.idx))
+        if len(self.idx)>0:
+            node = int(self.nodes_table.item(self.idx[0],0).text())
+            N    = myapp.df_pro.loc[node]
+            self.samplerau.setRowCount(N['Npoints'])
+            for i in range(N['Npoints']):
+                self.samplerau.setItem(i,0,QTableWidgetItem(str(N['X'][i])))
+                self.samplerau.setItem(i,1,QTableWidgetItem(self.strickler.text()))
         
     def initiate(self):
-        self.nodes_table.setRowCount(len(myapp.df_start.index))
+        nodes = []
+        for i in myapp.df_pro.index:
+            if -1*i in myapp.df_pro.index:
+                continue
+            else:
+                nodes.append(i)
+        self.nodes_table.setRowCount(len(nodes))
         for i in range(self.nodes_table.rowCount()):
-            node = myapp.df_start.index[i]
+            node = nodes[i]
             self.nodes_table.setItem(i,0,QTableWidgetItem(str(node)))
-            self.nodes_table.setItem(i,1,QTableWidgetItem(str(myapp.df_start.loc[node]['XL'])))
-            self.nodes_table.setItem(i,2,QTableWidgetItem(str(int(myapp.df_start.loc[node]['ID']))))
-            try:
-                self.nodes_table.setItem(i,3,QTableWidgetItem(str(myapp.df_pro.loc[node]['PName'])))
-            except:
-                self.nodes_table.setItem(i,3,QTableWidgetItem('N/A'))
+            self.nodes_table.setItem(i,1,QTableWidgetItem(str(myapp.df_start.loc[abs(node)]['XL'])))
+            self.nodes_table.setItem(i,2,QTableWidgetItem(str(int(myapp.df_start.loc[abs(node)]['ID']))))
+            self.nodes_table.setItem(i,3,QTableWidgetItem(str(myapp.df_pro.loc[node]['PName'])))
         
         
 class hydretPopup(QDialog, Ui_Dialog):
@@ -249,7 +272,7 @@ class MainW(QMainWindow, Ui_MainWindow):
         self.changes = 0
         self.statusbar = self.statusBar
         self.statusbar.showMessage('Ready')
-
+        
         #Menu commands
         self.openp.triggered.connect(self.OpenEnv)
         self.start_editing.triggered.connect(self.initiateEditing)
@@ -308,7 +331,7 @@ class MainW(QMainWindow, Ui_MainWindow):
         self.nodeView.scene().sigMouseMoved.connect(MouseMovements.mouseMoved_node)
         self.graphicsView.scene().sigMouseMoved.connect(MouseMovements.mouseMoved_quer)
         self.graphicsView2.scene().sigMouseMoved.connect(MouseMovements.mouseMoved_quer2)
-        #self.graphicsView.plotItem.vb.sigResized.connect(self.updateViews)
+        self.graphicsView.getViewBox().sigResized.connect(self.updateViews)
     
         #connect radio buttons
         self._rquer.toggled.connect(self.table_toggle)
@@ -325,6 +348,38 @@ class MainW(QMainWindow, Ui_MainWindow):
         self.redo.clicked.connect(self.redo_but)
         self.copy_clip.clicked.connect(connections.connect_handlecopy)
         self.paste_clip.clicked.connect(connections.connect_handlepaste)
+        
+        #icons
+        icon = QIcon()
+        icon.addPixmap(QPixmap(os.path.join(SCRIPT_DIR,"icons","hydret1D.ico")), QIcon.Normal,QIcon.Off)
+        self.setWindowIcon(icon)
+        icon1 = QIcon()
+        icon1.addPixmap(QPixmap(os.path.join(SCRIPT_DIR,"icons","redo.ico")), QIcon.Normal,QIcon.Off)
+        self.redo.setIcon(icon1)
+        icon2 = QIcon()
+        icon2.addPixmap(QPixmap(os.path.join(SCRIPT_DIR,"icons","undo.ico")), QIcon.Normal,QIcon.Off)
+        self.undo.setIcon(icon2)
+        icon3 = QIcon()
+        icon3.addPixmap(QPixmap(os.path.join(SCRIPT_DIR,"icons","water.ico")), QIcon.Normal,QIcon.Off)
+        self.actionProfil.setIcon(icon3)
+        icon4 = QIcon()
+        icon4.addPixmap(QPixmap(os.path.join(SCRIPT_DIR,"icons","map-3-24.ico")), QIcon.Normal,QIcon.Off)
+        self.actionLageplan.setIcon(icon4)
+        icon5 = QIcon()
+        icon5.addPixmap(QPixmap(os.path.join(SCRIPT_DIR,"icons","long.ico")), QIcon.Normal,QIcon.Off)
+        self.actionL_ngschnit.setIcon(icon5)
+        icon6 = QIcon()
+        icon6.addPixmap(QPixmap(os.path.join(SCRIPT_DIR,"icons","new.ico")), QIcon.Normal,QIcon.Off)
+        self.newp.setIcon(icon6)
+        icon7 = QIcon()
+        icon7.addPixmap(QPixmap(os.path.join(SCRIPT_DIR,"icons","open32.ico")), QIcon.Normal,QIcon.Off)
+        self.openp.setIcon(icon7)
+        icon8 = QIcon()
+        icon8.addPixmap(QPixmap(os.path.join(SCRIPT_DIR,"icons","save.ico")), QIcon.Normal,QIcon.Off)
+        self.savep.setIcon(icon8)
+        icon9 = QIcon()
+        icon9.addPixmap(QPixmap(os.path.join(SCRIPT_DIR,"icons","runmodel.ico")), QIcon.Normal,QIcon.Off)
+        self.run.setIcon(icon9)
         
         #set table sizes for nicer display
         self.coords_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
@@ -368,14 +423,17 @@ class MainW(QMainWindow, Ui_MainWindow):
                 node.name                  = -1*i
                 node['Mode']               = Popup._lmodus.text()
                 node['PName']              = 'RAUHEITSPROFIL'
-                node['Y']                  = np.array([float(Popup.strickler.text())]*node['Npoints'])
+                y = []
+                for t in range(Popup.samplerau.rowCount()):
+                    y.append(float(Popup.samplerau.item(t,1).text()))
+                node['Y']                  = np.array(y)
                 self.df_pro                = self.df_pro.append(node)
                 
                 #appending Schalterprofil
                 if Popup._schaltercheck.checkState() == 2:
                     nodeS                      = self.df_pro.loc[i].copy()
                     nodeS['Mode']              = Popup._smodus.text()
-                    nodeS['PName']             = 'SCHALTERPROFIL'
+                    nodeS['PName']             = 'SCHALTPROFIL'
                     nodeS['Y']                 = np.array([float(Popup._swert.text())]*node['Npoints'])
                     self.df_pro                = self.df_pro.append(nodeS)
             
@@ -402,7 +460,7 @@ class MainW(QMainWindow, Ui_MainWindow):
             self.df_pro = temp
             self.saveProject()
             n_h1d = h1d(hydret_path = self.HydretEnv[0])
-            self.initiate(hyd = n_h1d,i=0)
+            self.initiate(hyd = n_h1d,i=self.knotenNr.currentIndex())
         
     def renumber(self):
         
@@ -456,7 +514,7 @@ class MainW(QMainWindow, Ui_MainWindow):
         self.h1d = renumberHYD(self.h1d,d_index,myapp)
         self.saveProject()
         n_h1d = h1d(hydret_path = self.HydretEnv[0])
-        self.initiate(hyd = n_h1d,i=0)
+        self.initiate(hyd = n_h1d,i=self.knotenNr.currentIndex())
             
 
     def duplicatewinshow(self):
@@ -520,7 +578,7 @@ class MainW(QMainWindow, Ui_MainWindow):
                 
                 self.saveProject()
                 n_h1d = h1d(hydret_path = self.HydretEnv[0])
-                self.initiate(hyd = n_h1d,i=0)
+                self.initiate(hyd = n_h1d,i=self.knotenNr.currentIndex())
             pass
         
     def runModel(self):
@@ -534,12 +592,15 @@ class MainW(QMainWindow, Ui_MainWindow):
         #Popup.process.waitForFinished()
         self.statusbar.showMessage('Reloading Model...')
         n_h1d = h1d(hydret_path = self.HydretEnv[0])
-        self.initiate(hyd = n_h1d,i=self.iloc)
+        self.initiate(hyd = n_h1d,i=self.knotenNr.currentIndex())
         self.statusbar.showMessage('Ready')
     
     def OpenEnv(self):
         #Zukunft run datei als h1d benannt
-        self.HydretEnv = QFileDialog.getOpenFileName(caption='Hydret Projekt Öffnen (H1D/RUN File)',filter="*.run*;;*.h1d*")
+        if DOUBLECLICK_FILE:
+            self.HydretEnv = (sys.argv[1],'')
+        else:    
+            self.HydretEnv = QFileDialog.getOpenFileName(caption='Hydret Projekt Öffnen (H1D/RUN File)',filter="*.run*;;*.h1d*")
 
         if self.HydretEnv[0] != '':
             
@@ -555,7 +616,7 @@ class MainW(QMainWindow, Ui_MainWindow):
         self.savep.setEnabled(True)
         self.saveasp.setEnabled(True)
         self.run.setEnabled(True)
-        self.loadwsp.setEnabled(True)
+        self.loadwsp_2.setEnabled(True)
         self.node_renumber.setEnabled(True)
         self.node_delete.setEnabled(True)
         self.node_rau.setEnabled(True)
@@ -615,11 +676,13 @@ class MainW(QMainWindow, Ui_MainWindow):
         self.schnittName_label.addItems(self.df_pro[self.pos_]['PName'].astype(str))
         
         #Default Node to show
-        self.iloc = i
-        self.Node = self.df_pro.loc[self.df_pro.index[self.iloc]]
-        self.knotenNr.setCurrentText(_translate("MainWindow", str(self.df_pro.index[self.iloc])))
-        self.station_label.setCurrentText(_translate("MainWindow", str(self.df_pro['Station'].iloc[self.iloc])))
-        self.schnittName_label.setCurrentText(_translate("MainWindow", str(self.df_pro['PName'].iloc[self.iloc])))
+        self.knotenNr.setCurrentIndex(i)
+        self.station_label.setCurrentIndex(i)
+        self.schnittName_label.setCurrentIndex(i)
+
+        self.loc    = int(self.knotenNr.currentText())
+        self.iloc   = (self.df_pro.index.tolist()).index(self.loc)
+        self.Node   = self.df_pro.loc[self.loc]
         self.knotenNr.blockSignals(True)
         self.station_label.blockSignals(True)
         self.schnittName_label.blockSignals(True)
@@ -630,7 +693,7 @@ class MainW(QMainWindow, Ui_MainWindow):
         self.gewid_current = int(self.df_start.loc[self.df_pro.index[self.iloc]]['ID'])
         self.lang_ID.setCurrentText(_translate("MainWindow", str(self.gewid_current)))
         self.lang_ID.blockSignals(False)
-        self.idChange(i=self.iloc)
+        self.idChange(i=i)
         
         #update start
         try:
@@ -662,7 +725,7 @@ class MainW(QMainWindow, Ui_MainWindow):
                 self.v3_leg = self.langView.addLegend()
             except:
                 self.v3_leg = self.langView.addLegend()
-            langPlot(myapp,self.gewid_current)
+            self = langPlot(myapp,self.gewid_current)
             self.lang_label = pg.TextItem(color='k',border='k',fill='w')
             self.vLine_lang = pg.InfiniteLine(angle=90, movable=False)
             self.hLine_lang = pg.InfiniteLine(angle=0,  movable=False)
@@ -678,23 +741,23 @@ class MainW(QMainWindow, Ui_MainWindow):
             self.v3_leg = self.langView.addLegend()
         except:
             self.v3_leg = self.langView.addLegend()
-        langPlot(myapp,self.gewid_current)
+        self = langPlot(myapp,self.gewid_current)
         self.lang_label = pg.TextItem(color='k',border='k',fill='w')
         self.vLine_lang = pg.InfiniteLine(angle=90, movable=False)
         self.hLine_lang = pg.InfiniteLine(angle=0,  movable=False)
         
     def table_toggle(self):
-        self.idChange(i=self.iloc)
+        self.idChange(i=self.knotenNr.currentIndex())
     
-#    def updateViews(self):
-#        try:
-#            self.p2.setGeometry(self.ax.vb.sceneBoundingRect())
-#            self.p2.linkedViewChanged(self.ax.vb,self.p2.XAxis)
-#        except: pass
+    def updateViews(self):
+        try:
+            self.p2.setGeometry(self.graphicsView.getViewBox().sceneBoundingRect())
+            self.p2.linkedViewChanged(self.graphicsView.getViewBox(),self.p2.XAxis)
+        except: pass
     
     def idChange(self,i):
         '''
-        i = index
+        i = index of combo box (0,1,2...n)
         '''
         #blocking signals to prevent infinite loops
         self.knotenNr.blockSignals(True)
@@ -703,7 +766,8 @@ class MainW(QMainWindow, Ui_MainWindow):
         
         self.knotenNr.setCurrentIndex(i)
         #set labels from .pro file
-        self.iloc  = int(i)
+        self.loc   = int(self.knotenNr.currentText())
+        self.iloc  = (self.df_pro.index.tolist()).index(self.loc)
         
         #update editing info
         self = update_labels(myapp)
@@ -716,7 +780,6 @@ class MainW(QMainWindow, Ui_MainWindow):
             df   = self.df_pro
             self.df_s = self.df_start
             
-        self.loc = int(self.knotenNr.currentText())
         self.Node = df.loc[self.loc]
         
         #enabling radio buttons
@@ -744,11 +807,12 @@ class MainW(QMainWindow, Ui_MainWindow):
             
         #graphicView 2 content
         try:
-            self.iloc2 = int(i+1)
-            self.loc2 = df[self.pos_].index[self.iloc2]
+            self.loc2  = int(self.knotenNr.itemText(i+1))
+            self.iloc2 = (df.index.tolist()).index(self.loc2)
         except:
-            self.iloc2 = int(i-1)
-            self.loc2 = df[self.pos_].index[self.iloc2]
+            self.loc2  = int(self.knotenNr.itemText(i-1))
+            self.iloc2 = (df.index.tolist()).index(self.loc2)
+        
         self.Node2 = df.loc[self.loc2]
         
         #lcd
@@ -804,7 +868,7 @@ class MainW(QMainWindow, Ui_MainWindow):
         elif self._rrau.isChecked():
             self.coords_table.setRowCount(self.Node_R['Npoints'])
             self.coords_table.setHorizontalHeaderLabels(("X","Strickler"))
-            for table_i in range(self.Node['Npoints']):
+            for table_i in range(self.Node_R['Npoints']):
                 self.coords_table.setItem(table_i,0,QTableWidgetItem(str(self.Node_R['X'][table_i])))
                 self.coords_table.setItem(table_i,1,QTableWidgetItem(str(self.Node_R['Y'][table_i])))
 
@@ -877,6 +941,7 @@ class MainW(QMainWindow, Ui_MainWindow):
         self.stop_editing.setEnabled(True)
         self.start_editing.setEnabled(False)
         
+        self.coords_table.setEditTriggers(QAbstractItemView.DoubleClicked)
         self.edit_knoten.setEnabled(True)
         self.edit_station.setEnabled(True)
         self.edit_pname.setEnabled(True)
@@ -898,9 +963,10 @@ class MainW(QMainWindow, Ui_MainWindow):
         self.df_start_copy = self.df_start.copy()
         db_ = self.df_copy.copy()
         self.df_db   = [db_]
-        self.idChange(i=self.iloc)
+        self.idChange(i=self.knotenNr.currentIndex())
 
     def FinishEditing(self):
+        self.coords_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         STATE_EDIT = update_labels(myapp)
         self.Edit = False
         self = update_labels(myapp)
@@ -914,7 +980,10 @@ class MainW(QMainWindow, Ui_MainWindow):
             self.df_start.update(self.df_start_copy)
             self.knotenNr.blockSignals(True)
             self.knotenNr.clear()
-            self.knotenNr.addItems(self.df_pro.index.astype(str))
+            self.pos_ = self.df_pro.index>0
+            self.knotenNr.addItems(self.df_pro[self.pos_].index.astype(str))
+            self.station_label.addItems(self.df_pro[self.pos_]['Station'].astype(str))
+            self.schnittName_label.addItems(self.df_pro[self.pos_]['PName'].astype(str))
             self.knotenNr.blockSignals(False)
         else:
             pass
@@ -936,7 +1005,7 @@ class MainW(QMainWindow, Ui_MainWindow):
         self.geo_info.setEnabled(False)
         self.wsp_rau_box.setEnabled(False)
         self.plot_editor_box.setEnabled(False)
-        self.idChange(i=self.iloc)
+        self.idChange(i=self.knotenNr.currentIndex())
     
     def saveProject(self):
         self.statusbar.showMessage('Saving PRO...')
@@ -954,7 +1023,7 @@ class MainW(QMainWindow, Ui_MainWindow):
         self.changes -=1
         self.df_copy.update(self.df_db[self.changes])
         
-        self.idChange(i=self.iloc)
+        self.idChange(i=self.knotenNr.currentIndex())
         
         if self.changes == 0:
             self.undo.setEnabled(False)
@@ -963,7 +1032,7 @@ class MainW(QMainWindow, Ui_MainWindow):
     def redo_but(self):
         self.changes +=1
         self.df_copy.update(self.df_db[self.changes])
-        self.idChange(i=self.iloc)
+        self.idChange(i=self.knotenNr.currentIndex())
         
         if self.changes == len(self.df_db)-1:
             self.redo.setEnabled(False)
@@ -991,7 +1060,7 @@ class MainW(QMainWindow, Ui_MainWindow):
                 self.df_copy.iat[self.iloc_s,7] = np.array(y)
                 self.df_db.append(self.df_copy)
             self.undo.setEnabled(True)
-            self.idChange(i = self.iloc)
+            self.idChange(i = self.knotenNr.currentIndex())
         
 class connections:
     
@@ -1058,6 +1127,16 @@ class connections:
         loadresult(myapp)
         
     def connect_update_wsp():
+        try:
+            myapp.v1_leg.scene().removeItem(myapp.v1_leg)
+            myapp.v1_leg = myapp.graphicsView.addLegend()
+        except:
+            myapp.v1_leg = myapp.graphicsView.addLegend()
+        try:
+            myapp.v2_leg.scene().removeItem(myapp.v2_leg)
+            myapp.v2_leg = myapp.graphicsView2.addLegend()
+        except:
+            myapp.v2_leg = myapp.graphicsView2.addLegend()
         try:
             myapp.v3_leg.scene().removeItem(myapp.v3_leg)
             myapp.v3_leg = myapp.langView.addLegend()
@@ -1188,5 +1267,15 @@ if __name__ == '__main__':
     appctxt = ApplicationContext()
     myapp = MainW()
     myapp.show()
+    try:
+        if sys.argv[1].lower().endswith('.run'):
+            try:
+                DOUBLECLICK_FILE = True
+                myapp.OpenEnv()
+            except:
+                DOUBLECLICK_FILE = False
+                myapp.statusbar.showMessage('Invalid File!')
+    except:
+        pass
     exit_code = appctxt.app.exec_()
     sys.exit(exit_code)

@@ -37,6 +37,7 @@ def plot(myapp,Node,View):
     myapp.axViewBox = myapp.ax.getViewBox()
     myapp.axViewBox.setAspectLocked(lock=True, ratio=myapp.ratio)
     View.getAxis('left').setLabel('Höhe')
+    
     if View == myapp.graphicsView:
         myapp.ax1 = myapp.ax
         myapp.axViewBox1 = myapp.axViewBox
@@ -50,10 +51,12 @@ def plot(myapp,Node,View):
         if -1*Node.name in myapp.df_pro.index:
             View.showAxis('right')
             View.scene().addItem(myapp.p2)
-            myapp.p2.setGeometry(View.plotItem.vb.sceneBoundingRect())
+            myapp.p2.setGeometry(View.getViewBox().sceneBoundingRect())
+            myapp.p2.linkedViewChanged(View.getViewBox(), myapp.p2.XAxis)
             View.getAxis('right').linkToView(myapp.p2)
             myapp.p2.setXLink(View)
             View.getAxis('right').setLabel('kst', color='#0000ff')
+            myapp.p2.setYRange(0,100)
             g = View.plot(myapp.Node_R['X'],myapp.Node_R['Y'],pen='k',
                                        symbolSize=3,symbolPen=0.5,symbolBrush=0.5,
                                        fillLevel=myapp.Node_R['Y'].min(),brush=0.5,
@@ -62,7 +65,49 @@ def plot(myapp,Node,View):
             myapp.p2.addItem(g)
         else:
             View.showAxis('right',show=False)
+    
+    '''Annotate Info'''
+    
+    Q = 'Q: {:0.2f} m³/s'.format(myapp.df_start.loc[Node.name]['QZERO'])
+    Text = Q
+    if Node.name in myapp.h1d.nupe:
+        _idx = myapp.h1d.nupe.index(Node.name)
+        INF = '\n\nZufluss Mode: {}\nDatei: {}\nFaktor: {:0.2f}'.format(myapp.h1d.timmod[_idx],
+                      myapp.h1d.quinf_[_idx],myapp.h1d.faktor[_idx])
+        try:
+            INF = INF+'\nStation: {:0.1f}\nQbasis: {:0.2f}'.format(myapp.h1d.q_station[_idx],
+                                myapp.h1d.q_basis[_idx])
+        except:
+            pass
+        Text = Text+INF
+    
+    if Node.name in myapp.h1d.lie:
+        _idx = myapp.h1d.lie.index(Node.name)
+        li   = myapp.h1d.zdat[_idx].split()
+        LINF = '\n\nLateral Inflow Mode: {}\nDatei: {}\nFaktor: {}'.format(li[1],
+                      li[0],li[2])
+        try:
+            LINF = LINF+'\nStation: {:0.1f}\nQ_basis: {:0.2f}'.format(li[3],li[4])
+        except:
+            pass
+        Text = Text+LINF
+    
+    if Node.name in myapp.h1d.igate:
+        _idx = myapp.h1d.igate.index(Node.name)
+        gatd = myapp.h1d.gatdat[_idx]
+        Gate = '\n\nGate Max Durchlassöffnung: {}\nMode: {}\nQmin: {}\nQmax: {}\nTol: {}\nµ: {}\nGatmin: {}\nGatwso: {}\nDatei: {}'.format(myapp.h1d.igate[_idx],*gatd)
+        Text = Text + Gate
+    
+    weirs = [int(we.split()[0]) for we in myapp.h1d.weir_info]
+    if Node.name in weirs:
+        _idx = weirs.index(Node.name)
+        wehr = '\n\nWehr Höhe,Breite,µ: {},{},{}'.format(*myapp.h1d.weir_info[_idx].split()[1:4])
+        Text = Text+wehr
 
+    annotate = pg.TextItem(Text,anchor=(1,0.5),color='k',border='k',fill='w')
+    View.addItem(annotate)
+    annotate.setPos(Node.X.max(),Node.Y.max()+4)
+    
     '''River Bed'''
     myapp.riverbed = View.plot([riv_bed_x,riv_bed_x],[riv_bed_y,plot_bottom],
                                            pen=pg.mkPen(width=1,color='b'))
@@ -208,6 +253,27 @@ def langPlot(myapp,i):
             else:
                 myapp.langView.plot(sohle,wsp_l,pen=pg.mkPen(width=1,color=c),
                                      name = leg)
+    myapp.langView.getViewBox().setXRange(x.max(),x.min())
+    myapp.langView.getViewBox().setYRange(y.min(),y.max())
+    
+    #highlight on nodeview
+    try:
+        try:
+            myapp.highlight.clear()
+        except:pass
+    
+        rshp  = shp.Reader(myapp.achse)
+        for n,s in enumerate(rshp.records()):
+            if s['GEW_ID'] == i:
+                rec      = rshp.shapeRecords()[n]
+                pts        = np.array(rec.shape.points)
+                myapp.highlight = myapp.nodeView.plot(pts[:,0],pts[:,1],pen=pg.mkPen('y', width=3))
+                myapp.highlight.setZValue(0)
+                break
+    except:
+        myapp.statusbar.showMessage('ID missing in Start.dat...')
+
+    return myapp
         
 def nodePlot(myapp):
     myapp.nodeView.clear()
@@ -252,8 +318,9 @@ def nodePlot(myapp):
             na = myapp.gi_ityp.itemText(i-1)
         i1 = np.where(nTyp == i)
         
-        myapp.nodeView.plot(nX[i1],nY[i1],symbol=idic[0],pen=pg.mkPen(None),
+        nplot = myapp.nodeView.plot(nX[i1],nY[i1],symbol=idic[0],pen=pg.mkPen(None),
                            symbolSize=idic[1],symbolPen=idic[2],symbolBrush=idic[2],name=na)
+        nplot.setZValue(100)
     myapp.nodeView.setAspectLocked(lock=True, ratio=1)
 
 

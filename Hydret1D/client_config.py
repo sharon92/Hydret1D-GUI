@@ -1,6 +1,6 @@
 class ClientConfig(object):
     PUBLIC_KEY = 'None'
-    APP_NAME = 'main'
+    APP_NAME = 'Hydret1D'
     COMPANY_NAME = 'Sharon Shaji'
     HTTP_TIMEOUT = 30
     MAX_DOWNLOAD_RETRIES = 3
