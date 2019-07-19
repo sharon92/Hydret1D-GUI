@@ -119,7 +119,17 @@ class HYDRET:
         if self.idown == 1:
             self.weir_par = list(map(float,lines[b6].split()))
             b6 = b6+1
-        if (self.idown == 3) or (self.idown == 4):
+        elif self.idown == 2:
+            self.qh_tabelle = []
+            _qhcount = int(lines[b6].split())
+            _i = 1
+            while not len(self.qh_tabelle) == _qhcount:
+                _qh = list(map(float,lines[b6+_i].split()))
+                [self.qh_tabelle.append(_qht) for _qht in list(zip(_qh[::2],_qh[1::2]))]
+                _i +=1
+            b6 = b6+ _i
+            
+        elif (self.idown == 3) or (self.idown == 4):
             self.rb = lines[b6].strip()
             b6 = b6+1
         
@@ -196,7 +206,7 @@ class HYDRET:
             b10 = b10+self.ngates*gi
         
         #block 11
-        b11         = b10
+        b11              = b10
         self.slo         = float(lines[b11][:18])
         self.xsecmo      = lines[b11][18:20]
         self.prodat = lines[b11][20:].strip()
@@ -227,10 +237,12 @@ class HYDRET:
             self.startpath = os.path.join(os.getcwd(),sdat)
             assert os.path.exists(self.startpath), 'Start-Datei Pfad Pruefen!'
             os.chdir(cdr)
-            self.readSTART(self.startpath)
             b12 = b12+1
         else:
+            self.startpath = hyd_p
+            self.hyd_startdat = b12
             b12 = b12+self.nl+1
+        self.readSTART(self.startpath)
         #TODO:- Block 13, retentionsflaeche
     
 
@@ -295,54 +307,99 @@ class HYDRET:
 
     def readSTART(self,start_path):
         
-        try:
-            self.df_start = pd.read_csv(start_path,sep=',',index_col = 0,header=0)
-            try:
-                self.df_start = self.df_start.astype({'ID':int,'ITYPE':int})
-            except:
-                pass
-            return self.df_start
-        except:
-            raise ValueError('Start Format Pruefen ob Header vorhanden ist')
+        cols = ["IAB","ITYPE","WIDTH","HEIT","ZTR","ZTL","XL","ZO","RNI","DZERO","HZERO",
+                "QZERO","ZS","CKS","HR0","HR1","RNV1","HR2","RNV2","HR3","RNV3","HR4",
+                "RNV4","HR5","RNV5","HR6","RNV6","HR7","RNV7","SF","X","Y","ID","ZSHIFT"]
+        
+        typ =[int,int,float,float,float,float,float,float,float,float,float,float,float,float,
+         float,float,float,float,float,float,float,float,float,float,float,float,float,float,
+         float,float,float,float,int,float]
+        
+        form = ['{:4d}','{:3d}',(*['{:.2f}']*4),'{:.1f}','{:.2f}','{:.4f}',(*['{:.3f}']*3),
+                 '{:.2f}',(*['{:.3f}']*2),(*['{:.3f}','{:.4f}']*7),'{:.8f}',(*['{:.2f}']*2),
+                 '{:6d}','{:.2f}']
 
-def renumberHYD(h1d,d_idx,myapp):
+        #ovfbil
+        if self.ovfbil == 'OVFBIL':
+            [cols.insert(n,i)  for n,i in [(14,"LIRE"),(15,"NOVF"),(16,"IABOVF")]]
+            [typ.insert(n,i)  for n,i in [(14,int),(15,int),(16,int)]]
+            [form.insert(n,i) for n,i in [(14,'{:5d}'),(15,'{:5d}'),(16,'{:5d}')]]
+            
+        #ovfreq
+        elif self.ovfbil == 'OVFREG':
+            acol  = [(14,"LIRE"),(15,"NOVF"),(16,"IABOVF"),(17,"OVFAN"),(18,"OVFAUS"),
+                     (19,"QOMAX"),(20,"QREGEL"),(21,"TOVFAN"),(22,"TOVFAUS")]
+            atyp  = [(14,int),(15,int),(16,int),(17,float),(18,float),(19,float),
+                     (20,float),(21,float),(22,float)]
+            aform = [(14,'{:5d}'),(15,'{:5d}'),(16,'{:5d}'),(17,'{:.2f}'),(18,'{:.2f}'),(19,'{:.2f}'),
+                     (20,'{:.2f}'),(21,'{:.2f}'),(22,'{:.2f}')]
+            
+            [cols.insert(n,i)  for n,i in acol]
+            [typ.insert(n,i)  for n,i in atyp]
+            [form.insert(n,i) for n,i in aform]
+            
+
+        #kstime
+        if self.kstmod == 'KSTIME':
+            cols.insert(9,"KRAUT")
+            typ.insert(9,int)
+            form.insert(9,'{:5d}')
+        _dtype = dict(zip(cols,typ))
+        _dform = dict(zip(cols,form))
+
+        if not start_path.upper().endswith(".HYD"):
+            self.df_start = pd.read_csv(start_path,sep=None,skiprows=1,engine='python',
+                                        header=None,names=cols,dtype=_dtype)
+
+        else:
+            #read block
+            self.df_start = pd.read_fwf(start_path,skiprows = self.hyd_start,engine='python',
+                            header=None,sep=None,names=cols, dtype=_dtype)
+        self._dtype = _dtype
+        self._dform = _dform
+        self.df_start.set_index('IAB',inplace=True)
+        return self.df_start
+
+def renumberHYD(h1d,d_idx,self):
+    
+    self.p_hyd.setText(self.h1d.hyd_f)
+    self.p_aus.setText(self.h1d.out_f)
+    self.p_prodat.setText(self.h1d.prodat)
+    self.p_startdat.setText(self.h1d.startdat)
     
     #updatehyd
     if h1d.nwel > 0:
         h1d.kwel = [d_idx[i] for i in h1d.kwel]
         for wi in range(h1d.nwel):
-            myapp.p_kwel_table.setItem(wi,0,QTableWidgetItem(str(h1d.kwel[wi])))
+            self.p_kwel_table.setItem(wi,0,QTableWidgetItem(str(h1d.kwel[wi])))
 
     if h1d.nqin > 0:
         h1d.nupe = [d_idx[i] for i in h1d.nupe]
         for wi in range(h1d.nqin):
-            myapp.p_nupe.setItem(wi,0,QTableWidgetItem(str(h1d.nupe[wi])))
+            self.p_nupe.setItem(wi,0,QTableWidgetItem(str(h1d.nupe[wi])))
     
     if h1d.njunc > 0:
         h1d.nxj = [[d_idx[ii] for ii in i] for i in h1d.nxj]
-        for wi in range(myapp.h1d.njunc):
+        for wi in range(self.h1d.njunc):
             for ni in range(7):
-                myapp.p_nxj_table.setItem(wi,ni,QTableWidgetItem(str(h1d.nxj[wi][ni])))
+                self.p_nxj_table.setItem(wi,ni,QTableWidgetItem(str(h1d.nxj[wi][ni])))
 
     if h1d.latinf > 0:
         h1d.lie = [d_idx[i] for i in h1d.lie]
-        for wi in range(myapp.h1d.latinf):
-            myapp.p_lie_table.setItem(wi,0,QTableWidgetItem(str(h1d.lie[wi])))
+        for wi in range(self.h1d.latinf):
+            self.p_lie_table.setItem(wi,0,QTableWidgetItem(str(h1d.lie[wi])))
         
     if h1d.nweirs > 0:
         h1d.weir_info = ['%10.0f' %d_idx[int(i[:10])]+i[10:] for i in h1d.weir_info]
-        for wi in range(myapp.h1d.nweirs):
-            myapp.p_weir_table.setItem(wi,0,QTableWidgetItem(str(h1d.weir_info[wi].split()[0])))
+        for wi in range(self.h1d.nweirs):
+            self.p_weir_table.setItem(wi,0,QTableWidgetItem(str(h1d.weir_info[wi].split()[0])))
 
     if h1d.ngates > 0:
         h1d.igate = [d_idx[i] for i in h1d.igate]
-        for wi in range(myapp.h1d.ngates):
-            myapp.p_gate_table.setItem(wi,0,QTableWidgetItem(str(h1d.igate[wi])))
+        for wi in range(self.h1d.ngates):
+            self.p_gate_table.setItem(wi,0,QTableWidgetItem(str(h1d.igate[wi])))
 
-    return h1d
-    
-    
-    
+
 def writePRO(ProName,df_pro):
     lines = []
     for i,k in enumerate(df_pro.index):
@@ -376,8 +433,12 @@ def writePRO(ProName,df_pro):
         for i in lines:
             out_f.write(i)
 
-def writeStart(StartName,df_start):
-    df_start.to_csv(StartName)
+def writeStart(StartName,df_start,d):
+    df = df_start.copy()
+    df.reset_index(inplace=True)
+    for key,item in d.items():
+        df[key]    = df[key].apply(func = item.format, axis=1)
+    df.to_csv(StartName,sep=',',index=False)
                 
 def writeHYD(hydName,h1d):
     
@@ -414,6 +475,12 @@ def writeHYD(hydName,h1d):
     #Boundary Conditions
     if h1d.idown == 1:
         lines.append(('{:10.4f}'*len(h1d.weir_par)+'\n').format(*h1d.weir_par))
+        
+    elif h1d.idown == 2:
+        lines.append('{:5}\n'.format(len(h1d.qh_tabelle)))
+        for _i in range(0,len(h1d.qh_tabelle),4):
+            lines.append(('{:10.2f}'*4+'\n').format(*h1d.qh_tabelle[_i:_i+4]))
+        
     elif (h1d.idown == 3) or (h1d.idown == 4):
         lines.append(h1d.rb+'\n')
         

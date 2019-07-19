@@ -5,139 +5,66 @@ Created on Wed Jun 26 11:03:54 2019
 @author: s.Shaji
 """
 import numpy as np
+from modules.riverbed import cal_bank
 from modules.plotting import plot_bank
 from PyQt5.QtWidgets import QMessageBox,QApplication,QTableWidgetItem
 
 # =============================================================================
 # Edit Mode
 # =============================================================================
-def knoten_label(myapp):
+def knoten_label(self):
     try:
-        myapp.edit_knoten.blockSignals(True)
-        inp_knoten = int(myapp.edit_knoten.text())
-        ori_knoten = myapp.loc
+        self.edit_knoten.blockSignals(True)
+        inp_knoten = int(self.edit_knoten.text())
+        ori_knoten = self.loc
         if inp_knoten != ori_knoten:
-            if inp_knoten in myapp.df_copy.index:
-                overwrite = QMessageBox.question(myapp,'Editor',"Knoten Nummer existiert!\nÜberschreiben?",
+            if inp_knoten in self.df_copy.index:
+                overwrite = QMessageBox.question(self,'Editor',"Knoten Nummer existiert!\nÜberschreiben?",
                                                  QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
                 if overwrite == QMessageBox.Yes:
-                    myapp.df_copy.drop(labels = inp_knoten,inplace = True)
-                    myapp.df_copy.rename({ori_knoten:inp_knoten},inplace = True)
+                    self.df_copy.drop(labels = inp_knoten,inplace = True)
+                    self.df_copy.rename({ori_knoten:inp_knoten},inplace = True)
             else:
-                myapp.df_copy.rename({ori_knoten:inp_knoten},inplace = True)
-        myapp.edit_knoten.blockSignals(False)
+                self.df_copy.rename({ori_knoten:inp_knoten},inplace = True)
+        self.edit_knoten.blockSignals(False)
     except:
         pass
     
-def edit_modus(myapp,i):
-    myapp.df_copy.at[myapp.loc,'Mode'] = i
-    bankXY = myapp.cal_bank(myapp.Node)
-    plot_bank(myapp,bankXY,myapp.plot_bottom,i,myapp.Node,myapp.graphicsView,ModeEdit=True)
+def edit_modus(self,i):
+    self.df_copy.at[self.loc,'Mode'] = i
+    bankXY = cal_bank(self.df_copy.loc[self.loc])
+    plot_bank(self,bankXY,self.plot_bottom,i,self.Node,self.graphicsView,ModeEdit=True)
 
-def edit_maxHeight(myapp):
+def edit_maxHeight(self):
     try:
         mh = True
-        i = float(myapp.maxHeight_label.text())
+        i = float(self.maxHeight_label.text())
     except:
         mh = False
-        myapp.statusbar.showMessage('Max Height Error: Not a valid float..')
+        self.statusbar.showMessage('Max Height Error: Not a valid float..')
         
     if mh:
-        if (i != -1) & (i < myapp.Node['Y'].min()):
-            myapp.statusbar.showMessage('Max Height Error: Lower than min val '+str(myapp.Node['Y'].min()))
+        if (i != -1) & (i < self.Node['Y'].min()):
+            self.statusbar.showMessage('Max Height Error: Lower than min val '+str(self.Node['Y'].min()))
         else:
-            myapp.df_copy.at[myapp.loc,'Max Height'] = i
-            bankXY = myapp.cal_bank(myapp.Node)
-            plot_bank(myapp,bankXY,myapp.plot_bottom,myapp.Node['Mode'],myapp.Node,myapp.graphicsView,ModeEdit=True)
-            myapp.statusbar.showMessage('Ready')
-
-def delete_coords(myapp):
-    myapp.changes +=1
-    row_c = myapp.coords_table.selectedIndexes()
-    row_c_idx = sorted(set([i.row() for i in row_c]))
-    
-    if myapp._rquer.isChecked():
-        Node = myapp.Node.copy()
-        iloc = myapp.iloc
-    elif myapp._rrau.isChecked():
-        Node = myapp.Node_R.copy()
-        iloc = myapp.iloc_r
-    elif myapp._rschalter.isChecked():
-        Node = myapp.Node_S.copy()
-        iloc = myapp.iloc_s
-        
-    delx = np.round(np.delete(Node['X'], row_c_idx),2)
-    dely = np.round(np.delete(Node['Y'], row_c_idx),2)
-   
-    myapp.df_copy.iat[iloc,6]       = delx
-    myapp.df_copy.iat[iloc,7]       = dely
-    myapp.df_copy.iat[iloc,0]       = len(delx)
-    db_ = myapp.df_copy.copy()
-    myapp.df_db.append(db_)
-    
-    myapp.undo.setEnabled(True)
-    myapp.idChange(i=abs(myapp.iloc))
-
-
-def insert_coords(myapp):
-    myapp.changes +=1
-    npoints_2insert = myapp.npoints_insert.value()
-    
-    myapp.row_curr = myapp.coords_table.currentRow()
-    if myapp.row_curr == len(myapp.Node['X'])-1:           
-        i_x = float(myapp.coords_table.item(myapp.row_curr-1,0).text())
-        c_x = float(myapp.coords_table.item(myapp.row_curr,0).text())
-
-        i_y = float(myapp.coords_table.item(myapp.row_curr-1,1).text())
-        c_y = float(myapp.coords_table.item(myapp.row_curr,1).text())
-        
-        n_x = np.linspace(c_x+(c_x-i_x),c_x+npoints_2insert*(c_x-i_x),npoints_2insert)
-        n_y = np.linspace(c_y+(c_y-i_y),c_y+npoints_2insert*(c_y-i_y),npoints_2insert)
-    else:
-        c_x = float(myapp.coords_table.item(myapp.row_curr,0).text())
-        i_x = float(myapp.coords_table.item(myapp.row_curr+1,0).text())
-        
-        c_y = float(myapp.coords_table.item(myapp.row_curr,1).text())
-        i_y = float(myapp.coords_table.item(myapp.row_curr+1,1).text())
-
-        n_x = np.linspace(c_x+((i_x-c_x)/npoints_2insert),i_x-((i_x-c_x)/npoints_2insert),npoints_2insert)
-        n_y = np.linspace(c_y+((i_y-c_y)/npoints_2insert),i_y-((i_y-c_y)/npoints_2insert),npoints_2insert)    
-
-    if myapp._rquer.isChecked():
-        Node = myapp.Node.copy()
-        iloc = myapp.iloc
-    elif myapp._rrau.isChecked():
-        Node = myapp.Node_R.copy()
-        iloc = myapp.iloc_r
-    elif myapp._rschalter.isChecked():
-        Node = myapp.Node_S.copy()
-        iloc = myapp.iloc_s
-        
-    ix  = np.round(np.insert(Node['X'],myapp.row_curr+1,n_x),2)
-    iy  = np.round(np.insert(Node['Y'],myapp.row_curr+1,n_y),2)
-    
-    myapp.df_copy.iat[iloc,6]       = ix
-    myapp.df_copy.iat[iloc,7]       = iy
-    myapp.df_copy.iat[iloc,0] = len(ix)
-    db_ = myapp.df_copy.copy()
-    myapp.df_db.append(db_)
-    
-    myapp.undo.setEnabled(True)
-    myapp.idChange(i=abs(myapp.iloc))
+            self.df_copy.at[self.loc,'Max Height'] = i
+            bankXY = cal_bank(self.df_copy.loc[self.loc])
+            plot_bank(self,bankXY,self.plot_bottom,self.df_copy.loc[self.loc].Mode,self.df_copy.loc[self.loc],self.graphicsView,ModeEdit=True)
+            self.statusbar.showMessage('Ready')
     
         
-def _handlecopy(myapp):
-    sidx = myapp.coords_table.selectedIndexes()
+def _handlecopy(self):
+    sidx = self.coords_table.selectedIndexes()
     text = ''
     rows = [i.row() for i in sidx]
     cols = [i.column() for i in sidx]
     
-    if myapp._rquer.isChecked():
-        Node = myapp.Node.copy()
-    elif myapp._rrau.isChecked():
-        Node = myapp.Node_R.copy()
-    elif myapp._rschalter.isChecked():
-        Node = myapp.Node_S.copy()
+    if self._rquer.isChecked():
+        Node = self.Node.copy()
+    elif self._rrau.isChecked():
+        Node = self.Node_R.copy()
+    elif self._rschalter.isChecked():
+        Node = self.Node_S.copy()
     for t in range(len(rows)):
         if cols[t] == 0:
             text = text+str(Node['X'][rows[t]])+'\t'
@@ -150,17 +77,17 @@ def _handlecopy(myapp):
             pass
     QApplication.instance().clipboard().setText(text)
 
-def _handlepaste(myapp):
+def _handlepaste(self):
     clipboard_text =  QApplication.instance().clipboard().text()
-    if myapp._rquer.isChecked():
-        Node = myapp.Node.copy()
-        iloc = myapp.iloc
-    elif myapp._rrau.isChecked():
-        Node = myapp.Node_R.copy()
-        iloc = myapp.iloc_r
-    elif myapp._rschalter.isChecked():
-        Node = myapp.Node_S.copy()
-        iloc = myapp.iloc_s
+    if self._rquer.isChecked():
+        Node = self.Node.copy()
+        iloc = self.iloc
+    elif self._rrau.isChecked():
+        Node = self.Node_R.copy()
+        iloc = self.iloc_r
+    elif self._rschalter.isChecked():
+        Node = self.Node_S.copy()
+        iloc = self.iloc_s
     if clipboard_text:
         list_ = clipboard_text.split('\n')
         cols_ = list_[0].count('\t')+1
@@ -173,32 +100,32 @@ def _handlepaste(myapp):
             data[i] = ilist_
 
         data_len = len(data[0])
-        cid = myapp.coords_table.currentRow()
-        pos = myapp.coords_table.currentColumn()
+        cid = self.coords_table.currentRow()
+        pos = self.coords_table.currentColumn()
         if data_len > Node['Npoints'] - cid:
-            myapp.coords_table.setRowCount(cid+data_len)
+            self.coords_table.setRowCount(cid+data_len)
             for n,i in enumerate(range(cid,cid+data_len)):
                 if (pos == 0) & (cols_ == 1):
-                    myapp.coords_table.setItem(i,0,QTableWidgetItem(data[0][n]))
+                    self.coords_table.setItem(i,0,QTableWidgetItem(data[0][n]))
                 elif (pos == 0) & (cols_ > 1):
-                    myapp.coords_table.setItem(i,0,QTableWidgetItem(data[0][n]))
-                    myapp.coords_table.setItem(i,1,QTableWidgetItem(data[1][n]))
+                    self.coords_table.setItem(i,0,QTableWidgetItem(data[0][n]))
+                    self.coords_table.setItem(i,1,QTableWidgetItem(data[1][n]))
                 elif pos == 1:
-                    myapp.coords_table.setItem(i,1,QTableWidgetItem(data[0][n]))
+                    self.coords_table.setItem(i,1,QTableWidgetItem(data[0][n]))
         try:
-            x = [myapp.coords_table.item(i,0).text() for i in range(myapp.coords_table.rowCount()) if i!='']
-            y = [myapp.coords_table.item(i,1).text() for i in range(myapp.coords_table.rowCount()) if i!='']
+            x = [self.coords_table.item(i,0).text() for i in range(self.coords_table.rowCount()) if i!='']
+            y = [self.coords_table.item(i,1).text() for i in range(self.coords_table.rowCount()) if i!='']
              
             if len(x) == len(y):
-                myapp.changes +=1
-                myapp.df_copy.iat[iloc,6]       = np.array(x, dtype = np.float)
-                myapp.df_copy.iat[iloc,7]       = np.array(y, dtype = np.float)
-                myapp.df_copy.iat[iloc,0] = len(x)
-                myapp.idChange(myapp.iloc)
-                myapp.changes +=1
-                db_ = myapp.df_copy.copy()
-                myapp.df_db.append(db_)
-                myapp.undo.setEnabled(True)
+                self.changes +=1
+                self.df_copy.iat[iloc,6]       = np.array(x, dtype = np.float)
+                self.df_copy.iat[iloc,7]       = np.array(y, dtype = np.float)
+                self.df_copy.iat[iloc,0] = len(x)
+                self.idChange(self.iloc)
+                self.changes +=1
+                db_ = self.df_copy.copy()
+                self.df_db.append(db_)
+                self.undo.setEnabled(True)
         except:
             pass
          
@@ -206,167 +133,168 @@ def _handlepaste(myapp):
 # update mode
 # =============================================================================
 
+
 '''Updating dataframe from Labels in Editing mode'''
 
-def update_labels(myapp):
-    if myapp.Edit:
+def update_labels(app):
+    if app.Edit:
 
-    #def station_label(self):
+    #def station_label(app):
         try:
-            sn = float(myapp.edit_station.text())
-            myapp.df_copy.at[myapp.loc,'Station'] = sn
-            myapp.edit_station.clear()
+            sn = float(app.edit_station.text())
+            app.df_copy.at[app.loc,'Station'] = sn
+            app.edit_station.clear()
         except:
             pass
 
-    #def schnittName_label(self):
+    #def schnittName_label(app):
         try:
-            pn = myapp.edit_pname.text()
+            pn = app.edit_pname.text()
             if pn.strip() != '':
-                myapp.df_copy.at[myapp.loc,'PName'] = pn
-            myapp.edit_pname.clear()
+                app.df_copy.at[app.loc,'PName'] = pn
+            app.edit_pname.clear()
         except:
             pass
         
-    #def edit_ctab(self):
-        ct = myapp.ctab_label.currentIndex()
-        myapp.df_copy.at[myapp.loc,'CTAB'] = ct
+    #def edit_ctab(app):
+        ct = app.ctab_label.currentIndex()
+        app.df_copy.at[app.loc,'CTAB'] = ct
         
 
          
-    #def edit_maxHeight(self):
+    #def edit_maxHeight(app):
         try:
-            myapp.df_copy.at[myapp.loc,'Max Height'] = float(myapp.maxheight_label.text())
+            app.df_copy.at[app.loc,'Max Height'] = float(app.maxheight_label.text())
         except:
             pass
 
-    #def change_typ(self):
-        t1 = myapp.gi_ityp.currentIndex()
+    #def change_typ(app):
+        t1 = app.gi_ityp.currentIndex()
         try:
-            t2 = int(myapp.gi_typeedit.text())
+            t2 = int(app.gi_typeedit.text())
         
-            if t2 not in myapp.qschnt:
-                myapp.df_start_copy.at[myapp.loc,'ITYPE'] = t2
+            if t2 not in app.qschnt:
+                app.df_start_copy.at[app.loc,'ITYPE'] = t2
         except:
-            myapp.df_start_copy.at[myapp.loc,'ITYPE'] = myapp.qschnt[t1]
+            app.df_start_copy.at[app.loc,'ITYPE'] = app.qschnt[t1]
         
-    #def change_id(self):
+    #def change_id(app):
         try:
-            gid = int(myapp.gi_id.text())
-            myapp.df_start_copy.at[myapp.loc,'ID'] = gid
+            gid = int(app.gi_id.text())
+            app.df_start_copy.at[app.loc,'ID'] = gid
         except:
             pass
 
-    #def change_width(self):
+    #def change_width(app):
         try:
-            width = float(myapp.gi_width.text())
-            myapp.df_start_copy.at[myapp.loc,'WIDTH'] = width
+            width = float(app.gi_width.text())
+            app.df_start_copy.at[app.loc,'WIDTH'] = width
         except:
             pass
 
-    #def change_heit(self):
+    #def change_heit(app):
         try:
-            heit = float(myapp.gi_heit.text())
-            myapp.df_start_copy.at[myapp.loc,'HEIT'] = heit
+            heit = float(app.gi_heit.text())
+            app.df_start_copy.at[app.loc,'HEIT'] = heit
         except:
             pass
             
-    #def change_zo(self):
+    #def change_zo(app):
         try:
-            zo = float(myapp.gi_zo.text())
-            myapp.df_start_copy.at[myapp.loc,'ZO'] = zo
+            zo = float(app.gi_zo.text())
+            app.df_start_copy.at[app.loc,'ZO'] = zo
         except:
             pass
 
-    #def change_rni(self):
+    #def change_rni(app):
         try:
-            rni = float(myapp.gi_rni.text())
-            myapp.df_start_copy.at[myapp.loc,'RNI'] = rni
+            rni = float(app.gi_rni.text())
+            app.df_start_copy.at[app.loc,'RNI'] = rni
         except:
             pass
 
-    #def change_dzero(self):
+    #def change_dzero(app):
         try:
-            dzero = float(myapp.gi_dzero.text())
-            myapp.df_start_copy.at[myapp.loc,'DZERO'] = dzero
+            dzero = float(app.gi_dzero.text())
+            app.df_start_copy.at[app.loc,'DZERO'] = dzero
         except:
             pass
 
-    #def change_qzero(self):
+    #def change_qzero(app):
         try:
-            qzero = float(myapp.gi_qzero.text())
-            myapp.df_start_copy.at[myapp.loc,'QZERO'] = qzero
+            qzero = float(app.gi_qzero.text())
+            app.df_start_copy.at[app.loc,'QZERO'] = qzero
         except:
             pass
 
-    #def change_zs(self):
+    #def change_zs(app):
         try:
-            zs = float(myapp.gi_zs.text())
-            myapp.df_start_copy.at[myapp.loc,'ZS'] = zs
+            zs = float(app.gi_zs.text())
+            app.df_start_copy.at[app.loc,'ZS'] = zs
         except:
             pass
 
-    #def change_xl(self):
+    #def change_xl(app):
         try:
-            xl = float(myapp.gi_xl.text())
-            myapp.df_start_copy.at[myapp.loc,'XL'] = xl
+            xl = float(app.gi_xl.text())
+            app.df_start_copy.at[app.loc,'XL'] = xl
         except:
             pass
 
-    #def change_ztr(self):
+    #def change_ztr(app):
         try:
-            ztr = float(myapp.gi_ztr.text())
-            myapp.df_start_copy.at[myapp.loc,'ZTR'] = ztr
+            ztr = float(app.gi_ztr.text())
+            app.df_start_copy.at[app.loc,'ZTR'] = ztr
         except:
             pass
 
-    #def change_ztl(self):
+    #def change_ztl(app):
         try:
-            ztl = float(myapp.gi_ztl.text())
-            myapp.df_start_copy.at[myapp.loc,'ZTL'] = ztl
+            ztl = float(app.gi_ztl.text())
+            app.df_start_copy.at[app.loc,'ZTL'] = ztl
         except:
             pass
 
-    #def change_ckm(self):
+    #def change_ckm(app):
         try:
-            ckm = float(myapp.wsp_ckm.text())
-            myapp.df_start_copy.at[myapp.loc,'CKM'] = ckm
+            ckm = float(app.wsp_ckm.text())
+            app.df_start_copy.at[app.loc,'CKM'] = ckm
         except:
             pass
 
-    #def change_hr0(self):
+    #def change_hr0(app):
         try:
-            hr0 = float(myapp.wsp_hr0.text())
-            myapp.df_start_copy.at[myapp.loc,'HR0'] = hr0
+            hr0 = float(app.wsp_hr0.text())
+            app.df_start_copy.at[app.loc,'HR0'] = hr0
         except:
             pass
 
-    #def change_rw(self):
+    #def change_rw(app):
         try:
-            rw = float(myapp.pro_rw.text())
-            myapp.df_start_copy.at[myapp.loc,'X'] = rw
+            rw = float(app.pro_rw.text())
+            app.df_start_copy.at[app.loc,'X'] = rw
         except:
             pass
 
-    #def change_hw(self):
+    #def change_hw(app):
         try:
-            hw = float(myapp.pro_hw.text())
-            myapp.df_start_copy.at[myapp.loc,'Y'] = hw
+            hw = float(app.pro_hw.text())
+            app.df_start_copy.at[app.loc,'Y'] = hw
         except:
             pass
 
-    #def change_sf(self):
+    #def change_sf(app):
         try:
-            sf = float(myapp.gi_sf.text())
-            myapp.df_start_copy.at[myapp.loc,'SF'] = sf
+            sf = float(app.gi_sf.text())
+            app.df_start_copy.at[app.loc,'SF'] = sf
         except:
             pass
         
-    #def change_wspm(self):
+    #def change_wspm(app):
         try:
             for wi in range(7):
-                myapp.df_start_copy.at[myapp.loc,'HR'+str(wi+1)] = float(myapp.wsp_table.item(0,wi))
-                myapp.df_start_copy.at[myapp.loc,'RN'+str(wi+1)] = float(myapp.wsp_table.item(1,wi))
+                app.df_start_copy.at[app.loc,'HR'+str(wi+1)] = float(app.wsp_table.item(0,wi))
+                app.df_start_copy.at[app.loc,'RN'+str(wi+1)] = float(app.wsp_table.item(1,wi))
         except:
             pass
-    return myapp
+    return app
