@@ -5,8 +5,7 @@ Created on Wed Jun 26 11:03:54 2019
 @author: s.Shaji
 """
 import numpy as np
-from modules.riverbed import cal_bank
-from modules.plotting import plot_bank
+from modules.plotting import update_banks
 from PyQt5.QtWidgets import QMessageBox,QApplication,QTableWidgetItem
 
 # =============================================================================
@@ -32,8 +31,7 @@ def knoten_label(self):
     
 def edit_modus(self,i):
     self.df_copy.at[self.loc,'Mode'] = i
-    bankXY = cal_bank(self.df_copy.loc[self.loc])
-    plot_bank(self,bankXY,self.plot_bottom,i,self.Node,self.graphicsView,ModeEdit=True)
+    update_banks(self,0)
 
 def edit_maxHeight(self):
     try:
@@ -48,8 +46,7 @@ def edit_maxHeight(self):
             self.statusbar.showMessage('Max Height Error: Lower than min val '+str(self.Node['Y'].min()))
         else:
             self.df_copy.at[self.loc,'Max Height'] = i
-            bankXY = cal_bank(self.df_copy.loc[self.loc])
-            plot_bank(self,bankXY,self.plot_bottom,self.df_copy.loc[self.loc].Mode,self.df_copy.loc[self.loc],self.graphicsView,ModeEdit=True)
+            update_banks(self,0)
             self.statusbar.showMessage('Ready')
     
         

@@ -5,182 +5,111 @@ Created on Wed Jun 26 11:49:02 2019
 @author: s.Shaji
 """
 
-import numpy as np
-import pandas as pd
-import pyqtgraph as pg
-import shapefile as shp
+import numpy          as     np
+import pandas         as     pd
+import pyqtgraph      as     pg
+import shapefile      as     shp
 from shapely.geometry import LineString
 from modules.loaddata import loadshp
 from modules.riverbed import riv_bed,cal_bank
-from PyQt5.QtWidgets import QTableWidgetItem,QFileDialog,QColorDialog
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QColor
+from PyQt5.QtWidgets  import QTableWidgetItem,QFileDialog,QColorDialog
+from PyQt5.QtCore     import Qt
+from PyQt5.QtGui      import QColor
 
 # =============================================================================
 # Initiate plotting, Plot all 4 Graphic windows and then update the data using
 # update functions
 # =============================================================================
 
-'''Plot the Main Cross-section View here'''
-def qplot1(self):
-
-    Node = self.Node
-    View = self.graphicsView
-    View.clear()
-    riv_bed_y,riv_bed_idx,riv_bed_x = riv_bed(Node)
-    self.plot_bottom                     = riv_bed_y-2
+'''Plot the Cross-section Views here'''
+def qplots(self,plist=[0,1]):
+    for n in plist:
+        Node = self.qplotD['node'][n]
+        View = self.qplotD['view'][n]
+        View.clear()
+        
+        riv_bed_y,riv_bed_idx,riv_bed_x = riv_bed(Node)
+        self.qplotD['plotbot'][n]       = riv_bed_y-2
+        
+        View.addLegend()
+        
+        self.qplotD['axis'][n] = View.plot(Node['X'],Node['Y'],pen='k',symbol='d',
+                                           symbolSize=7,symbolPen='r',symbolBrush='r',
+                                           fillLevel=self.qplotD['plotbot'][n],brush=(195,176,145),
+                                           name="Querschnitt")
+        
+        self.qplotD['axis'][n].setZValue(1000)
+        self.qplotD['axis'][n].getViewBox().setAspectLocked(lock=True, ratio=self.ratio)
+        View.getAxis('left').setLabel('Höhe')
     
-    View.addLegend()
-    
-    self.ax1 = View.plot(Node['X'],Node['Y'],pen='k',symbol='d',
-                                   symbolSize=7,symbolPen='r',symbolBrush='r',
-                                   fillLevel=self.plot_bottom,brush=(195,176,145),
-                                   name="Querschnitt")
-    
-    self.ax1.setZValue(1000)
-    self.axViewBox1 = self.ax1.getViewBox()
-    self.axViewBox1.setAspectLocked(lock=True, ratio=self.ratio)
-    View.getAxis('left').setLabel('Höhe')
-
-    #plot lamellen
-    if -1*Node.name in self.df_pro.index:
-        View.showAxis('right')
-        View.scene().addItem(self.p2)
-        self.p2.setGeometry(View.getViewBox().sceneBoundingRect())
-        self.p2.linkedViewChanged(View.getViewBox(), self.p2.XAxis)
-        View.getAxis('right').linkToView(self.p2)
-        self.p2.setXLink(View)
-        View.getAxis('right').setLabel('kst', color='#0000ff')
-        self.p2.setYRange(-100,100)
-        self.rau_ax1 = View.plot(self.Node_R['X'],self.Node_R['Y'],pen='k',
-                                   symbolSize=3,symbolPen=0.5,symbolBrush=0.5,
-                                   fillLevel=self.Node_R['Y'].min(),brush=0.5,name='k-strickler')
-        self.rau_ax1.setZValue(10001)
-        self.p2.addItem(self.rau_ax1)
-    else:
-        try:
-            self.rau_ax1.scene().removeItem(self.rau_ax1)
-        except:
-            pass
-        View.showAxis('right',show=False)
-    
-    '''Annotate Info'''
-    Text = textgen(Node,self)
-    self.annotate1 = pg.TextItem(Text,anchor=(1,0.5),color='k',border='k',fill='w')
-    View.addItem(self.annotate1)
-    self.annotate1.setPos(Node.X.max(),Node.Y.max()+4)
-    
-    '''River Bed'''
-    self.riverbed1 = View.plot([riv_bed_x,riv_bed_x],[riv_bed_y,self.plot_bottom],
-                                           pen=pg.mkPen(width=1,color='b'))
-    self.sohle1 = pg.TextItem(text='Tiefpunkt',anchor=(0.5,0.5),color='b',border='k',fill='w')
-    View.addItem(self.sohle1)
-    self.sohle1.setPos(riv_bed_x,self.plot_bottom)
-    self.sohle1.setZValue(4000) 
-    self.riverbed1.setZValue(3000)
-    plan_name(self)
-    LOB_x,LOB_y,ROB_x,ROB_y,idx_l,idx_r = cal_bank(Node,return_idx=True)
-    bankXY = LOB_x,LOB_y,ROB_x,ROB_y
-    plot_bank(self,bankXY,self.plot_bottom,Node['Mode'],Node,View)
-
-    '''Pointer'''
-    self.quer_label =pg.TextItem(color='k')
-    self.graphicsView.addItem(self.quer_label)
-    self.quer_label.setPos(Node.X[0],Node.Y[0])
-    self.quer_label.setZValue(10000)
-    
-'''Plot the Secondary Cross-section View here'''
-def qplot2(self):
-    Node = self.Node2
-    View = self.graphicsView2
-    View.clear()
-    riv_bed_y,riv_bed_idx,riv_bed_x = riv_bed(Node)
-    plot_bottom                     = riv_bed_y-2
-
-    View.addLegend()
-
-    self.ax2 = View.plot(Node['X'],Node['Y'],pen='k',symbol='d',
-                                   symbolSize=7,symbolPen='r',symbolBrush='r',
-                                   fillLevel=plot_bottom,brush=(195,176,145),
-                                   name="Querschnitt")
-    self.ax2.setZValue(1000)
-    self.axViewBox2 = self.ax2.getViewBox()
-    self.axViewBox2.setAspectLocked(lock=True, ratio=self.ratio)
-    View.getAxis('left').setLabel('Höhe')
-
-    '''Annotate Info'''
-    Text = textgen(Node,self)
-    self.annotate2 = pg.TextItem(Text,anchor=(1,0.5),color='k',border='k',fill='w')
-    View.addItem(self.annotate2)
-    self.annotate2 .setPos(Node.X.max(),Node.Y.max()+4)
-    
-    '''River Bed'''
-    self.riverbed2 = View.plot([riv_bed_x,riv_bed_x],[riv_bed_y,plot_bottom],
-                                           pen=pg.mkPen(width=1,color='b'))
-    self.sohle2 = pg.TextItem(text='Tiefpunkt',anchor=(0.5,0.5),color='b',border='k',fill='w')
-    View.addItem(self.sohle2)
-    self.sohle2.setPos(riv_bed_x,plot_bottom)
-    self.sohle2.setZValue(4000) 
-    self.riverbed2.setZValue(3000)
-    plan_name(self)
-    LOB_x,LOB_y,ROB_x,ROB_y,idx_l,idx_r = cal_bank(Node,return_idx=True)
-    bankXY = LOB_x,LOB_y,ROB_x,ROB_y
-    plot_bank(self,bankXY,plot_bottom,Node['Mode'],Node,View)
-
-    '''Pointer'''
-    self.quer2_label =pg.TextItem(color='k')
-    self.graphicsView2.addItem(self.quer2_label)
-    self.quer2_label.setPos(Node.X[0],Node.Y[0])
-    self.quer2_label.setZValue(10000)
-    self.graphicsView.getViewBox().autoRange(items=[self.ax1,self.annotate1])
-    
-'''Plot banks for the Cross-sections'''
-def plot_bank(self,bankXY,plot_bottom,Mod,Node,View,ModeEdit = False):
-
-    riv_bed_y,riv_bed_idx,riv_bed_x = riv_bed(Node)
-    LOB_x,LOB_y,ROB_x,ROB_y = bankXY
-    top_y = max(LOB_y,ROB_y) +2
-    if (riv_bed_x <= LOB_x) or (riv_bed_x >= LOB_y):
-        riv_bed_x = (LOB_x+ROB_x)/2.
-    
-    if not ModeEdit:
-        if View == self.graphicsView2:
-            self.bank_l2 = View.plot([LOB_x,LOB_x],[LOB_y,top_y],pen=pg.mkPen(width=2,color='k'))
-            self.bank_r2 = View.plot([ROB_x,ROB_x],[ROB_y,top_y],pen=pg.mkPen(width=2,color='k')) 
-            self.bank_t2 = View.plot([LOB_x,ROB_x],[top_y,top_y])
-            
-            self.a_l2 = pg.ArrowItem(angle=0,pen=None,brush='k')
-            self.a_l2.setPos(LOB_x,top_y)
-            View.addItem(self.a_l2)
-            self.a_r2 = pg.ArrowItem(angle=-180,pen=None,brush='k')
-            self.a_r2.setPos(ROB_x,top_y)
-            View.addItem(self.a_r2)
-            self.mode_item2 = pg.TextItem(text = Mod,anchor=(0.5,0.5),border='k',fill='k',color='w')
-            View.addItem(self.mode_item2)
-            self.mode_item2.setPos(riv_bed_x,top_y)
+        #plot lamellen
+        if not self.qplotD['rnode'][n] is None:
+            View.showAxis('right')
+            View.scene().addItem(self.qplotD['rvbox'][n])
+            self.qplotD['rvbox'][n].setGeometry(View.getViewBox().sceneBoundingRect())
+            self.qplotD['rvbox'][n].linkedViewChanged(View.getViewBox(), self.qplotD['rvbox'][n].XAxis)
+            View.getAxis('right').linkToView(self.qplotD['rvbox'][n])
+            self.qplotD['rvbox'][n].setXLink(View)
+            View.getAxis('right').setLabel('kst', color='#0000ff')
+            self.qplotD['rvbox'][n].setYRange(-100,100)
+            self.qplotD['raxis'][n] = View.plot(self.qplotD['rnode'][n].X,self.qplotD['rnode'][n].Y,pen='k',
+                                               symbolSize=3,symbolPen=0.5,symbolBrush=0.5,
+                                               fillLevel=self.qplotD['rnode'][n].Y.min(),brush=0.5,name='k-strickler')
+            self.qplotD['raxis'][n].setZValue(10001)
+            self.qplotD['rvbox'][n].addItem(self.qplotD['raxis'][n])
         else:
-            self.bank_l1 = View.plot([LOB_x,LOB_x],[LOB_y,top_y],pen=pg.mkPen(width=2,color='k'))
-            self.bank_r1 = View.plot([ROB_x,ROB_x],[ROB_y,top_y],pen=pg.mkPen(width=2,color='k')) 
-            self.bank_t1 = View.plot([LOB_x,ROB_x],[top_y,top_y])
+            try:
+                self.qplotD['raxis'][n].scene().removeItem(self.qplotD['raxis'][n])
+                self.qplotD['raxis'][n] = None
+            except:
+                pass
+            View.showAxis('right',show=False)
+        
+        '''Annotate Info'''
+        Text = textgen(Node,self)
+        self.qplotD['annotate'][n] = pg.TextItem(Text,anchor=(1,0.5),color='k',border='k',fill='w')
+        View.addItem(self.qplotD['annotate'][n])
+        self.qplotD['annotate'][n].setPos(Node.X.max(),Node.Y.max()+4)
+        
+        '''River Bed'''
+        self.qplotD['riverbed'][n] = View.plot([riv_bed_x,riv_bed_x],[riv_bed_y,self.qplotD['plotbot'][n]],
+                                               pen=pg.mkPen(width=1,color='b'))
+        self.qplotD['riverbed'][n].setZValue(3000)
+        self.qplotD['sohle'][n]    = pg.TextItem(text='Tiefpunkt',anchor=(0.5,0.5),color='b',border='k',fill='w')
+        View.addItem(self.qplotD['sohle'][n])
+        self.qplotD['sohle'][n].setPos(riv_bed_x,self.qplotD['plotbot'][n])
+        self.qplotD['sohle'][n].setZValue(4000)
+       
+        '''Title'''
+        plan_name(self)
+        
+        '''Plot Banks'''
+        LOB_x,LOB_y,ROB_x,ROB_y,idx_l,idx_r = cal_bank(Node,return_idx=True)
+    
+        top_y = max(LOB_y,ROB_y) +2
+        if (riv_bed_x <= LOB_x) or (riv_bed_x >= ROB_x):
+            riv_bed_x = (LOB_x+ROB_x)/2.
             
-            self.a_l1 = pg.ArrowItem(angle=0,pen=None,brush='k')
-            self.a_l1.setPos(LOB_x,top_y)
-            View.addItem(self.a_l1)
-            self.a_r1 = pg.ArrowItem(angle=-180,pen=None,brush='k')
-            self.a_r1.setPos(ROB_x,top_y)
-            View.addItem(self.a_r1)
-            self.mode_item1 = pg.TextItem(text = Mod,anchor=(0.5,0.5),border='k',fill='k',color='w')
-            View.addItem(self.mode_item1)
-            self.mode_item1.setPos(riv_bed_x,top_y)
-            
-    else:
-        self.bank_l1.setData([LOB_x,LOB_x],[plot_bottom,top_y])
-        self.bank_r1.setData([ROB_x,ROB_x],[plot_bottom,top_y])
-        self.bank_t1.setData([LOB_x,ROB_x],[top_y,top_y])
-        self.mode_item1.setText(Mod)
-        self.mode_item1.setPos(riv_bed_x,top_y)
-        self.a_l1.setPos(LOB_x,top_y)
-        self.a_r1.setPos(ROB_x,top_y)
+        bank_l = View.plot([LOB_x,LOB_x],[LOB_y,top_y],pen=pg.mkPen(width=2,color='k'))
+        bank_r = View.plot([ROB_x,ROB_x],[ROB_y,top_y],pen=pg.mkPen(width=2,color='k')) 
+        bank_t = View.plot([LOB_x,ROB_x],[top_y,top_y])
+        
+        a_l = pg.ArrowItem(angle=0,pen=None,brush='k')
+        a_l.setPos(LOB_x,top_y)
+        View.addItem(a_l)
+        a_r = pg.ArrowItem(angle=-180,pen=None,brush='k')
+        a_r.setPos(ROB_x,top_y)
+        View.addItem(a_r)
+        mode_item = pg.TextItem(text = Node.Mode,anchor=(0.5,0.5),border='k',fill='k',color='w')
+        View.addItem(mode_item)
+        mode_item.setPos(riv_bed_x,top_y)
+        self.qplotD['rbank'][n] = [bank_l,bank_r,bank_t,a_l,a_r,mode_item]
+                
+        '''Pointer'''
+        self.qplotD['pointer'][n] =pg.TextItem(color='k')
+        View.addItem(self.qplotD['pointer'][n])
+        self.qplotD['pointer'][n].setPos(Node.X[0],Node.Y[0])
+        self.qplotD['pointer'][n].setZValue(10000)
 
 '''Generate annotations'''
 def textgen(Node,self):
@@ -260,6 +189,7 @@ def langPlot(self):
     self.langView.getViewBox().setYRange(y.min(),self.df_wsp.max().max())
     gewMarker(self)
 
+'''Plot the Aerial View here'''
 def nodePlot(self):
     self.nodeView.clear()
     #achse plot
@@ -401,7 +331,14 @@ def update_wsp(self):
     
 '''Plot WSP for the Cross-Sections'''
 def plot_wsp(self):
-    self.wsp_bank1,self.wsp_bank2 = [],[]
+    for n,View in enumerate([self.graphicsView,self.graphicsView2]):
+        try:
+            [View.plotItem.legend.removeItem(self.qplotD['wbank'][n][i]) for i in range(0,len(self.qplotD['wbank'][n]),2)]
+            [View.removeItem(i) for i in self.qplotD['wbank'][n]]
+        except:
+            pass
+        
+    wsp_bank1,wsp_bank2 = [],[]
     wsp_zval1,wsp_zval2 = [],[]
     for r in range(self.p_wspdat.rowCount()):
         c = self.p_wspdat.item(r,3).background().color()
@@ -439,20 +376,23 @@ def plot_wsp(self):
                 label.setPos(riv_bed_x,wsp)
                 
                 if Node.name == self.Node.name:
-                    self.wsp_bank1.append(wsp0)
-                    self.wsp_bank1.append(label)
+                    wsp_bank1.append(wsp0)
+                    wsp_bank1.append(label)
                     wsp_zval1.append(wsp)
                 else:
-                    self.wsp_bank2.append(wsp0)
-                    self.wsp_bank2.append(label)
+                    wsp_bank2.append(wsp0)
+                    wsp_bank2.append(label)
                     wsp_zval2.append(wsp)
-            indexing1 = list(reversed([sorted(wsp_zval1).index(i) for i in wsp_zval1]))
-            indexing2 = list(reversed([sorted(wsp_zval2).index(i) for i in wsp_zval2]))
-            for p in range(0,len(self.wsp_bank1),2):
-                self.wsp_bank1[p].setZValue(500+indexing1[int(p-p/2)])
-                self.wsp_bank1[p+1].setZValue(5000+indexing1[int(p-p/2)]+1)
-                self.wsp_bank2[p].setZValue(500+indexing2[int(p-p/2)])
-                self.wsp_bank2[p+1].setZValue(5000+indexing2[int(p-p/2)]+1)
+                    
+    indexing1 = list(reversed([sorted(wsp_zval1).index(i) for i in wsp_zval1]))
+    indexing2 = list(reversed([sorted(wsp_zval2).index(i) for i in wsp_zval2]))
+    for p in range(0,len(wsp_bank1),2):
+        wsp_bank1[p].setZValue(500+indexing1[int(p-p/2)])
+        wsp_bank1[p+1].setZValue(5000+indexing1[int(p-p/2)]+1)
+        wsp_bank2[p].setZValue(500+indexing2[int(p-p/2)])
+        wsp_bank2[p+1].setZValue(5000+indexing2[int(p-p/2)]+1)
+    self.qplotD['wbank'] = [wsp_bank1,wsp_bank2]
+                
                 
 def colorpicker(self):
     if self.p_wspdat.currentColumn() == 3:
@@ -469,168 +409,113 @@ def plotROI(self):
     self.editable_schnitt.setZValue(50001)
         
 '''Update the Main Cross-section View here'''
-def uqplot1(self,ROI=False):
-    Node = self.Node
-    View = self.graphicsView
-    
-    if ROI:
-        Node = self.df_copy.loc[Node.name]
-
-    riv_bed_y,riv_bed_idx,riv_bed_x = riv_bed(Node)
-    plot_bottom                     = riv_bed_y-2
-    
-    self.ax1.setData(Node['X'],Node['Y'],fillLevel=plot_bottom,name="Querschnitt")
-    
-    #plot lamellen
-    if -1*Node.name in self.df_pro.index:
-        try:
-            self.rau_ax1.clear()
-        except:pass
-        View.showAxis('right')
-        View.scene().addItem(self.p2)
-        self.p2.setGeometry(View.getViewBox().sceneBoundingRect())
-        self.p2.linkedViewChanged(View.getViewBox(), self.p2.XAxis)
-        View.getAxis('right').linkToView(self.p2)
-        self.p2.setXLink(View)
-        View.getAxis('right').setLabel('kst', color='#0000ff')
-        self.p2.setYRange(-100,100)
-        self.rau_ax1 = View.plot(self.Node_R['X'],self.Node_R['Y'],pen='k',
-                                   symbolSize=3,symbolPen=0.5,symbolBrush=0.5,
-                                   fillLevel=self.Node_R['Y'].min(),brush=0.5,
-                                   name='k-strickler')
-        self.rau_ax1.setZValue(10001)
-        self.p2.addItem(self.rau_ax1)
-        strickler=True
-    else:
-        strickler=False
-        try:
-            self.rau_ax1.clear()
-        except:pass
-        View.showAxis('right',show=False)
-    
-    if ROI:
-        self.editable_schnitt.setPoints(np.vstack((Node.X,Node.Y)).T)
+def uqplots(self,plist=[0,1],ROI=False):
+    for n in plist:
+        Node  = self.qplotD['node'][n]
+        rNode = self.qplotD['rnode'][n]
+#        sNode = self.qplotD['snode'][n]
+        View  = self.qplotD['view'][n]
         
-    '''update text annotations Info'''
-    Text = textgen(Node,self)
-    self.annotate1.setText(Text)
-    self.annotate1.setPos(Node.X.max(),Node.Y.max()+4)
+#        if ROI:
+#            Node = self.df_copy.loc[Node.name]
     
-    '''update river Bed annotations'''
-    self.riverbed1.setData([riv_bed_x,riv_bed_x],[riv_bed_y,plot_bottom])
-    self.sohle1.setPos(riv_bed_x,plot_bottom)
-    plan_name(self)
+        riv_bed_y,riv_bed_idx,riv_bed_x = riv_bed(Node)
+        self.qplotD['plotbot'][n]       = riv_bed_y-2
+        
+        self.qplotD['axis'][n].setData(Node['X'],Node['Y'],fillLevel=self.qplotD['plotbot'][n])
+        
+        #plot lamellen
+        if not rNode is None:
+            if not self.qplotD['raxis'][n] is None:
+                self.qplotD['raxis'][n].setData(rNode.X,rNode.Y)
+            else:
+                View.showAxis('right')
+                View.scene().addItem(self.qplotD['rvbox'][n])
+                self.qplotD['rvbox'][n].setGeometry(View.getViewBox().sceneBoundingRect())
+                self.qplotD['rvbox'][n].linkedViewChanged(View.getViewBox(), self.qplotD['rvbox'][n].XAxis)
+                View.getAxis('right').linkToView(self.qplotD['rvbox'][n])
+                self.qplotD['rvbox'][n].setXLink(View)
+                View.getAxis('right').setLabel('kst', color='#0000ff')
+                self.qplotD['rvbox'][n].setYRange(-100,100)
+                self.qplotD['raxis'][n] = View.plot(rNode.X,rNode.Y,pen='k',symbolSize=3,
+                                                     symbolPen=0.5,symbolBrush=0.5,
+                                                     fillLevel=rNode.Y.min(),brush=0.5,
+                                                     name='k-strickler')
+                self.qplotD['raxis'][n].setZValue(10001)
+                self.qplotD['rvbox'][n].addItem(self.qplotD['raxis'][n])
+        else:
+            if not self.qplotD['raxis'][n] is None:
+                self.qplotD['raxis'][n].clear()
+                View.plotItem.legend.removeItem(self.qplotD['raxis'][n])
+                self.qplotD['raxis'][n] = None
+            View.showAxis('right',show=False)
+        
+        if ROI:
+            self.editable_schnitt.setPoints(np.vstack((Node.X,Node.Y)).T)
+            
+        '''update text annotations Info'''
+        Text = textgen(Node,self)
+        self.qplotD['annotate'][n].setText(Text)
+        self.qplotD['annotate'][n].setPos(Node.X.max(),Node.Y.max()+4)
+        
+        '''update river Bed annotations'''
+        self.qplotD['riverbed'][n].setData([riv_bed_x,riv_bed_x],[riv_bed_y,self.qplotD['plotbot'][n]])
+        self.qplotD['sohle'][n].setPos(riv_bed_x,self.qplotD['plotbot'][n])
+        plan_name(self)
+    
+        #update banks here
+        LOB_x,LOB_y,ROB_x,ROB_y,idx_l,idx_r = cal_bank(Node,return_idx=True)
+        update_banks(self,n)
+                
+        #update wsp here
+        for r in range(0,len(self.qplotD['wbank'][n]),2):
+            '''Starting WSP'''
+            if idx_l == riv_bed_idx:
+                wsp_l = Node['X'][idx_l]
+            else:
+                wsp_l = Node['X'][idx_l:].min()
+            if idx_r == riv_bed_idx:
+                wsp_r = Node['X'][idx_r]
+            else:
+                try:
+                    wsp_r = Node['X'][:idx_r+1].max()
+                except:
+                    wsp_r = Node['X'].max()
+                
+            wsp = self.df_wsp.loc[Node.name][self.p_wspdat.item(r,1).text()]
+            leg = self.p_wspdat.item(r,1).text() + ',WSP= '+str(round(wsp,2))+' m+NN'
+            self.qplotD['wbank'][n][r].setData([wsp_l,wsp_r],[wsp,wsp],fillLevel=self.qplotD['plotbot'][n])
+            View.plotItem.legend.removeItem(self.qplotD['wbank'][n][r])
+            View.plotItem.legend.addItem(self.qplotD['wbank'][n][r],leg)
+            self.qplotD['wbank'][n][r+1].setPos(riv_bed_x,wsp)
+    
+        View.getViewBox().autoRange(items=[self.qplotD['axis'][n],self.qplotD['annotate'][n]])
 
-    #update banks here
-    LOB_x,LOB_y,ROB_x,ROB_y,idx_l,idx_r = cal_bank(Node,return_idx=True)
-
+'''Update banks for the Cross-sections'''
+def update_banks(self,n):
+    
+    Node = self.qplotD['node'][n]
+    riv_bed_y,riv_bed_idx,riv_bed_x = riv_bed(Node)
+    LOB_x,LOB_y,ROB_x,ROB_y = cal_bank(Node)
     top_y = max(LOB_y,ROB_y) +2
     if (riv_bed_x <= LOB_x) or (riv_bed_x >= ROB_x):
         riv_bed_x = (LOB_x+ROB_x)/2.
         
-    Mod = Node['Mode']
-    self.bank_l1.setData([LOB_x,LOB_x],[plot_bottom,top_y])
-    self.bank_r1.setData([ROB_x,ROB_x],[plot_bottom,top_y])
-    self.bank_t1.setData([LOB_x,ROB_x],[top_y,top_y])
-    self.mode_item1.setText(Mod)
-    self.mode_item1.setPos(riv_bed_x,top_y)
-    self.a_l1.setPos(LOB_x,top_y)
-    self.a_r1.setPos(ROB_x,top_y)
-            
-    #update wsp here
-    for r in range(0,len(self.wsp_bank1),2):
-        '''Starting WSP'''
-        if idx_l == riv_bed_idx:
-            wsp_l = Node['X'][idx_l]
-        else:
-            wsp_l = Node['X'][idx_l:].min()
-        if idx_r == riv_bed_idx:
-            wsp_r = Node['X'][idx_r]
-        else:
-            try:
-                wsp_r = Node['X'][:idx_r+1].max()
-            except:
-                wsp_r = Node['X'].max()
-            
-        wsp = self.df_wsp.loc[Node.name][self.p_wspdat.item(r,1).text()]
-        leg = self.p_wspdat.item(r,1).text() + ',WSP= '+str(round(wsp,2))+' m+NN'
-        self.wsp_bank1[r].setData([wsp_l,wsp_r],[wsp,wsp],fillLevel=plot_bottom,name=leg)
-        self.wsp_bank1[r+1].setPos(riv_bed_x,wsp)
-
-    View.getViewBox().autoRange(items=[self.ax1,self.annotate1])
+    self.qplotD['rbank'][n][0].setData([LOB_x,LOB_x],[self.qplotD['plotbot'][n],top_y])
+    self.qplotD['rbank'][n][1].setData([ROB_x,ROB_x],[self.qplotD['plotbot'][n],top_y])
+    self.qplotD['rbank'][n][2].setData([LOB_x,ROB_x],[top_y,top_y])
+    self.qplotD['rbank'][n][3].setPos(LOB_x,top_y)
+    self.qplotD['rbank'][n][4].setPos(ROB_x,top_y)
+    self.qplotD['rbank'][n][5].setText(self.Node.Mode)
+    self.qplotD['rbank'][n][5].setPos(riv_bed_x,top_y)
     
 '''View updater for Lamellen View'''
 def updateViews(self):
     try:
-        self.p2.setGeometry(self.graphicsView.getViewBox().sceneBoundingRect())
-        self.p2.linkedViewChanged(self.graphicsView.getViewBox(),self.p2.XAxis)
+        for n,v in [(0,self.graphicsView),(1,self.graphicsView2)]:
+            self.qplotD['rvbox'][n].setGeometry(v.getViewBox().sceneBoundingRect())
+            self.qplotD['rvbox'][n].linkedViewChanged(v.getViewBox(),self.qplotD['rvbox'][n].XAxis)
     except: pass
-
-'''Update the Secondary Cross-section View here'''
-def uqplot2(self):
-    
-    Node = self.Node2
-    View = self.graphicsView2
-
-    riv_bed_y,riv_bed_idx,riv_bed_x = riv_bed(Node)
-    plot_bottom                     = riv_bed_y-2
-    
-    
-    self.q2_leg.items=[]
-    try:
-        while self.q2_leg.layout.count() >0:
-            self.q2_leg.removeAt(0)
-    except:pass
-        
-    self.ax2.setData(Node['X'],Node['Y'],fillLevel=plot_bottom)
-    self.q2_leg.addItem(self.ax2,"Querschnitt")
-    
-    '''update text annotations Info'''
-    Text = textgen(Node,self)
-    self.annotate2.setText(Text)
-    self.annotate2.setPos(Node.X.max(),Node.Y.max()+4)
-    
-    '''update river Bed annotations'''
-    self.riverbed2.setData([riv_bed_x,riv_bed_x],[riv_bed_y,plot_bottom])
-    self.sohle2.setPos(riv_bed_x,plot_bottom)
-    plan_name(self)
-
-    #update banks here
-    LOB_x,LOB_y,ROB_x,ROB_y,idx_l,idx_r = cal_bank(Node,return_idx=True)
-    top_y = max(LOB_y,ROB_y) +2
-    if (riv_bed_x <= LOB_x) or (riv_bed_x >= ROB_x):
-        riv_bed_x = (LOB_x+ROB_x)/2.
-    Mod = Node['Mode']
-    self.bank_l2.setData([LOB_x,LOB_x],[plot_bottom,top_y])
-    self.bank_r2.setData([ROB_x,ROB_x],[plot_bottom,top_y])
-    self.bank_t2.setData([LOB_x,ROB_x],[top_y,top_y])
-    self.mode_item2.setText(Mod)
-    self.mode_item2.setPos(riv_bed_x,top_y)
-    self.a_l2.setPos(LOB_x,top_y)
-    self.a_r2.setPos(ROB_x,top_y)
-
-    #update wsp here
-    for r in range(0,len(self.wsp_bank2),2):
-        '''Starting WSP'''
-        if idx_l == riv_bed_idx:
-            wsp_l = Node['X'][idx_l]
-        else:
-            wsp_l = Node['X'][idx_l:].min()
-        if idx_r == riv_bed_idx:
-            wsp_r = Node['X'][idx_r]
-        else:
-            try:
-                wsp_r = Node['X'][:idx_r+1].max()
-            except:
-                wsp_r = Node['X'].max()
-            
-        wsp = self.df_wsp.loc[Node.name][self.p_wspdat.item(r,1).text()]
-        leg = self.p_wspdat.item(r,1).text() + ',WSP= '+str(round(wsp,2))+' m+NN'
-        self.q2_leg.addItem(wsp,leg)
-        self.wsp_bank2[r].setData([wsp_l,wsp_r],[wsp,wsp],fillLevel=plot_bottom)
-        self.wsp_bank2[r+1].setPos(riv_bed_x,wsp)
-
-    View.getViewBox().autoRange(items=[self.ax2,self.annotate2])
 
 def ulangPlot(self):
     i=int(self.lang_ID.currentText())
@@ -656,56 +541,28 @@ def ulangPlot(self):
 
 '''Mark the selected Coordinates from Coordinates table into the Main Cross-section View'''
 def xyMarker(self):
-    
-    self.row_c = self.coords_table.selectedIndexes()
-    self.row_c_idx = [i.row() for i in self.row_c]
-    
+
+    self.row_c_idx = sorted(set([i.row() for i in self.coords_table.selectedIndexes()]))
+
     if self.Edit:
+        self.delete_rows.setEnabled(True)
         color = 'y'
     else:
         color = 'b'
-        
+
+    Node = self.qplotD['node'][0]
+    xs,ys = Node['X'][self.row_c_idx],Node['Y'][self.row_c_idx]
+    
     if self._rquer.isChecked():
-        Node = self.Node
-        xs,ys = Node['X'][self.row_c_idx],Node['Y'][self.row_c_idx]
-        try:
-            self.selection.clear()
-            self.selection.setData(xs,ys)
-        except:
+        if hasattr(self,'selection'):
+            self.selection.setData(xs,ys,symbolPen=color,symbolBrush=color)
+        else:
             self.selection = self.graphicsView.plot(xs,ys,pen=None,symbol='o',
                                                     symbolSize=10,symbolPen=color,symbolBrush=color)
             self.selection.setZValue(2000)
 
-    elif self._rrau.isChecked():
-        Node = self.Node_R
-        xs,ys = Node['X'][self.row_c_idx],Node['Y'][self.row_c_idx]
-        try:
-            self.selectionR.clear()
-            self.selectionR.setData(xs,ys)
-        except:
-            self.selectionR = self.graphicsView.plot(xs,ys,pen=None,symbol='o',
-                                                    symbolSize=10,symbolPen=color,symbolBrush=color)
-            self.selectionR.setZValue(2000)
-            self.p2.addItem(self.selectionR)
-        
-    elif self._rschalter.isChecked():
-        Node = self.Node_S
-        xs,ys = Node['X'][self.row_c_idx],Node['Y'][self.row_c_idx]
-        try:
-            self.selectionS.clear()
-            self.selectionS.setData(xs,ys)
-        except:
-            self.selectionS = self.graphicsView.plot(xs,ys,pen=None,symbol='o',
-                                                    symbolSize=10,symbolPen=color,symbolBrush=color)
-            self.selectionS.setZValue(2000)
-            self.p3.addItem(self.selectionS)
-
 def xyUnmark(self,event):
     try: self.selection.clear()
-    except: pass
-    try: self.selectionR.clear()
-    except: pass
-    try: self.selectionS.clear()
     except: pass
 
 def nodeMarker(self):
@@ -757,8 +614,8 @@ def gewUnmark(self,event):
 
 def changeAR(self):
     self.ratio = 1.0/self.AspectRatio.value()
-    self.axViewBox1.setAspectLocked(lock=True, ratio=self.ratio)
-    self.axViewBox2.setAspectLocked(lock=True, ratio=self.ratio)
+    self.ax1.getViewBox().setAspectLocked(lock=True, ratio=self.ratio)
+    self.ax2.getViewBox().setAspectLocked(lock=True, ratio=self.ratio)
 
 def plan_name(self):
     if self.p_plan.text() != '':
@@ -803,7 +660,7 @@ def undo_but(self):
     self.changes -=1
     self.df_copy.update(self.df_db[self.changes])
     
-    uqplot1(self,ROI=True)
+    uqplots(self,plist = [0],ROI=True)
     
     if self.changes == 0:
         self.undo.setEnabled(False)
@@ -815,14 +672,34 @@ def redo_but(self):
     self.changes +=1
     self.df_copy.update(self.df_db[self.changes])
     
-    uqplot1(self,ROI=True)
+    uqplots(self,plist = [0],ROI=True)
     
     if self.changes == len(self.df_db)-1:
         self.redo.setEnabled(False)
     if self.changes > 0:
         self.undo.setEnabled(True)
     self.editable_schnitt.blockSignals(False)
-            
+
+def del_but(self):
+    self.editable_schnitt.blockSignals(True)
+    self.coords_table.blockSignals(True)
+    self.changes +=1
+    
+    [self.coords_table.removeRow(i) for i in reversed(sorted(set([r.row() for r in self.coords_table.selectedItems()])))]
+    update_data(self,src='table')
+
+    self.df_copy.update(self.df_db[self.changes])
+    
+    uqplots(self,plist = [0],ROI=True)
+    
+    if self.changes == len(self.df_db)-1:
+        self.redo.setEnabled(False)
+    if self.changes > 0:
+        self.undo.setEnabled(True)
+    self.delete_rows.setEnabled(False)
+    self.coords_table.blockSignals(False)
+    self.editable_schnitt.blockSignals(False)
+    
 def update_schnitt(self):
     self.coords_table.blockSignals(True)
     _pts = self.editable_schnitt.getState()['points']
@@ -834,7 +711,7 @@ def update_schnitt(self):
     for _i in range(len(_pts)):
         self.coords_table.setItem(_i,0,QTableWidgetItem(str(self.Node.X[_i])))
         self.coords_table.setItem(_i,1,QTableWidgetItem(str(self.Node.Y[_i])))
-    uqplot1(self)
+    uqplots(self,plist = [0])
     self.coords_table.blockSignals(False)
     
 def plot_update_coords(self):
@@ -844,6 +721,114 @@ def plot_update_coords(self):
         self.redo.setEnabled(False)
     self.changes +=1
     update_data(self,src='table')
-    uqplot1(self)
+    uqplots(self,plist = [0])
     self.undo.setEnabled(True)
     self.coords_table.blockSignals(False)
+    
+# =============================================================================
+# Mouse Movements on plots
+# =============================================================================
+    
+def pointer_lang(self,evt):
+    try:
+        mousePoint = self.langView.getViewBox().mapSceneToView(evt)
+        xi = mousePoint.x()
+        #yi = mousePoint.y()
+        gid = self.gewid_current
+        gdx = (self.df_start['ID'] == gid)
+        val = min(self.df_start['XL'][gdx], key=lambda x: abs(x - xi))
+        idx = self.df_start[gdx][self.df_start['XL'][gdx]==val].index[0]
+        
+        sohle = self.df_start.loc[idx]['ZO']
+        try:
+            t = "{:>} {:>}\n".format('Schnitt:',self.df_pro.loc[idx]['PName'])
+        except:
+            t = '-\n'
+        text  = t+"{:>} {:>0.2f}\n{:>} {:>}\n{:>} {:>0.2f}".format('Station:',val,'Knoten:',idx,'Sohle:  ',sohle)
+        
+        for i in self.df_wsp.columns:
+            t = "\n{:>} {:>0.2f}".format(i+':',self.df_wsp.loc[idx][i])
+            text = text+t
+
+        self.langView.addItem(self.lang_label)
+        self.langView.addItem(self.vLine_lang, ignoreBounds=False)
+        self.langView.addItem(self.hLine_lang, ignoreBounds=False)
+        self.lang_label.setTextWidth(150)
+        self.lang_label.setZValue(10000)
+        self.vLine_lang.setZValue(9999)
+        self.hLine_lang.setZValue(9999)
+        self.lang_label.setText(text)
+        self.lang_label.setPos(val,sohle)
+        self.vLine_lang.setPos(val)
+        self.hLine_lang.setPos(sohle)
+    except:
+        pass
+
+def pointer_node(self,evt):
+    try:
+        mousePoint = self.nodeView.getViewBox().mapSceneToView(evt)
+        xi = mousePoint.x()
+        yi = mousePoint.y()
+        
+        pt    = np.array([xi,yi])
+        nodes = np.array(list(zip(self.df_start['X'].values,self.df_start['Y'].values)))
+        dist  = np.linalg.norm(nodes - pt, ord=2, axis=1)
+        
+        nearest = sorted(list(zip(dist,self.df_start.index)))[0]
+        try:
+            sname = self.df_pro.loc[nearest[1]]['PName']
+        except:
+            sname = '--'
+        
+        if nearest[0] < 500:
+            self.node_label.setText('Node: '+ str(nearest[1])+'\nStation: '+str(self.df_start.loc[nearest[1]]['XL'])+
+                                     '\nSchnitt: '+sname)
+            self.node_label.setPos(self.df_start.loc[nearest[1]]['X'],self.df_start.loc[nearest[1]]['Y'])
+            
+        self.vLine_node.setPos(self.df_start.loc[nearest[1]]['X'])
+        self.hLine_node.setPos(self.df_start.loc[nearest[1]]['Y'])
+    except:
+        pass
+
+def pointer_q1(self,evt):
+    try:
+        mousePoint = self.graphicsView.getViewBox().mapSceneToView(evt)
+        xi = mousePoint.x()
+        yi = mousePoint.y()
+        
+        pt    = np.array([xi,yi])
+        nx    = np.array([float(self.coords_table.item(_x,0).text()) for _x in range(self.coords_table.rowCount())])
+        ny    = np.array([float(self.coords_table.item(_y,1).text()) for _y in range(self.coords_table.rowCount())])
+        nodes = np.array(list(zip(nx,ny)))
+        dist  = np.linalg.norm(nodes - pt, ord=2, axis=1)
+        nearest = sorted(list(zip(dist,range(len(dist)))))[0]
+        
+        if nearest[0] < 0.5:
+            self.qplotD['pointer'][0].setText("({:0.2f},{:0.2f})".format(nx[nearest[1]],ny[nearest[1]]))
+            self.qplotD['pointer'][0].setPos(nx[nearest[1]],ny[nearest[1]])
+        else:
+            self.qplotD['pointer'][0].setText('')
+
+    except:
+        pass
+    
+def pointer_q2(self,evt):
+    try:
+        mousePoint = self.graphicsView2.getViewBox().mapSceneToView(evt)
+        xi = mousePoint.x()
+        yi = mousePoint.y()
+        
+        pt    = np.array([xi,yi])
+        nodes = np.array(list(zip(self.df_pro.loc[self.loc2]['X'],self.df_pro.loc[self.loc2]['Y'])))
+        dist  = np.linalg.norm(nodes - pt, ord=2, axis=1)
+        nearest = sorted(list(zip(dist,range(len(dist)))))[0]
+        
+        if nearest[0] < 0.5:
+            self.qplotD['pointer'][1].setText("({:0.2f},{:0.2f})".format(self.df_pro.loc[self.loc2]['X'][nearest[1]],
+                                             self.df_pro.loc[self.loc2]['Y'][nearest[1]]))
+            self.qplotD['pointer'][1].setPos(self.df_pro.loc[self.loc2]['X'][nearest[1]],
+                                             self.df_pro.loc[self.loc2]['Y'][nearest[1]])
+        else:
+            self.qplotD['pointer'][1].setText('')
+    except:
+        pass

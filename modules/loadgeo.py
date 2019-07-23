@@ -4,9 +4,104 @@ Created on Fri May 31 11:28:40 2019
 
 @author: s.Shaji
 """
+import numpy          as     np
+import pyqtgraph      as     pg
+from modules.riverbed import riv_bed
+from PyQt5.QtWidgets  import QTableWidgetItem,QAbstractItemView
+from PyQt5.QtGui      import QFont,QColor
 
-from PyQt5.QtWidgets import QTableWidgetItem
+# =============================================================================
+# load Querschnitt Display info
+# =============================================================================
+def load_qinfo(self,df,i):
+    
+    #enabling radio buttons
+    for n,loc in enumerate([self.loc,self.loc2]):
+        if -1*loc in df.index:
+            _iloc = np.argwhere(df.index==-1*loc)[0]
+            for il in _iloc:
+                if df.iloc[il].Mode == 'H2':
+                    self.qplotD['riloc'][n] = il
+                    self.qplotD['rvbox'][n] = pg.ViewBox()
+                    self.qplotD['rnode'][n] = df.iloc[il]
+                    self._rrau.setEnabled(True)
+            for il in _iloc:
+                if df.iloc[il].Mode == 'ZS':
+                    self.iloc_s = il
+                    self.qplotD['siloc'][n] = il
+                    self.qplotD['snode'][n] = df.iloc[il]
+                    self._rschalter.setEnabled(True)
+        else:
+            self._rquer.setChecked(True)
+            self._rrau.setEnabled(False)
+            self._rschalter.setEnabled(False)
+            for key_ in ['rvbox','rnode','riloc','snode','siloc']:
+                self.qplotD[key_][n] = None
+                    
+    #lcd
+    self.Punkte_label.display(self.Node['Npoints'])
 
+    try:
+        self.modus_label.setCurrentIndex(self.qschnp.index(self.Node['Mode']))
+    except:
+        self.modus_label.setCurrentIndex(self.qschnp.index(self.h1d.xsecmo))
+        self.Node['Mode'] = self.h1d.xsecmo
+    
+    if self.Node['CTAB'] == 1:
+        self.ctab_label.setCurrentIndex(1)
+    
+    elif self.Node['CTAB'] == 0:
+        self.ctab_label.setCurrentIndex(0)
+    
+    self.maxHeight_label.setText(str(self.Node['Max Height']))
+    self.station_label.setCurrentIndex(i)
+    self.schnittName_label.setCurrentIndex(i)
+
+    #set coords from .pro
+    self.coords_table.blockSignals(True)
+    
+    try:
+        self.coords_table.clear()
+    except: pass
+    
+    #radio buttons check
+    if self._rquer.isChecked():
+        self.coords_table.setRowCount(self.Node['Npoints'])
+        self.coords_table.setHorizontalHeaderLabels(("X","Y"))
+        for table_i in range(self.Node['Npoints']):
+            self.coords_table.setItem(table_i,0,QTableWidgetItem(str(self.Node['X'][table_i])))
+            self.coords_table.setItem(table_i,1,QTableWidgetItem(str(self.Node['Y'][table_i])))
+        #rivbed color
+        '''River Bed'''
+        riv_bed_y,riv_bed_idx,riv_bed_x = riv_bed(self.Node)
+        
+        rfont = QFont()
+        rfont.setBold(True)
+        self.coords_table.item(riv_bed_idx,0).setForeground(QColor(255,99,71))
+        self.coords_table.item(riv_bed_idx,1).setForeground(QColor(255,99,71))
+        self.coords_table.item(riv_bed_idx,0).setFont(rfont)
+        self.coords_table.item(riv_bed_idx,1).setFont(rfont)
+        self.coords_table.scrollToItem(self.coords_table.item(riv_bed_idx,1),QAbstractItemView.PositionAtCenter)
+        self.coords_table.selectRow(riv_bed_idx)
+    
+    elif self._rrau.isChecked():
+        self.Node_R = self.qplotD['rnode'][0]
+        self.coords_table.setRowCount(self.Node_R['Npoints'])
+        self.coords_table.setHorizontalHeaderLabels(("X","Strickler"))
+        for table_i in range(self.Node_R['Npoints']):
+            self.coords_table.setItem(table_i,0,QTableWidgetItem(str(self.Node_R['X'][table_i])))
+            self.coords_table.setItem(table_i,1,QTableWidgetItem(str(self.Node_R['Y'][table_i])))
+
+    elif self._rschalter.isChecked():
+        self.Node_S = self.qplotD['snode'][0]
+        self.coords_table.setRowCount(self.Node_S['Npoints'])
+        self.coords_table.setHorizontalHeaderLabels(("X","Y"))
+        for table_i in range(self.Node_S['Npoints']):
+            self.coords_table.setItem(table_i,0,QTableWidgetItem(str(self.Node_S['X'][table_i])))
+            self.coords_table.setItem(table_i,1,QTableWidgetItem(str(self.Node_S['Y'][table_i])))
+    
+    self.coords_table.blockSignals(False)
+    
 # =============================================================================
 # load geometrie info
 # =============================================================================
