@@ -1,0 +1,1105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>q_dock</class>
+ <widget class="QDockWidget" name="q_dock">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1354</width>
+    <height>664</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Querschnitt</string>
+  </property>
+  <widget class="QWidget" name="dockWidgetContents">
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="0" column="0">
+     <widget class="QGroupBox" name="groupBox_5">
+      <property name="title">
+       <string/>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_21">
+       <item row="0" column="1" rowspan="3">
+        <widget class="QTabWidget" name="qp_widget">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>400</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Segoe UI</family>
+           <pointsize>9</pointsize>
+          </font>
+         </property>
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
+         <widget class="QWidget" name="pro_prop">
+          <attribute name="title">
+           <string>Profil Info</string>
+          </attribute>
+          <layout class="QGridLayout" name="gridLayout_9">
+           <item row="1" column="1" colspan="2">
+            <widget class="QLabel" name="label_88">
+             <property name="text">
+              <string>Station [m]</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1" colspan="2">
+            <widget class="QLabel" name="label_4">
+             <property name="font">
+              <font>
+               <family>Segoe UI</family>
+               <pointsize>9</pointsize>
+               <underline>false</underline>
+              </font>
+             </property>
+             <property name="text">
+              <string>Profilauswertung:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3" colspan="2">
+            <widget class="QLineEdit" name="edit_knoten">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="3">
+            <widget class="QLineEdit" name="pro_rw">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="3" colspan="2">
+            <widget class="QComboBox" name="modus_label">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Querprofil:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;V = wie eingegeben&lt;/p&gt;&lt;p&gt;R = Reduziert zwischen linkem und rechtem Hochpunkt &lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Breitflächiger Abfluss (bQ):&lt;/span&gt;&lt;/p&gt;&lt;p&gt;K = Kernquerschnitt, bQ erst wenn WSP&amp;gt;K&lt;/p&gt;&lt;p&gt;F = vollen Querschnitt, bQ von Anfang an&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;DF = Abfluss nur innerhalb des Bauwerks (Für die Ermittlung der Leistungsfähigkeit eines Bauwerks)&lt;/p&gt;&lt;p&gt;OF = (&lt;span style=&quot; font-weight:600;&quot;&gt;O&lt;/span&gt;verland&lt;span style=&quot; font-weight:600;&quot;&gt;F&lt;/span&gt;low) Bauwerk wird als komplett verklaust angenommen, Der gesamte Abfluss fließt über das Gelände ab&lt;/p&gt;&lt;p&gt;H2 = Rauhigkeitsprofil mit negativer Knotennummer&lt;/p&gt;&lt;p&gt;ZS = Schaltprofil&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <item>
+              <property name="text">
+               <string>VK</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>RK</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>VF</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>RF</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>DF</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>OF</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>H2</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>RS</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>ZS</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="4" column="1" colspan="2">
+            <widget class="QLabel" name="label_5">
+             <property name="font">
+              <font>
+               <family>Segoe UI</family>
+               <pointsize>9</pointsize>
+               <underline>false</underline>
+              </font>
+             </property>
+             <property name="text">
+              <string>Querschnittsparameter:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QLabel" name="ddddd">
+             <property name="text">
+              <string>X:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="1" colspan="4">
+            <widget class="QGroupBox" name="plot_editor_box">
+             <property name="title">
+              <string>Profil</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_7" columnstretch="1,0,0,0">
+              <item row="4" column="0" colspan="4">
+               <widget class="QTableWidget" name="coords_table">
+                <property name="minimumSize">
+                 <size>
+                  <width>140</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="toolTipDuration">
+                 <number>-8</number>
+                </property>
+                <property name="editTriggers">
+                 <set>QAbstractItemView::NoEditTriggers</set>
+                </property>
+                <property name="showDropIndicator" stdset="0">
+                 <bool>false</bool>
+                </property>
+                <property name="dragDropOverwriteMode">
+                 <bool>false</bool>
+                </property>
+                <property name="alternatingRowColors">
+                 <bool>true</bool>
+                </property>
+                <property name="selectionMode">
+                 <enum>QAbstractItemView::ExtendedSelection</enum>
+                </property>
+                <property name="selectionBehavior">
+                 <enum>QAbstractItemView::SelectRows</enum>
+                </property>
+                <property name="columnCount">
+                 <number>2</number>
+                </property>
+                <column>
+                 <property name="text">
+                  <string>X</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Y</string>
+                 </property>
+                </column>
+               </widget>
+              </item>
+              <item row="1" column="0" colspan="3">
+               <widget class="QGroupBox" name="groupBox">
+                <property name="title">
+                 <string/>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_3">
+                 <item row="0" column="2">
+                  <widget class="QRadioButton" name="_rschalter">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="text">
+                    <string>Schalt</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QRadioButton" name="_rquer">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="text">
+                    <string>Quer</string>
+                   </property>
+                   <property name="checked">
+                    <bool>true</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QRadioButton" name="_rrau">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="text">
+                    <string>Rau</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item row="1" column="3">
+               <widget class="QGroupBox" name="groupBox_2">
+                <property name="title">
+                 <string/>
+                </property>
+                <property name="flat">
+                 <bool>false</bool>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_19">
+                 <item row="0" column="1">
+                  <widget class="QPushButton" name="redo">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="toolTip">
+                    <string>redo</string>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="icon">
+                    <iconset>
+                     <normaloff>../icons/redo3.ico</normaloff>../icons/redo3.ico</iconset>
+                   </property>
+                   <property name="shortcut">
+                    <string>Ctrl+Y</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QPushButton" name="undo">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="toolTip">
+                    <string>undo</string>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="icon">
+                    <iconset>
+                     <normaloff>../icons/undo3.ico</normaloff>../icons/undo3.ico</iconset>
+                   </property>
+                   <property name="shortcut">
+                    <string>Ctrl+Z</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="3">
+                  <widget class="QPushButton" name="copy_clip">
+                   <property name="toolTip">
+                    <string>Copy</string>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="icon">
+                    <iconset>
+                     <normaloff>../icons/copy.ico</normaloff>../icons/copy.ico</iconset>
+                   </property>
+                   <property name="shortcut">
+                    <string>Ctrl+C</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="4">
+                  <widget class="QPushButton" name="paste_clip">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="toolTip">
+                    <string>Paste</string>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="icon">
+                    <iconset>
+                     <normaloff>../icons/Paste.ico</normaloff>../icons/Paste.ico</iconset>
+                   </property>
+                   <property name="shortcut">
+                    <string>Ctrl+V</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="2">
+                  <widget class="QPushButton" name="delete_rows">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="toolTip">
+                    <string>Delete rows</string>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="icon">
+                    <iconset>
+                     <normaloff>../icons/delete.ico</normaloff>../icons/delete.ico</iconset>
+                   </property>
+                   <property name="shortcut">
+                    <string>Del</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item row="2" column="3" colspan="2">
+            <widget class="QLineEdit" name="edit_pname">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1" colspan="2">
+            <widget class="QLabel" name="label_6">
+             <property name="font">
+              <font>
+               <family>Segoe UI</family>
+               <pointsize>9</pointsize>
+               <underline>false</underline>
+              </font>
+             </property>
+             <property name="text">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Maximale Höhe:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" colspan="2">
+            <widget class="QLabel" name="label_73">
+             <property name="text">
+              <string>Knoten Nummer</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1" colspan="2">
+            <widget class="QLabel" name="label_90">
+             <property name="text">
+              <string>Profil Name</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="3" colspan="2">
+            <widget class="QComboBox" name="ctab_label">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>&quot;CTAB&quot;, Wenn &quot;ON&quot;, werden Details der Profilauswetung in *.OUT geschrieben</string>
+             </property>
+             <property name="currentIndex">
+              <number>0</number>
+             </property>
+             <item>
+              <property name="text">
+               <string>OFF</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>ON</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="5" column="3" colspan="2">
+            <widget class="QLineEdit" name="maxHeight_label">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="3" colspan="2">
+            <widget class="QLineEdit" name="edit_station">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="1">
+            <widget class="QLabel" name="label_82">
+             <property name="text">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Y:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="3">
+            <widget class="QLineEdit" name="pro_hw">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="geo_info_2">
+          <attribute name="title">
+           <string>Geometrie Info</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_2">
+           <item>
+            <widget class="QGroupBox" name="geo_info">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="title">
+              <string/>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_15">
+              <item row="2" column="1">
+               <widget class="QLineEdit" name="gi_width">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Kreis: Durchmesser&lt;/p&gt;&lt;p&gt;Rechteck, Trapez: Sohlbreite&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_68">
+                <property name="text">
+                 <string>Profil Typ:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_69">
+                <property name="text">
+                 <string>Querschnittsbreite [m]</string>
+                </property>
+               </widget>
+              </item>
+              <item row="6" column="1">
+               <widget class="QLineEdit" name="gi_xl">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Entfernung bis zum nächsten stromabwärts liegenden Verb. knoten&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="1">
+               <widget class="QLineEdit" name="gi_kstime"/>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLineEdit" name="gi_id"/>
+              </item>
+              <item row="5" column="0">
+               <widget class="QLabel" name="label_87">
+                <property name="text">
+                 <string>Verkrautung</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QLineEdit" name="gi_heit"/>
+              </item>
+              <item row="6" column="0">
+               <widget class="QLabel" name="label_89">
+                <property name="text">
+                 <string>Entfernung</string>
+                </property>
+               </widget>
+              </item>
+              <item row="7" column="0" colspan="2">
+               <widget class="QLabel" name="label_8">
+                <property name="font">
+                 <font>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Neigung der Böschung (beim Profil Typ: Trapez)</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QComboBox" name="gi_ityp">
+                <property name="editable">
+                 <bool>false</bool>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>Kreisquerschnitt (1)</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Rechteckquerschnitt (2)</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Trapezquerschnitt (3)</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>beliebiger Querschnitt (4)</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>(INTERN) interpoliertes querschnitt (5)</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>interpoliertes Zusatzquerprofil (6)</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>(7)</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>interpoliertes Bauwersprofil (8)</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Bauwerksprofil (9)</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="label_70">
+                <property name="text">
+                 <string>Querschnittshöhe [m]</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="1">
+               <widget class="QLineEdit" name="gi_zo"/>
+              </item>
+              <item row="4" column="0">
+               <widget class="QLabel" name="label_74">
+                <property name="text">
+                 <string>Sohlhöhe [m+NN]</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_80">
+                <property name="text">
+                 <string>Gewässer ID</string>
+                </property>
+               </widget>
+              </item>
+              <item row="8" column="0">
+               <widget class="QLabel" name="label_71">
+                <property name="text">
+                 <string>Rechts                            </string>
+                </property>
+               </widget>
+              </item>
+              <item row="8" column="1">
+               <widget class="QLineEdit" name="gi_ztr"/>
+              </item>
+              <item row="9" column="0">
+               <widget class="QLabel" name="label_72">
+                <property name="text">
+                 <string>Links</string>
+                </property>
+               </widget>
+              </item>
+              <item row="9" column="1">
+               <widget class="QLineEdit" name="gi_ztl"/>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="ovf_modbox">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="title">
+              <string>Overflow Mode</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_12">
+              <item row="4" column="2">
+               <widget class="QLabel" name="label_9">
+                <property name="text">
+                 <string>Q Regel</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="label_17">
+                <property name="text">
+                 <string>An</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLineEdit" name="gi_novf"/>
+              </item>
+              <item row="3" column="3">
+               <widget class="QLineEdit" name="gi_ovfaus"/>
+              </item>
+              <item row="5" column="1">
+               <widget class="QLineEdit" name="gi_tovfan"/>
+              </item>
+              <item row="5" column="2">
+               <widget class="QLabel" name="label_86">
+                <property name="text">
+                 <string>T Aus</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="3">
+               <widget class="QLineEdit" name="gi_iabovf"/>
+              </item>
+              <item row="5" column="0">
+               <widget class="QLabel" name="label_85">
+                <property name="text">
+                 <string>T An</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="2">
+               <widget class="QLabel" name="label_64">
+                <property name="text">
+                 <string>Aus</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="2" colspan="2">
+               <widget class="QComboBox" name="gi_lire">
+                <item>
+                 <property name="text">
+                  <string>Gleich</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Links</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Rechts</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item row="1" column="2">
+               <widget class="QLabel" name="label_14">
+                <property name="text">
+                 <string>Knoten</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="1">
+               <widget class="QLineEdit" name="gi_qomax"/>
+              </item>
+              <item row="4" column="0">
+               <widget class="QLabel" name="label_81">
+                <property name="text">
+                 <string>Q Max</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_13">
+                <property name="text">
+                 <string>Anzahl</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QLineEdit" name="gi_ovfan"/>
+              </item>
+              <item row="4" column="3">
+               <widget class="QLineEdit" name="gi_qregel"/>
+              </item>
+              <item row="0" column="0" colspan="2">
+               <widget class="QLabel" name="label_12">
+                <property name="text">
+                 <string>Niedriger BOK</string>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="3">
+               <widget class="QLineEdit" name="gi_tovfaus"/>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="wsp_rau_box2">
+          <attribute name="title">
+           <string>WSP-Rauhigkeit Info</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <item>
+            <widget class="QGroupBox" name="wsp_rau_box">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="title">
+              <string/>
+             </property>
+             <layout class="QGridLayout" name="gridLayout">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_75">
+                <property name="text">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Rauhigkeit&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLineEdit" name="gi_dzero"/>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_77">
+                <property name="text">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Basis Abfluss [m&lt;span style=&quot; vertical-align:super;&quot;&gt;3&lt;/span&gt;/s]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+              <item row="6" column="0">
+               <widget class="QLabel" name="label_83">
+                <property name="text">
+                 <string>SF</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QLineEdit" name="gi_zs">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Höhe der Überfall- bzw. Überluafkante&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;über ser Sohle an Knoten, bei denen ein Überfall&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;erfolgen kann [m]&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;Bei Trapez- und unregelmäßigen Querschnitten &lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;wird die Profilhöhe als Überlaufkante angenommen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="0">
+               <widget class="QLabel" name="label_84">
+                <property name="text">
+                 <string>WSP limit</string>
+                </property>
+               </widget>
+              </item>
+              <item row="6" column="1">
+               <widget class="QLineEdit" name="gi_sf"/>
+              </item>
+              <item row="5" column="1">
+               <widget class="QLineEdit" name="wsp_ckm">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Q = 2/3 * 'mue' * (2*g) &lt;span style=&quot; vertical-align:super;&quot;&gt;½ &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLineEdit" name="gi_qzero"/>
+              </item>
+              <item row="4" column="1">
+               <widget class="QLineEdit" name="wsp_hr0">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wassertand bis zu dem Anfangsrauigkeit gilt&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLineEdit" name="gi_rni">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Profil Typ 1: absolute Rauhigkeit [m]&lt;/p&gt;&lt;p&gt;Profil Typ 2,3,4: Rauhigkeitsbeiwert (Manning's n)&lt;/p&gt;&lt;p&gt;mit: Manning's n = 1/ks&lt;/p&gt;&lt;p&gt;ks = Stricklerbeiwert&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_76">
+                <property name="text">
+                 <string>Anfangswassertiefe [m]</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="label_78">
+                <property name="text">
+                 <string>Höhe der Überfall</string>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="0">
+               <widget class="QLabel" name="label_79">
+                <property name="text">
+                 <string>Abflussbeiwert 'mue' (über Wehr)</string>
+                </property>
+               </widget>
+              </item>
+              <item row="7" column="0" colspan="2">
+               <widget class="QTableWidget" name="wsp_table">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wasserstand (n): wo Manning's N = (n) gilt &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <row>
+                 <property name="text">
+                  <string>1</string>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string>2</string>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string>3</string>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string>4</string>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string>5</string>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string>6</string>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string>7</string>
+                 </property>
+                </row>
+                <column>
+                 <property name="text">
+                  <string>Wasserstand</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Manning</string>
+                 </property>
+                </column>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QGroupBox" name="groupBox_4">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="title">
+          <string/>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>Knoten</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="knotenNr">
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="editable">
+             <bool>false</bool>
+            </property>
+            <property name="maxVisibleItems">
+             <number>100</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_15">
+            <property name="text">
+             <string>Station [m]</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="station_label">
+            <property name="minimumSize">
+             <size>
+              <width>120</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>150</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="editable">
+             <bool>false</bool>
+            </property>
+            <property name="maxVisibleItems">
+             <number>100</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_7">
+            <property name="text">
+             <string>Profil Name:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="schnittName_label">
+            <property name="minimumSize">
+             <size>
+              <width>200</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>220</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="editable">
+             <bool>false</bool>
+            </property>
+            <property name="maxVisibleItems">
+             <number>100</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_3">
+            <property name="font">
+             <font>
+              <family>Segoe UI</family>
+              <pointsize>9</pointsize>
+              <underline>false</underline>
+             </font>
+            </property>
+            <property name="text">
+             <string>Anzahl der Punkte:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLCDNumber" name="Punkte_label">
+            <property name="font">
+             <font>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="segmentStyle">
+             <enum>QLCDNumber::Flat</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_2">
+            <property name="font">
+             <font>
+              <family>Segoe UI</family>
+              <pointsize>9</pointsize>
+              <underline>false</underline>
+             </font>
+            </property>
+            <property name="text">
+             <string>Aspect Ratio:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QDoubleSpinBox" name="AspectRatio">
+            <property name="decimals">
+             <number>3</number>
+            </property>
+            <property name="minimum">
+             <double>0.100000000000000</double>
+            </property>
+            <property name="value">
+             <double>1.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QSplitter" name="splitter">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <widget class="PlotWidget" name="graphicsView">
+          <property name="lineWidth">
+           <number>2</number>
+          </property>
+         </widget>
+         <widget class="PlotWidget" name="graphicsView2">
+          <property name="lineWidth">
+           <number>2</number>
+          </property>
+          <property name="backgroundBrush">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>222</red>
+             <green>222</green>
+             <blue>222</blue>
+            </color>
+           </brush>
+          </property>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PlotWidget</class>
+   <extends>QGraphicsView</extends>
+   <header>pyqtgraph</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

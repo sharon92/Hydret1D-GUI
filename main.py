@@ -6,7 +6,6 @@ import sys
 import os
 import numpy             as np
 import pandas            as pd
-from functools           import partial
 
 '''import modules to read hydret'''
 from modules.rawh1d      import HYDRET as h1d
@@ -19,7 +18,7 @@ from modules.plotting    import (qplots,uqplots,
                                  wsp_df_update,
                                  nodePlot,
                                  langPlot,
-                                 nodeMarker,gewUnmark)
+                                 nodeMarker)
 
 '''import pyqt5 modules'''
 import pyqtgraph          as     pg
@@ -57,7 +56,16 @@ class MainW(QMainWindow, Ui_MainWindow):
         self.statusbar = self.statusBar
         self.statusbar.showMessage('Ready')
         
-        self.qplotD = {'view'   : (self.graphicsView,self.graphicsView2),
+        #Docks
+        self.tabifyDockWidget(self.qp_dock,self.ls_dock)
+        self.tabifyDockWidget(self.ls_dock,self.lp_dock)
+        
+        self.qp_view.triggered.connect(self.qdockv)
+        self.lp_view.triggered.connect(self.lpdockv)
+        self.ls_view.triggered.connect(self.lsdockv)
+        
+        qplotD =     {
+                      'view'   : [self.graphicsView,self.graphicsView2],
                       'node'    : [None,None],
                       'rnode'   : [None,None],
                       'riloc'   : [None,None],
@@ -73,17 +81,33 @@ class MainW(QMainWindow, Ui_MainWindow):
                       'rbank'   : [None,None],
                       'wbank'   : [None,None],
                       'pointer' : [None,None]
-                      }
+                          }
         
-        #Docks
-        self.tabifyDockWidget(self.qp_dock,self.lp_dock)
-        
+        self.qplotD = pd.DataFrame(qplotD,dtype=object,index=[0,1])
+
         #make connections
         connections(self)
         
         #Beautify GUI
         initiateBeautify(self)
     
+    def qdockv(self):
+        
+        if not self.qp_dock.isVisible():
+            self.qp_dock.setVisible(True)
+            
+    def lpdockv(self):
+        
+        if not self.lp_dock.isVisible():
+            self.lp_dock.setVisible(True)
+        self.lp_dock.show()
+            
+    def lsdockv(self):
+        
+        if not self.ls_dock.isVisible():
+            self.ls_dock.setVisible(True)
+        self.ls_dock.show()
+            
     def OpenEnv(self):
         #Zukunft run datei als h1d benannt
         if DOUBLECLICK_FILE:
@@ -122,7 +146,7 @@ class MainW(QMainWindow, Ui_MainWindow):
         #initiate HYD 
         load_hyd(self)
         '''hyd checks'''
-        lead_ = (60./self.h1d.dt)*self.h1d.toth+1
+        lead_ = (60./self.h1d.tinc)*self.h1d.toth+1
         if not self.h1d.lead == lead_:
             self.h1d.lead == lead_
             self.statusbar.showMessage('Anzahl der Ganglinienstützstellen ersetz!')
@@ -188,21 +212,13 @@ class MainW(QMainWindow, Ui_MainWindow):
         #update start
         try:
             nodePlot(self)
-            self.nplot.scene().sigMouseClicked.connect(partial(gewUnmark,self))
             self.node_label = pg.TextItem(color='k',border='k',fill='w')
-            self.nodeView.addItem(self.node_label)
-            self.node_label.setPos(self.df_start.iloc[0]['X'],self.df_start.iloc[0]['Y'])
             self.vLine_node = pg.InfiniteLine(angle=90, movable=False)
-            self.vLine_node.setPos(self.df_start.iloc[0]['X'])
             self.hLine_node = pg.InfiniteLine(angle=0,  movable=False)
-            self.hLine_node.setPos(self.df_start.iloc[0]['Y'])
-            self.nodeView.addItem(self.vLine_node, ignoreBounds=False)
-            self.nodeView.addItem(self.hLine_node, ignoreBounds=False)
-            self.node_label.setZValue(10000)
-            self.vLine_node.setZValue(9999)
-            self.hLine_node.setZValue(9999)
+            nodeMarker(self,self.df_s)
         except:
             pass
+        
         #update langschnitt
         try:        
             langPlot(self)
@@ -263,7 +279,8 @@ class MainW(QMainWindow, Ui_MainWindow):
             self.loc2  = int(self.knotenNr.itemText(i-1))
             self.iloc2 = (df.index.tolist()).index(self.loc2)
         self.Node2 = df.loc[self.loc2]
-        self.qplotD['node'] = [self.Node,self.Node2]
+        self.qplotD['node'][0] = self.Node
+        self.qplotD['node'][1] = self.Node2
         
         #unmark highlighted nodes if any
         self.graphicsView.scene().sigMouseClicked.emit(QEvent.MouseButtonPress)
@@ -275,12 +292,11 @@ class MainW(QMainWindow, Ui_MainWindow):
         load_start(self)
 
         #try updating the existing plot
-        if not self.qplotD['axis'] == [None,None]:
+        if not ((self.qplotD['axis'][0] is None) or (self.qplotD['axis'][1] is None)):
             uqplots(self)
         else:
             qplots(self)
             wsp_df_update (self)
-
 
         if self.Edit:
             self.graphicsView.addItem(self.editable_schnitt)
@@ -288,8 +304,8 @@ class MainW(QMainWindow, Ui_MainWindow):
             plotROI(self)
             self.editable_schnitt.blockSignals(False)
             
-        nodeMarker(self)
-
+        nodeMarker(self,self.df_s)
+        
         self.knotenNr.blockSignals(False)
         self.station_label.blockSignals(False)
         self.schnittName_label.blockSignals(False)
@@ -372,12 +388,12 @@ class MainW(QMainWindow, Ui_MainWindow):
         self.idChange(i=self.knotenNr.currentIndex())
     
     def saveProject(self):
+        updateHyd(self)
         self.statusbar.showMessage('Saving PRO...')
-        writePRO(self.h1d.propath,self.df_pro)
+        writePRO(self.h1d.prodat,self.df_pro)
         self.statusbar.showMessage('Saving Start...')
         writeStart(self.h1d.startpath,self.df_start,self.h1d._dform)
         self.statusbar.showMessage('Saving HYD...')
-        updateHyd(self)
         writeHYD(self.h1d.hyd_p,self.h1d)
         self.statusbar.showMessage('Saving RUN...')
         writeRUN(self.h1drun,self.h1d)

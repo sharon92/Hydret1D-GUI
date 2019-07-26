@@ -25,9 +25,15 @@ class profLamellen(QDialog,Ui_rauDialog):
         self._schaltercheck.stateChanged.connect(self._schalter)
         self.overwrite.stateChanged.connect(self.ovw)
         self.nodes_table.itemSelectionChanged.connect(self.lcd)
+        self.samplerauY.itemChanged.connect(self.updateplot)
         self.ok.clicked.connect(self.accept)
         self.cancel.clicked.connect(self.reject)
     
+    def updateplot(self):
+        y = [float(self.samplerauY.item(i,0).text()) for i in range(self.samplerauY.rowCount())]
+        if hasattr(self,'kstplot'):
+            self.kstplot.setData(self.N.X,y)
+        
     def ovw(self):
         if self.overwrite.checkState() == 2:
             self.dataname.setEnabled(False)
@@ -41,16 +47,23 @@ class profLamellen(QDialog,Ui_rauDialog):
             self._swert.setEnabled(False)
         
     def lcd(self):
+        self.samplerauY.blockSignals(True)
         self.idx = sorted(set([i.row() for i in self.nodes_table.selectedIndexes()]))
-        self.count.display(len(self.idx))
         if len(self.idx)>0:
-            node = int(self.nodes_table.item(self.idx[0],0).text())
-            N    = self.main.df_pro.loc[node]
+            node   = int(self.nodes_table.item(self.idx[0],0).text())
+            N      = self.main.df_pro.loc[node]
+            self.N = N
             self.samplerauX.setRowCount(N['Npoints'])
             self.samplerauY.setRowCount(N['Npoints'])
             for i in range(N['Npoints']):
                 self.samplerauX.setItem(i,0,QTableWidgetItem(str(N['X'][i])))
                 self.samplerauY.setItem(i,0,QTableWidgetItem(self.strickler.text()))
+            y = [float(self.samplerauY.item(i,0).text()) for i in range(self.samplerauY.rowCount())]
+            if hasattr(self,'kstplot'):
+                self.kstplot.clear()
+            self.kstplot = self.rauView.plot(N.X,y,pen='k',symbol='d',
+                              symbolSize=7,symbolPen='r',symbolBrush='r')
+        self.samplerauY.blockSignals(False)
         
     def initiate(self):
         name = self.main.h1drun.upper().replace('.RUN','')
@@ -102,18 +115,18 @@ def raumode(self):
             node['Mode']               = Popup._lmodus.text()
             node['PName']              = 'RAUHEITSPROFIL'
             y = []
-            for t in range(Popup.samplerau.rowCount()):
-                y.append(float(Popup.samplerau.item(t,1).text()))
+            for t in range(Popup.samplerauY.rowCount()):
+                y.append(float(Popup.samplerauY.item(t,0).text()))
             node['Y']                  = np.array(y)
             self.df_pro                = self.df_pro.append(node)
             
             #appending Schalterprofil
             if Popup._schaltercheck.checkState() == 2:
-                nodeS                      = self.df_pro.loc[i].copy()
-                nodeS['Mode']              = Popup._smodus.text()
-                nodeS['PName']             = 'SCHALTPROFIL'
-                nodeS['Y']                 = np.array([float(Popup._swert.text())]*node['Npoints'])
-                self.df_pro                = self.df_pro.append(nodeS)
+                nodeS                  = self.df_pro.loc[i].copy()
+                nodeS['Mode']          = Popup._smodus.text()
+                nodeS['PName']         = 'SCHALTPROFIL'
+                nodeS['Y']             = np.array([float(Popup._swert.text())]*node['Npoints'])
+                self.df_pro            = self.df_pro.append(nodeS)
         
         #reorder dataframe
         temp = pd.DataFrame(columns = self.df_pro.columns)

@@ -58,23 +58,25 @@ class nodeGen(QDialog, Ui_nodegenDialog):
         self.station_show.addItems(self.main.df_pro['Station'].astype(str))
         self.station_show.setCurrentIndex(self.main.iloc)
         self.achse_show.setText(self.main.h1d.achse)
-        
-        try:
-            self.start_station.setText(str(self.main.df_pro.iloc[self.main.iloc]['Station']))
-            self.end_station.setText(str(self.main.df_pro.iloc[self.main.iloc+1]['Station']))
-        except:
-            self.start_station.setText(str(self.main.df_pro.iloc[self.main.iloc-1]['Station']))
-            self.end_station.setText(str(self.main.df_pro.iloc[self.main.iloc]['Station']))
-
-        self.schnitt_show.setText(self.main.df_pro.iloc[self.main.iloc]['PName'])
-        self.node_show.setText(str(self.main.df_pro.iloc[self.main.iloc].name))
-        self.id.setText(str(int(self.main.df_start.loc[int(self.node_show.text())]['ID'])))
+        self.stationChange(self.main.iloc)
         
     def stationChange(self,i):
         self.schnitt_show.setText(self.main.df_pro.iloc[i]['PName'])
         self.node_show.setText(str(self.main.df_pro.iloc[i].name))
         self.id.setText(str(int(self.main.df_start.loc[int(self.node_show.text())]['ID'])))
         
+        if self.main._rrau.isEnabled():
+            self.copy_rau.setEnabled(True)
+        else:
+            self.copy_rau.setEnabled(False)
+            self.copy_rau.setChecked(False)
+
+        if self.main._rschalter.isEnabled():
+            self.copy_schalt.setEnabled(True)
+        else:
+            self.copy_schalt.setEnabled(False)
+            self.copy_schalt.setChecked(False)
+
         try:
             self.start_station.setText(str(self.main.df_pro.iloc[i]['Station']))
             self.end_station.setText(str(self.main.df_pro.iloc[i+1]['Station']))
@@ -131,8 +133,13 @@ def nodegenwinshow(self):
     Popup = nodeGen(self)
     if Popup.exec_():
         add = Popup.edit_name.rowCount()
-        
+            
         if add>0:
+            if Popup.dataname.isEnabled():
+                self.h1d.prodat    = Popup.dataname.text()+'.pro'
+                self.h1d.propath   = os.path.join(self.h1denv,self.h1d.prodat)
+                self.p_prodat.setText(self.h1d.prodat)
+                    
             name,knoten,station = [],[],[]
             for i in range(Popup.edit_name.rowCount()):
                 name.append(Popup.edit_name.item(i,0).text())
@@ -149,6 +156,18 @@ def nodegenwinshow(self):
             node_y        = [y for y in node_p['Y']]
             konstant      = node['ZO'] - gefaelle*node['XL']
             ZO            = [gefaelle*s + konstant for s in station]
+            
+
+            if -1*muster_knoten in self.df_pro.index:
+                _iloc = np.argwhere(self.df_pro.index==-1*muster_knoten)[0]
+                if Popup.copy_rau.checkState() == 2:
+                    for il in _iloc:
+                        if self.df_pro.iloc[il].Mode == 'H2':
+                            nodeR = self.df_pro.iloc[il].copy()
+                if Popup.copy_schalt.checkState() == 2:
+                    for il in _iloc:
+                        if self.df_pro.iloc[il].Mode == 'ZS':
+                            nodeS = self.df_pro.iloc[il].copy()
             
             idx1     = (self.df_start['ID'] == int(Popup.id.text())) & (self.df_start['XL'] >station[0])
             iloc1    = len(self.df_start[idx1])
@@ -170,22 +189,46 @@ def nodegenwinshow(self):
                     node['Y']   = 0
                     df_upper     = df_upper.append(node)
                     
+                    if Popup.copy_rau.checkState() == 2:
+                        nodeR.name        = -1*i
+                        nodeR['Station']  = station[n]
+                        nodeR['PName']    = 'RAUHEITSPROFIL'
+                        self.df_pro       = self.df_pro.append(nodeR)
                     node_p.name      = i
                     node_p['Station']= station[n]
                     node_p['PName']  = name[n] 
                     node_p['Y']      = np.array(node_y+(ZO[n]-tiefp))
                     self.df_pro      = self.df_pro.append(node_p)
+                    
+                    if Popup.copy_schalt.checkState() == 2:
+                        nodeS.name        = -1*i
+                        nodeS['Station']  = station[n]
+                        nodeS['PName']    = 'SCHALTPROFIL'
+                        self.df_pro       = self.df_pro.append(nodeR)
                 else:
+                    #TODO:- add logic here
                     pass
             
 
             df_upper = df_upper.append(df_lower)
             del self.df_start
             self.df_start = df_upper
-            
-            pidx = [i for i in self.df_start.index if i in self.df_pro.index]
+            self.df_pro = self.df_pro.reset_index(inplace=True)
+            pidx = []
+            for i in self.df_start.index:
+                if -1*i in self.df_pro.IAB.values:
+                    try:
+                        pidx.append(self.df_pro[(self.df_pro.IAB == -1*i) & (self.df_pro.Mode == 'H2')].index[0])
+                    except: pass
+                if i in self.df_pro.IAB.values:
+                    pidx.append(self.df_pro[self.df_pro == i].index[0])
+                if -1*i in self.df_pro.IAB.values:
+                    try:
+                        pidx.append(self.df_pro[(self.df_pro.IAB == -1*i) & (self.df_pro.Mode == 'ZS')].index[0])
+                    except: pass
+                    
             self.df_pro = self.df_pro.loc[pidx,:]
-            
+            self.df_pro.set_index(columns='IAB',inplace=True)
             self.saveProject()
             n_h1d = h1d(hydret_path = self.HydretEnv[0])
             self.initiate(hyd = n_h1d,i=self.knotenNr.currentIndex())

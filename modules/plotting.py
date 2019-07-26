@@ -12,8 +12,8 @@ import shapefile      as     shp
 from shapely.geometry import LineString
 from modules.loaddata import loadshp
 from modules.riverbed import riv_bed,cal_bank
-from PyQt5.QtWidgets  import QTableWidgetItem,QFileDialog,QColorDialog
-from PyQt5.QtCore     import Qt
+from PyQt5.QtWidgets  import QTableWidgetItem,QFileDialog,QColorDialog,QApplication
+from PyQt5.QtCore     import Qt,QEvent
 from PyQt5.QtGui      import QColor
 
 # =============================================================================
@@ -116,39 +116,45 @@ def textgen(Node,self):
     
     Q = 'Q: {:0.2f} m³/s'.format(self.df_start.loc[Node.name]['QZERO'])
     Text = Q
-    if Node.name in self.h1d.nupe:
-        _idx = self.h1d.nupe.index(Node.name)
-        INF = '\n\nZufluss Mode: {}\nDatei: {}\nFaktor: {:0.2f}'.format(self.h1d.timmod[_idx],
-                      self.h1d.quinf_[_idx],self.h1d.faktor[_idx])
-        try:
-            INF = INF+'\nStation: {:0.1f}\nQbasis: {:0.2f}'.format(self.h1d.q_station[_idx],
-                                self.h1d.q_basis[_idx])
-        except:
-            pass
-        Text = Text+INF
+    try:
+        if Node.name in self.h1d.nupe:
+            _idx = self.h1d.nupe.index(Node.name)
+            INF = '\n\nZufluss Mode: {}\nDatei: {}\nFaktor: {:0.2f}'.format(self.h1d.timmod[_idx],
+                          self.h1d.quinf_[_idx],self.h1d.faktor[_idx])
+            try:
+                INF = INF+'\nStation: {:0.1f}\nQbasis: {:0.2f}'.format(self.h1d.q_station[_idx],
+                                    self.h1d.q_basis[_idx])
+            except: pass
+            Text = Text+INF
+    except: pass
+
+    try:
+        if Node.name in self.h1d.lie:
+            _idx = self.h1d.lie.index(Node.name)
+            li   = self.h1d.zdat[_idx].split()
+            LINF = '\n\nLateral Inflow Mode: {}\nDatei: {}\nFaktor: {}'.format(li[1],
+                          li[0],li[2])
+            try:
+                LINF = LINF+'\nStation: {:0.1f}\nQ_basis: {:0.2f}'.format(li[3],li[4])
+            except: pass
+            Text = Text+LINF
+    except: pass
     
-    if Node.name in self.h1d.lie:
-        _idx = self.h1d.lie.index(Node.name)
-        li   = self.h1d.zdat[_idx].split()
-        LINF = '\n\nLateral Inflow Mode: {}\nDatei: {}\nFaktor: {}'.format(li[1],
-                      li[0],li[2])
-        try:
-            LINF = LINF+'\nStation: {:0.1f}\nQ_basis: {:0.2f}'.format(li[3],li[4])
-        except:
-            pass
-        Text = Text+LINF
-    
-    if Node.name in self.h1d.igate:
-        _idx = self.h1d.igate.index(Node.name)
-        gatd = self.h1d.gatdat[_idx]
-        Gate = '\n\nGate Max Durchlassöffnung: {}\nMode: {}\nQmin: {}\nQmax: {}\nTol: {}\nµ: {}\nGatmin: {}\nGatwso: {}\nDatei: {}'.format(self.h1d.igate[_idx],*gatd)
-        Text = Text + Gate
-    
-    weirs = [int(we.split()[0]) for we in self.h1d.weir_info]
-    if Node.name in weirs:
-        _idx = weirs.index(Node.name)
-        wehr = '\n\nWehr Höhe,Breite,µ: {},{},{}'.format(*self.h1d.weir_info[_idx].split()[1:4])
-        Text = Text+wehr
+    try:
+        if Node.name in self.h1d.igate:
+            _idx = self.h1d.igate.index(Node.name)
+            gatd = self.h1d.gatdat[_idx]
+            Gate = '\n\nGate Max Durchlassöffnung: {}\nMode: {}\nQmin: {}\nQmax: {}\nTol: {}\nµ: {}\nGatmin: {}\nGatwso: {}\nDatei: {}'.format(self.h1d.igate[_idx],*gatd)
+            Text = Text + Gate
+    except: pass
+
+    try:
+        weirs = [int(we.split()[0]) for we in self.h1d.weir_info]
+        if Node.name in weirs:
+            _idx = weirs.index(Node.name)
+            wehr = '\n\nWehr Höhe,Breite,µ: {},{},{}'.format(*self.h1d.weir_info[_idx].split()[1:4])
+            Text = Text+wehr
+    except:pass
         
     return Text
 
@@ -209,7 +215,7 @@ def nodePlot(self):
     nXL  = self.df_start['XL'].values
     
     nX,nY = np.zeros(len(nXL)),np.zeros(len(nXL))
-    
+    self.nodeView.addLegend()
     for gid in np.unique(nID):
         try:
             idx      = s_gid.index(gid)
@@ -236,10 +242,25 @@ def nodePlot(self):
         nplot = self.nodeView.plot(nX[i1],nY[i1],symbol=idic[0],pen=pg.mkPen(None),
                            symbolSize=idic[1],symbolPen=idic[2],symbolBrush=idic[2],name=na)
         nplot.setZValue(100)
-    self.nplot = nplot
+
+    xk1     = float(self.df_s.loc[self.loc]['X'])
+    yk1     = float(self.df_s.loc[self.loc]['Y'])
+    xk2     = float(self.df_s.loc[self.loc2]['X'])
+    yk2     = float(self.df_s.loc[self.loc2]['Y'])
+
+    self.pro_mark = self.nodeView.plot([xk1,xk2],[yk1,yk2],pen=None,symbol='o',symbolSize='10',
+                                       symbolPen='b',symbolBrush='b')
+    self.nodeitem = pg.TextItem(text=str(self.loc),angle=0,border='k',fill='w',color='b')
+    self.nodeView.addItem(self.nodeitem)
+    self.nodeitem.setPos(xk1,yk1)
+    self.nodeitem2 = pg.TextItem(text=str(self.loc2),angle=0,border='k',fill='w',color='b')
+    self.nodeView.addItem(self.nodeitem2)
+    self.nodeitem2.setPos(xk2,yk2)
+        
     self.nodeView.setAspectLocked(lock=True, ratio=1)
-
-
+    self.nodeView.getViewBox().setXRange(nX.min(),nX.max())
+    self.nodeView.getViewBox().setYRange(nY.min(),nY.max())
+    
 '''use when loading WSP'''
 def loadresult(self):
     wspDat = QFileDialog.getOpenFileName(caption='WSP File)',filter="*.dat*")
@@ -519,20 +540,23 @@ def updateViews(self):
 
 def ulangPlot(self):
     i=int(self.lang_ID.currentText())
-    self.langView.clear()
+    self.gewid_current= i
     idx = (self.df_start['ID'] == i)
     x = self.df_start['XL'].values[idx]
     y = self.df_start['ZO'].values[idx]
     pts = np.array(sorted(list(zip(x,y))))
-    self.lsplot.setData(pts)
+    self.lsplot.setData(pts,fillLevel=np.nanmin(y)-0.2)
     
     for r in range(0,len(self.wsp_bankL)):
         wsp_l = self.df_wsp[self.p_wspdat.item(r,1).text()].values[idx]
         sohle = self.df_start['XL'].values[idx]
         leg   = self.p_wspdat.item(r,1).text()
-        self.wsp_bankL[r].setData(sohle,wsp_l,name = leg,fillLevel=self.df_start['ZO'][idx].min()-0.2)
+        self.wsp_bankL[r].setData(sohle,wsp_l,fillLevel=self.df_start['ZO'][idx].min()-0.2)
+        self.langView.plotItem.legend.removeItem(self.wsp_bankL[r])
+        self.langView.plotItem.legend.addItem(self.wsp_bankL[r],leg)
     self.langView.getViewBox().setXRange(x.max(),x.min())
     self.langView.getViewBox().setYRange(y.min(),self.df_wsp.max().max())
+    self.langView.scene().sigMouseClicked.emit(QEvent.MouseButtonPress)
     gewMarker(self)
     
 # =============================================================================
@@ -565,52 +589,42 @@ def xyUnmark(self,event):
     try: self.selection.clear()
     except: pass
 
-def nodeMarker(self):
-    try:
-        self.pro_mark.clear()
-        self.nodeView.removeItem(self.nodeitem)
-        self.nodeView.removeItem(self.nodeitem2)
-    except:
-        pass
-    xk1     = float(self.df_start.loc[self.loc]['X'])
-    yk1     = float(self.df_start.loc[self.loc]['Y'])
-    xk2     = float(self.df_start.loc[self.loc2]['X'])
-    yk2     = float(self.df_start.loc[self.loc2]['Y'])
-    try:
+def nodeMarker(self,df):
+    if hasattr(self,'pro_mark'):
+        xk1     = float(df.loc[self.loc]['X'])
+        yk1     = float(df.loc[self.loc]['Y'])
+        xk2     = float(df.loc[self.loc2]['X'])
+        yk2     = float(df.loc[self.loc2]['Y'])
+    
         self.pro_mark.setData([xk1,xk2],[yk1,yk2])
         self.nodeitem.setText(str(self.loc))
         self.nodeitem.setPos(xk1,yk1)
         self.nodeitem2.setText(str(self.loc2))
         self.nodeitem2.setPos(xk2,yk2)
-    except:
-        self.pro_mark = self.nodeView.plot([xk1,xk2],[yk1,yk2],pen=None,symbol='o',symbolSize='10',
-                                           symbolPen='b',symbolBrush='b')
-        self.nodeitem = pg.TextItem(text=str(self.loc),angle=0,border='k',fill='w',color='b')
-        self.nodeView.addItem(self.nodeitem)
-        self.nodeitem.setPos(xk1,yk1)
-        self.nodeitem2 = pg.TextItem(text=str(self.loc2),angle=0,border='k',fill='w',color='b')
-        self.nodeView.addItem(self.nodeitem2)
-        self.nodeitem2.setPos(xk2,yk2)
 
 #Mark Gewässer achse in Node View
 def gewMarker(self):
-    i= self.gewid_current
+    i= int(self.lang_ID.currentText())
     try:
+        self.nodeView.plotItem.legend.removeItem(self.highlight)
         self.highlight.clear()
-    except:pass
-
+    except: pass
     rshp  = shp.Reader(self.achse)
     for n,s in enumerate(rshp.records()):
         if s['GEW_ID'] == i:
             rec      = rshp.shapeRecords()[n]
             pts        = np.array(rec.shape.points)
-            self.highlight = self.nodeView.plot(pts[:,0],pts[:,1],pen=pg.mkPen('y', width=3))
+            self.highlight = self.nodeView.plot(pts[:,0],pts[:,1],pen=pg.mkPen('y', width=3),name='GEW ID: '+str(i))
             self.highlight.setZValue(0)
             break
 
 def gewUnmark(self,event):
-    try: self.highlight.clear()
-    except: pass
+    if self.highlight.opts['pen'] is None:
+        self.highlight.setData(pen=pg.mkPen('y', width=3))
+        self.nodeView.plotItem.legend.addItem(self.highlight,self.highlight.name())
+    else:
+        self.highlight.setData(pen=None)
+        self.nodeView.plotItem.legend.removeItem(self.highlight)
 
 def changeAR(self):
     self.ratio = 1.0/self.AspectRatio.value()
@@ -629,6 +643,91 @@ def plan_name(self):
 # =============================================================================
 # Update plots under Editing Mode
 # =============================================================================
+       
+def undo_but(self):
+    self.editable_schnitt.blockSignals(True)
+    self.changes -=1
+    self.df_copy.update(self.df_db[self.changes])
+    
+    update_nodes(self)
+    uqplots(self,plist = [0],ROI=True)
+    
+    if self.changes == 0:
+        self.undo.setEnabled(False)
+    self.redo.setEnabled(True)
+    self.editable_schnitt.blockSignals(False)
+
+def redo_but(self):
+    self.editable_schnitt.blockSignals(True)
+    self.changes +=1
+    self.df_copy.update(self.df_db[self.changes])
+    
+    update_nodes(self)
+    uqplots(self,plist = [0],ROI=True)
+    
+    if self.changes == len(self.df_db)-1:
+        self.redo.setEnabled(False)
+    if self.changes > 0:
+        self.undo.setEnabled(True)
+    self.editable_schnitt.blockSignals(False)
+
+def del_but(self):
+    self.editable_schnitt.blockSignals(True)
+    self.coords_table.blockSignals(True)
+    self.changes +=1
+    
+    [self.coords_table.removeRow(i) for i in reversed(sorted(set([r.row() for r in self.coords_table.selectedItems()])))]
+    update_data(self,src='table')
+
+    self.df_copy.update(self.df_db[self.changes])
+    update_nodes(self)
+    uqplots(self,plist = [0],ROI=True)
+    
+    self.selection.clear()
+    if self.changes == len(self.df_db)-1:
+        self.redo.setEnabled(False)
+    if self.changes > 0:
+        self.undo.setEnabled(True)
+    self.delete_rows.setEnabled(False)
+    self.coords_table.blockSignals(False)
+    self.editable_schnitt.blockSignals(False)
+
+def plot_update_coords(self):
+    self.coords_table.blockSignals(True)
+    if not len(self.df_db) == self.changes + 1:
+        self.df_db = self.df_db[:self.changes+1]
+        self.redo.setEnabled(False)
+    self.changes +=1
+    update_data(self,src='table')
+
+    self.df_copy.update(self.df_db[self.changes])
+    update_nodes(self)
+    uqplots(self,plist = [0])
+    self.undo.setEnabled(True)
+    self.coords_table.blockSignals(False)
+    
+def update_nodes(self):
+    #update nodes object
+    self.qplotD['node'][0] = self.df_copy.loc[self.loc]
+    if not self.qplotD['rnode'][0] == None:
+        self.qplotD['rnode'][0] = self.df_copy.iloc[self.qplotD['riloc'][0]]
+    if not self.qplotD['snode'][0] == None:
+        self.qplotD['snode'][0] = self.df_copy.iloc[self.qplotD['siloc'][0]]
+        
+def update_schnitt(self):
+    self.coords_table.blockSignals(True)
+    _pts = self.editable_schnitt.getState()['points']
+    self.Node['Npoints']=len(_pts)
+    self.Punkte_label.display(len(_pts))
+    self.coords_table.setRowCount(len(_pts))
+    self.Node.X = np.array([round(xi.x(),3) for xi in self.editable_schnitt.getState()['points']])
+    self.Node.Y = np.array([round(yi.y(),3) for yi in self.editable_schnitt.getState()['points']])
+    for _i in range(len(_pts)):
+        self.coords_table.setItem(_i,0,QTableWidgetItem(str(self.Node.X[_i])))
+        self.coords_table.setItem(_i,1,QTableWidgetItem(str(self.Node.Y[_i])))
+    uqplots(self,plist = [0])
+    self.coords_table.blockSignals(False)
+
 def update_data(self,src = 'db'):
     if src=='db':
         self.coords_table.setRowCount(self.Node.Npoints)
@@ -653,78 +752,81 @@ def update_data(self,src = 'db'):
             df.iat[self.iloc_s,7] = y
         self.df_db.append(df)
         return x,y
+    
+def _handlecopy(self):
+    sidx = self.coords_table.selectedIndexes()
+    text = ''
+    rows = [i.row() for i in sidx]
+    cols = [i.column() for i in sidx]
+    
+    if self._rquer.isChecked():
+        Node = self.Node.copy()
+    elif self._rrau.isChecked():
+        Node = self.Node_R.copy()
+    elif self._rschalter.isChecked():
+        Node = self.Node_S.copy()
+    for t in range(len(rows)):
+        if cols[t] == 0:
+            text = text+str(Node['X'][rows[t]])+'\t'
+        elif cols[t] == 1:
+            text = text+str(Node['Y'][rows[t]])
+        try:
+            if cols[t+1] == 0:
+                text = text+'\n'
+        except:
+            pass
+    QApplication.instance().clipboard().setText(text)
+
+def _handlepaste(self):
+    self.editable_schnitt.blockSignals(True)
+    self.changes +=1
+    clipboard_text =  QApplication.instance().clipboard().text()
+    if hasattr(self,'selection'):
+        self.selection.clear()
+    if self._rquer.isChecked():
+        Node = self.Node.copy()
+    elif self._rrau.isChecked():
+        Node = self.Node_R.copy()
+    elif self._rschalter.isChecked():
+        Node = self.Node_S.copy()
+    if clipboard_text:
+        self.coords_table.blockSignals(True)
+        list_ = clipboard_text.split('\n')
+        cols_ = list_[0].count('\t')+1
+        data  = [None]*cols_
+        for i in range(cols_):
+            if cols_>1:
+                ilist_  = [l.split('\t')[i] for l in list_[:-1]]
+            else:
+                ilist_  = list_[:-1]
+            data[i] = ilist_
+
+        data_len = len(data[0])
+        cid = self.coords_table.currentRow()
+        pos = self.coords_table.currentColumn()
+        if data_len > Node['Npoints'] - cid:
+            self.coords_table.setRowCount(cid+data_len)
+            for n,i in enumerate(range(cid,cid+data_len)):
+                if (pos == 0) & (cols_ == 1):
+                    self.coords_table.setItem(i,0,QTableWidgetItem(data[0][n]))
+                elif (pos == 0) & (cols_ > 1):
+                    self.coords_table.setItem(i,0,QTableWidgetItem(data[0][n]))
+                    self.coords_table.setItem(i,1,QTableWidgetItem(data[1][n]))
+                elif pos == 1:
+                    self.coords_table.setItem(i,1,QTableWidgetItem(data[0][n]))
+        self.coords_table.blockSignals(False)
         
-       
-def undo_but(self):
-    self.editable_schnitt.blockSignals(True)
-    self.changes -=1
-    self.df_copy.update(self.df_db[self.changes])
-    
-    uqplots(self,plist = [0],ROI=True)
-    
-    if self.changes == 0:
-        self.undo.setEnabled(False)
-    self.redo.setEnabled(True)
-    self.editable_schnitt.blockSignals(False)
+        update_data(self,src='table')
+        self.df_copy.update(self.df_db[self.changes])
+        update_nodes(self)
+        uqplots(self,plist = [0],ROI=True)
+        self.editable_schnitt.blockSignals(False)
+        if self.changes == len(self.df_db)-1:
+            self.redo.setEnabled(False)
+        if self.changes > 0:
+            self.undo.setEnabled(True)
 
-def redo_but(self):
-    self.editable_schnitt.blockSignals(True)
-    self.changes +=1
-    self.df_copy.update(self.df_db[self.changes])
-    
-    uqplots(self,plist = [0],ROI=True)
-    
-    if self.changes == len(self.df_db)-1:
-        self.redo.setEnabled(False)
-    if self.changes > 0:
-        self.undo.setEnabled(True)
-    self.editable_schnitt.blockSignals(False)
 
-def del_but(self):
-    self.editable_schnitt.blockSignals(True)
-    self.coords_table.blockSignals(True)
-    self.changes +=1
-    
-    [self.coords_table.removeRow(i) for i in reversed(sorted(set([r.row() for r in self.coords_table.selectedItems()])))]
-    update_data(self,src='table')
-
-    self.df_copy.update(self.df_db[self.changes])
-    
-    uqplots(self,plist = [0],ROI=True)
-    
-    if self.changes == len(self.df_db)-1:
-        self.redo.setEnabled(False)
-    if self.changes > 0:
-        self.undo.setEnabled(True)
-    self.delete_rows.setEnabled(False)
-    self.coords_table.blockSignals(False)
-    self.editable_schnitt.blockSignals(False)
-    
-def update_schnitt(self):
-    self.coords_table.blockSignals(True)
-    _pts = self.editable_schnitt.getState()['points']
-    self.Node['Npoints']=len(_pts)
-    self.Punkte_label.display(len(_pts))
-    self.coords_table.setRowCount(len(_pts))
-    self.Node.X = np.array([round(xi.x(),3) for xi in self.editable_schnitt.getState()['points']])
-    self.Node.Y = np.array([round(yi.y(),3) for yi in self.editable_schnitt.getState()['points']])
-    for _i in range(len(_pts)):
-        self.coords_table.setItem(_i,0,QTableWidgetItem(str(self.Node.X[_i])))
-        self.coords_table.setItem(_i,1,QTableWidgetItem(str(self.Node.Y[_i])))
-    uqplots(self,plist = [0])
-    self.coords_table.blockSignals(False)
-    
-def plot_update_coords(self):
-    self.coords_table.blockSignals(True)
-    if not len(self.df_db) == self.changes + 1:
-        self.df_db = self.df_db[:self.changes+1]
-        self.redo.setEnabled(False)
-    self.changes +=1
-    update_data(self,src='table')
-    uqplots(self,plist = [0])
-    self.undo.setEnabled(True)
-    self.coords_table.blockSignals(False)
-    
 # =============================================================================
 # Mouse Movements on plots
 # =============================================================================
@@ -734,7 +836,7 @@ def pointer_lang(self,evt):
         mousePoint = self.langView.getViewBox().mapSceneToView(evt)
         xi = mousePoint.x()
         #yi = mousePoint.y()
-        gid = self.gewid_current
+        gid = int(self.lang_ID.currentText())
         gdx = (self.df_start['ID'] == gid)
         val = min(self.df_start['XL'][gdx], key=lambda x: abs(x - xi))
         idx = self.df_start[gdx][self.df_start['XL'][gdx]==val].index[0]
@@ -779,11 +881,18 @@ def pointer_node(self,evt):
             sname = self.df_pro.loc[nearest[1]]['PName']
         except:
             sname = '--'
+
+        self.nodeView.addItem(self.node_label)
+        self.nodeView.addItem(self.vLine_node, ignoreBounds=False)
+        self.nodeView.addItem(self.hLine_node, ignoreBounds=False)
+        self.node_label.setZValue(10000)
+        self.vLine_node.setZValue(9999)
+        self.hLine_node.setZValue(9999)
         
-        if nearest[0] < 500:
-            self.node_label.setText('Node: '+ str(nearest[1])+'\nStation: '+str(self.df_start.loc[nearest[1]]['XL'])+
-                                     '\nSchnitt: '+sname)
-            self.node_label.setPos(self.df_start.loc[nearest[1]]['X'],self.df_start.loc[nearest[1]]['Y'])
+
+        self.node_label.setText('Node: '+ str(nearest[1])+'\nStation: '+str(self.df_start.loc[nearest[1]]['XL'])+
+                                 '\nSchnitt: '+sname)
+        self.node_label.setPos(self.df_start.loc[nearest[1]]['X'],self.df_start.loc[nearest[1]]['Y'])
             
         self.vLine_node.setPos(self.df_start.loc[nearest[1]]['X'])
         self.hLine_node.setPos(self.df_start.loc[nearest[1]]['Y'])

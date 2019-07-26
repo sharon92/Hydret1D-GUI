@@ -160,7 +160,7 @@
             <x>0</x>
             <y>0</y>
             <width>452</width>
-            <height>1031</height>
+            <height>1048</height>
            </rect>
           </property>
           <attribute name="label">
@@ -1570,20 +1570,11 @@ p, li { white-space: pre-wrap; }
     </property>
     <addaction name="checkforupdate"/>
    </widget>
-   <widget class="QMenu" name="menuView">
-    <property name="title">
-     <string>View</string>
-    </property>
-    <addaction name="qp_view"/>
-    <addaction name="ls_view"/>
-    <addaction name="lp_view"/>
-   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuJunctions"/>
    <addaction name="menuLoad"/>
    <addaction name="menuRun"/>
-   <addaction name="menuView"/>
    <addaction name="menuAbout"/>
   </widget>
   <widget class="QDockWidget" name="qp_dock">
@@ -1599,9 +1590,6 @@ p, li { white-space: pre-wrap; }
      <pointsize>9</pointsize>
     </font>
    </property>
-   <property name="floating">
-    <bool>false</bool>
-   </property>
    <property name="features">
     <set>QDockWidget::AllDockWidgetFeatures</set>
    </property>
@@ -1609,14 +1597,130 @@ p, li { white-space: pre-wrap; }
     <set>Qt::AllDockWidgetAreas</set>
    </property>
    <property name="windowTitle">
-    <string>Querschnitt</string>
+    <string>Querprofil View</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_5">
     <layout class="QGridLayout" name="gridLayout_13" rowstretch="1,0,0">
-     <item row="0" column="2" rowspan="3">
+     <item row="0" column="6">
+      <widget class="QLabel" name="label_3">
+       <property name="font">
+        <font>
+         <family>Segoe UI</family>
+         <pointsize>9</pointsize>
+         <underline>false</underline>
+        </font>
+       </property>
+       <property name="text">
+        <string>Anzahl der Punkte:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="8">
+      <widget class="QLabel" name="label_2">
+       <property name="font">
+        <font>
+         <family>Segoe UI</family>
+         <pointsize>9</pointsize>
+         <underline>false</underline>
+        </font>
+       </property>
+       <property name="text">
+        <string>Aspect Ratio:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QLabel" name="label_15">
+       <property name="text">
+        <string>Station [m]</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="7">
+      <widget class="QLCDNumber" name="Punkte_label">
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="segmentStyle">
+        <enum>QLCDNumber::Flat</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="font">
+        <font>
+         <family>Segoe UI</family>
+         <pointsize>9</pointsize>
+         <underline>false</underline>
+        </font>
+       </property>
+       <property name="text">
+        <string>Knoten</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QComboBox" name="station_label">
+       <property name="minimumSize">
+        <size>
+         <width>120</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>150</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="editable">
+        <bool>false</bool>
+       </property>
+       <property name="maxVisibleItems">
+        <number>100</number>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="4">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>Profil Name:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0" colspan="10">
+      <widget class="PlotWidget" name="graphicsView"/>
+     </item>
+     <item row="0" column="1">
+      <widget class="QComboBox" name="knotenNr">
+       <property name="minimumSize">
+        <size>
+         <width>80</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>80</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="editable">
+        <bool>false</bool>
+       </property>
+       <property name="maxVisibleItems">
+        <number>100</number>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="10" rowspan="3">
       <widget class="QTabWidget" name="qp_widget">
        <property name="enabled">
         <bool>true</bool>
@@ -2500,201 +2604,58 @@ p, li { white-space: pre-wrap; }
        </widget>
       </widget>
      </item>
-     <item row="0" column="0" colspan="2">
-      <widget class="QGroupBox" name="groupBox_4">
+     <item row="0" column="9">
+      <widget class="QDoubleSpinBox" name="AspectRatio">
+       <property name="decimals">
+        <number>3</number>
+       </property>
+       <property name="minimum">
+        <double>0.100000000000000</double>
+       </property>
+       <property name="value">
+        <double>1.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="5">
+      <widget class="QComboBox" name="schnittName_label">
+       <property name="minimumSize">
+        <size>
+         <width>200</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>220</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="editable">
+        <bool>false</bool>
+       </property>
+       <property name="maxVisibleItems">
+        <number>100</number>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0" colspan="10">
+      <widget class="PlotWidget" name="graphicsView2">
        <property name="maximumSize">
         <size>
          <width>16777215</width>
-         <height>50</height>
+         <height>300</height>
         </size>
        </property>
-       <property name="title">
-        <string/>
+       <property name="backgroundBrush">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>222</red>
+          <green>222</green>
+          <blue>222</blue>
+         </color>
+        </brush>
        </property>
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <widget class="QLabel" name="label">
-          <property name="font">
-           <font>
-            <family>Segoe UI</family>
-            <pointsize>9</pointsize>
-            <underline>false</underline>
-           </font>
-          </property>
-          <property name="text">
-           <string>Knoten</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="knotenNr">
-          <property name="minimumSize">
-           <size>
-            <width>80</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>80</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="editable">
-           <bool>false</bool>
-          </property>
-          <property name="maxVisibleItems">
-           <number>100</number>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_15">
-          <property name="text">
-           <string>Station [m]</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="station_label">
-          <property name="minimumSize">
-           <size>
-            <width>120</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>150</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="editable">
-           <bool>false</bool>
-          </property>
-          <property name="maxVisibleItems">
-           <number>100</number>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_7">
-          <property name="text">
-           <string>Profil Name:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="schnittName_label">
-          <property name="minimumSize">
-           <size>
-            <width>200</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>220</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="editable">
-           <bool>false</bool>
-          </property>
-          <property name="maxVisibleItems">
-           <number>100</number>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_3">
-          <property name="font">
-           <font>
-            <family>Segoe UI</family>
-            <pointsize>9</pointsize>
-            <underline>false</underline>
-           </font>
-          </property>
-          <property name="text">
-           <string>Anzahl der Punkte:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLCDNumber" name="Punkte_label">
-          <property name="font">
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="segmentStyle">
-           <enum>QLCDNumber::Flat</enum>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_2">
-          <property name="font">
-           <font>
-            <family>Segoe UI</family>
-            <pointsize>9</pointsize>
-            <underline>false</underline>
-           </font>
-          </property>
-          <property name="text">
-           <string>Aspect Ratio:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QDoubleSpinBox" name="AspectRatio">
-          <property name="decimals">
-           <number>3</number>
-          </property>
-          <property name="minimum">
-           <double>0.100000000000000</double>
-          </property>
-          <property name="value">
-           <double>1.000000000000000</double>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item row="1" column="0" colspan="2">
-      <widget class="QGroupBox" name="groupBox_5">
-       <property name="title">
-        <string/>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_21">
-        <item row="0" column="0">
-         <widget class="QSplitter" name="splitter">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <widget class="PlotWidget" name="graphicsView"/>
-          <widget class="PlotWidget" name="graphicsView2">
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>300</height>
-            </size>
-           </property>
-           <property name="backgroundBrush">
-            <brush brushstyle="SolidPattern">
-             <color alpha="255">
-              <red>222</red>
-              <green>222</green>
-              <blue>222</blue>
-             </color>
-            </brush>
-           </property>
-          </widget>
-         </widget>
-        </item>
-       </layout>
       </widget>
      </item>
     </layout>
@@ -2723,14 +2684,24 @@ p, li { white-space: pre-wrap; }
     <set>Qt::AllDockWidgetAreas</set>
    </property>
    <property name="windowTitle">
-    <string>Lageplan</string>
+    <string>Lageplan View</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_6">
     <layout class="QGridLayout" name="gridLayout_10">
-     <item row="0" column="2" rowspan="3">
+     <item row="1" column="0" colspan="3">
+      <widget class="PlotWidget" name="langView"/>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_93">
+       <property name="text">
+        <string>Gewässer ID</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3" rowspan="3">
       <widget class="QGroupBox" name="groupBox_13">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -2746,8 +2717,8 @@ p, li { white-space: pre-wrap; }
        </property>
        <property name="maximumSize">
         <size>
-         <width>250</width>
-         <height>16777215</height>
+         <width>350</width>
+         <height>999999</height>
         </size>
        </property>
        <property name="title">
@@ -2793,7 +2764,10 @@ p, li { white-space: pre-wrap; }
        </layout>
       </widget>
      </item>
-     <item row="2" column="0" colspan="2">
+     <item row="0" column="2">
+      <widget class="QComboBox" name="lang_ID"/>
+     </item>
+     <item row="3" column="0" colspan="3">
       <widget class="PlotWidget" name="nodeView">
        <property name="minimumSize">
         <size>
@@ -2811,9 +2785,6 @@ p, li { white-space: pre-wrap; }
    <property name="windowTitle">
     <string>toolBar</string>
    </property>
-   <property name="toolButtonStyle">
-    <enum>Qt::ToolButtonTextUnderIcon</enum>
-   </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
@@ -2828,38 +2799,6 @@ p, li { white-space: pre-wrap; }
    <addaction name="start_editing"/>
    <addaction name="stop_editing"/>
    <addaction name="separator"/>
-   <addaction name="qp_view"/>
-   <addaction name="ls_view"/>
-   <addaction name="lp_view"/>
-   <addaction name="separator"/>
-  </widget>
-  <widget class="QDockWidget" name="ls_dock">
-   <property name="floating">
-    <bool>false</bool>
-   </property>
-   <property name="windowTitle">
-    <string>Längsschnitt</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>2</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents">
-    <layout class="QGridLayout" name="gridLayout_20">
-     <item row="0" column="0">
-      <widget class="QLabel" name="label_93">
-       <property name="text">
-        <string>Gewässer ID</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QComboBox" name="lang_ID"/>
-     </item>
-     <item row="1" column="0" colspan="2">
-      <widget class="PlotWidget" name="langView"/>
-     </item>
-    </layout>
-   </widget>
   </widget>
   <action name="actionProfil">
    <property name="checkable">
@@ -3076,35 +3015,7 @@ p, li { white-space: pre-wrap; }
     <string>Updates...</string>
    </property>
   </action>
-  <action name="qp_view">
-   <property name="icon">
-    <iconset>
-     <normaloff>../icons/water.ico</normaloff>../icons/water.ico</iconset>
-   </property>
-   <property name="text">
-    <string>Querschnitt...</string>
-   </property>
-  </action>
-  <action name="ls_view">
-   <property name="icon">
-    <iconset>
-     <normaloff>../icons/long.ico</normaloff>../icons/long.ico</iconset>
-   </property>
-   <property name="text">
-    <string>Längsschnitt...</string>
-   </property>
-  </action>
-  <action name="lp_view">
-   <property name="icon">
-    <iconset>
-     <normaloff>../icons/map-3-24.ico</normaloff>../icons/map-3-24.ico</iconset>
-   </property>
-   <property name="text">
-    <string>Lageplan...</string>
-   </property>
-  </action>
   <zorder>qp_dock</zorder>
-  <zorder>ls_dock</zorder>
  </widget>
  <customwidgets>
   <customwidget>

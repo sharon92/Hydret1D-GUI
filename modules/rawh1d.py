@@ -315,15 +315,15 @@ class HYDRET:
          float,float,float,float,float,float,float,float,float,float,float,float,float,float,
          float,float,float,float,int,float]
         
-        form = ['{:4d}','{:3d}',(*['{:.2f}']*4),'{:.1f}','{:.2f}','{:.4f}',(*['{:.3f}']*3),
+        form = ['{:4.0f}','{:3.0f}',(*['{:.2f}']*4),'{:.1f}','{:.2f}','{:.4f}',(*['{:.3f}']*3),
                  '{:.2f}',(*['{:.3f}']*2),(*['{:.3f}','{:.4f}']*7),'{:.8f}',(*['{:.2f}']*2),
-                 '{:6d}','{:.2f}']
+                 '{:6.0f}','{:.2f}']
 
         #ovfbil
         if self.ovfbil == 'OVFBIL':
             [cols.insert(n,i)  for n,i in [(14,"LIRE"),(15,"NOVF"),(16,"IABOVF")]]
             [typ.insert(n,i)  for n,i in [(14,int),(15,int),(16,int)]]
-            [form.insert(n,i) for n,i in [(14,'{:5d}'),(15,'{:5d}'),(16,'{:5d}')]]
+            [form.insert(n,i) for n,i in [(14,'{:5.0f}'),(15,'{:5.0f}'),(16,'{:5.0f}')]]
             
         #ovfreq
         elif self.ovfbil == 'OVFREG':
@@ -331,7 +331,7 @@ class HYDRET:
                      (19,"QOMAX"),(20,"QREGEL"),(21,"TOVFAN"),(22,"TOVFAUS")]
             atyp  = [(14,int),(15,int),(16,int),(17,float),(18,float),(19,float),
                      (20,float),(21,float),(22,float)]
-            aform = [(14,'{:5d}'),(15,'{:5d}'),(16,'{:5d}'),(17,'{:.2f}'),(18,'{:.2f}'),(19,'{:.2f}'),
+            aform = [(14,'{:5.0f}'),(15,'{:5.0f}'),(16,'{:5.0f}'),(17,'{:.2f}'),(18,'{:.2f}'),(19,'{:.2f}'),
                      (20,'{:.2f}'),(21,'{:.2f}'),(22,'{:.2f}')]
             
             [cols.insert(n,i)  for n,i in acol]
@@ -343,7 +343,7 @@ class HYDRET:
         if self.kstmod == 'KSTIME':
             cols.insert(9,"KRAUT")
             typ.insert(9,int)
-            form.insert(9,'{:5d}')
+            form.insert(9,'{:5.0f}')
         _dtype = dict(zip(cols,typ))
         _dform = dict(zip(cols,form))
 

@@ -19,9 +19,7 @@ from dialogs.runHydret    import runModel
 from modules.loaddata    import dataadd,dataremove
 from modules.editsection  import (knoten_label,
                                   edit_modus,
-                                  edit_maxHeight,
-                                  _handlecopy,
-                                  _handlepaste)
+                                  edit_maxHeight)
 
 from modules.plotting     import (updateViews,update_schnitt,
                                   plot_update_coords,changeAR,
@@ -29,6 +27,8 @@ from modules.plotting     import (updateViews,update_schnitt,
                                   undo_but,redo_but,del_but,
                                   xyMarker,xyUnmark,
                                   colorpicker,
+                                  _handlecopy,
+                                  _handlepaste,
                                   loadresult,update_wsp,
                                   pointer_q1,pointer_q2,
                                   pointer_lang,pointer_node)
@@ -43,7 +43,9 @@ from modules.loadhyd      import (inflowNodes,
                                   lateralInflows,
                                   ovfmode)
 
+
 SCRIPT_DIR = os.path.dirname(os.path.realpath(sys.argv[0]))
+
 
 def connections(self):
     
@@ -167,6 +169,15 @@ def initiateBeautify(self):
     icon12 = QIcon()
     icon12.addPixmap(QPixmap(os.path.join(SCRIPT_DIR,"icons","delete.ico")), QIcon.Normal,QIcon.Off)
     self.delete_rows.setIcon(icon12)
+    icon13 = QIcon()
+    icon13.addPixmap(QPixmap(os.path.join(SCRIPT_DIR,"icons","water.ico")), QIcon.Normal,QIcon.Off)
+    self.qp_view.setIcon(icon13)
+    icon14 = QIcon()
+    icon14.addPixmap(QPixmap(os.path.join(SCRIPT_DIR,"icons","long.ico")), QIcon.Normal,QIcon.Off)
+    self.ls_view.setIcon(icon14)
+    icon15 = QIcon()
+    icon15.addPixmap(QPixmap(os.path.join(SCRIPT_DIR,"icons","map.ico")), QIcon.Normal,QIcon.Off)
+    self.lp_view.setIcon(icon15)
     
     #set table sizes for nicer display
     self.coords_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)

@@ -24,20 +24,32 @@ def load_qinfo(self,df,i):
                     self.qplotD['riloc'][n] = il
                     self.qplotD['rvbox'][n] = pg.ViewBox()
                     self.qplotD['rnode'][n] = df.iloc[il]
-                    self._rrau.setEnabled(True)
             for il in _iloc:
                 if df.iloc[il].Mode == 'ZS':
                     self.iloc_s = il
                     self.qplotD['siloc'][n] = il
                     self.qplotD['snode'][n] = df.iloc[il]
-                    self._rschalter.setEnabled(True)
         else:
-            self._rquer.setChecked(True)
-            self._rrau.setEnabled(False)
-            self._rschalter.setEnabled(False)
             for key_ in ['rvbox','rnode','riloc','snode','siloc']:
                 self.qplotD[key_][n] = None
-                    
+    
+    if not self.qplotD['riloc'][0] is None:
+        self._rrau.setEnabled(True)
+    else:
+        self._rrau.setEnabled(False)
+        
+    if not self.qplotD['siloc'][0] is None:
+        self._rschalter.setEnabled(True)
+    else:
+        self._rschalter.setEnabled(False)
+    
+    if self._rrau.isChecked():
+        if not self._rrau.isEnabled():
+            self._rquer.setChecked(True)
+    if self._rschalter.isChecked():
+        if not self._rschalter.isEnabled():
+            self._rquer.setChecked(True)
+        
     #lcd
     self.Punkte_label.display(self.Node['Npoints'])
 
