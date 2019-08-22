@@ -1,0 +1,57 @@
+      PROGRAM ANFANG95
+      CHARACTER*220 HYDZEIL,ANFZEIL
+      CHARACTER*12 HYDALT,HYDNEU,ANFDAT
+      CHARACTER*6 TEST1,TEST2
+      PRINT *
+      PRINT '(T2,A)','HYDRAIN-DATEI: '
+      READ (*,'(A)') HYDALT
+
+
+      DO 5 I=1,12
+         IF(HYDALT(I:I).EQ.'.') IP=I
+    5 CONTINUE
+      IP1=IP-1
+      IP2=IP+1
+      IP3=IP+3
+      HYDNEU=HYDALT(1:IP1)
+      HYDNEU(IP:IP)='.'
+      HYDNEU(IP2:IP3)='NEU'
+      PRINT *
+      PRINT '(T2,A,A)','AUSGABE AUF ',HYDNEU
+      PRINT *
+      PRINT '(T2,A)','ANFANGS-DATEI: '
+      READ (*,'(A)') ANFDAT
+      OPEN(11,FILE=HYDALT,STATUS='OLD')
+      OPEN(22,FILE=HYDNEU,STATUS='UNKNOWN')
+C
+      OPEN(33,FILE=ANFDAT,STATUS='OLD')
+      READ(33,'(A)') ANFZEIL
+      TEST1=ANFZEIL(1:6)
+C
+      NZALT=0
+      NZNEU=0
+    1 READ(11,'(A)',END=4) HYDZEIL
+      NZALT=NZALT+1
+C
+      TEST2=HYDZEIL(1:6)
+      IF (TEST1.EQ.TEST2) THEN
+         WRITE(22,'(A)') ANFZEIL
+         NZNEU=NZNEU+1
+         READ(33,'(A)',END=2) ANFZEIL
+         TEST1=ANFZEIL(1:6)
+      ELSE
+         WRITE(22,'(A)') HYDZEIL
+         NZNEU=NZNEU+1
+      END IF
+      GOTO 3
+C   2 WRITE(22,'(A)') HYDZEIL
+    2 TEST1='------'
+      CLOSE(33,STATUS='KEEP')
+    3 CONTINUE
+      GOTO 1
+    4 CONTINUE
+      PRINT '(T2,2(A,I5))','NZALT = ',NZALT,'   NZNEU = ',NZNEU
+      CLOSE(11,STATUS='KEEP')
+      CLOSE(22,STATUS='KEEP')
+      STOP
+      END

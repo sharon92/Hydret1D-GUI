@@ -4,16 +4,17 @@ from fbs_runtime.application_context.PyQt5 import ApplicationContext
 '''import system modules'''
 import sys
 import os
+import time
 import numpy             as np
 import pandas            as pd
-
+from packaging           import version
 '''import modules to read hydret'''
 from modules.rawh1d      import HYDRET as h1d
 from modules.rawh1d      import writePRO,writeStart,writeHYD,writeRUN
 from modules.editsection import update_labels
 from modules.loadhyd     import load_hyd,updateHyd
 from modules.loadgeo     import load_start,load_qinfo
-from modules.plotting    import (qplots,uqplots,
+from modules.plotting    import (qplots,uqplots,plotcols,
                                  plotROI,
                                  wsp_df_update,
                                  nodePlot,
@@ -26,9 +27,10 @@ import pyqtgraph          as     pg
 from PyQt5.QtWidgets      import (QMainWindow,
                                   QMessageBox,
                                   QFileDialog,
+                                  QSplashScreen,
                                   QAbstractItemView)
-from PyQt5.QtCore         import QCoreApplication,QEvent
-from PyQt5.QtGui          import QColor
+from PyQt5.QtCore         import QCoreApplication,QEvent,Qt
+from PyQt5.QtGui          import QColor,QPixmap
 from ui.interface         import initiateBeautify,connections
 from ui.hydretUI          import Ui_MainWindow
 
@@ -36,18 +38,19 @@ pg.setConfigOption('background', 'w')
 pg.setConfigOption('foreground', 'k')
 _translate = QCoreApplication.translate
 
+global DOUBLECLICK_FILE,SCRIPT_DIR
 SCRIPT_DIR = os.path.dirname(os.path.realpath(sys.argv[0]))
-
-global DOUBLECLICK_FILE
 DOUBLECLICK_FILE = False
 
-__version__ = '1.1.0'
-        
+__version__ = '1.1.4'
+
+
 class MainW(QMainWindow, Ui_MainWindow):
     
     def __init__(self):
         QMainWindow.__init__(self)
         self.setupUi(self)
+        self.setWindowTitle(_translate("MainWindow", "Hydret1D-GUI  v"+str(__version__)))
         self.showMaximized()
         
         #status
@@ -65,15 +68,16 @@ class MainW(QMainWindow, Ui_MainWindow):
         self.ls_view.triggered.connect(self.lsdockv)
         
         qplotD =     {
-                      'view'   : [self.graphicsView,self.graphicsView2],
+                      'view'    : [self.graphicsView,self.graphicsView2],
                       'node'    : [None,None],
                       'rnode'   : [None,None],
                       'riloc'   : [None,None],
                       'snode'   : [None,None],
                       'siloc'   : [None,None],
                       'axis'    : [None,None],
-                      'raxis'   : [None,None],
-                      'rvbox'   : [None,None],
+                      'lamtbank': [None,None],
+                      'lamcbank': [{},None],
+                      'lambank' : [None,None],
                       'annotate': [None,None],
                       'riverbed': [None,None],
                       'plotbot' : [None,None],
@@ -89,7 +93,11 @@ class MainW(QMainWindow, Ui_MainWindow):
         connections(self)
         
         #Beautify GUI
+        self.script_dir = SCRIPT_DIR
         initiateBeautify(self)
+        
+        #look for updates
+        self.checkForUpdates(clicked=False)
     
     def qdockv(self):
         
@@ -100,13 +108,11 @@ class MainW(QMainWindow, Ui_MainWindow):
         
         if not self.lp_dock.isVisible():
             self.lp_dock.setVisible(True)
-        self.lp_dock.show()
             
     def lsdockv(self):
         
         if not self.ls_dock.isVisible():
             self.ls_dock.setVisible(True)
-        self.ls_dock.show()
             
     def OpenEnv(self):
         #Zukunft run datei als h1d benannt
@@ -142,7 +148,13 @@ class MainW(QMainWindow, Ui_MainWindow):
             self.lp_view_box(hyd.achse.split("\\")[-1])
         except:
             pass
-
+        
+        self.forceplot = True
+        #initiate defaults
+        if not hasattr(self,'plotdefaults'):
+            self.forceplot = True
+            plotcols(self)
+        
         #initiate HYD 
         load_hyd(self)
         '''hyd checks'''
@@ -166,11 +178,24 @@ class MainW(QMainWindow, Ui_MainWindow):
 
         #set lageplan view active
         self.df_start     = hyd.df_start
+        
+        #wsp für längschnitts
         self.mod_plan     = self.p_plan.text()
-        self.df_wsp       = pd.DataFrame({self.mod_plan : self.df_start['HZERO']},
-                                          index = self.df_start.index)
-        self.wsp_view_dat = [(self.h1d.startdat,True,QColor(28,163,236,150),True)]
-        self.wsp_dict     = [self.mod_plan]
+        
+        #look for wsp.dat
+        self.db_wsp =[('Anfangs WSP',self.df_start)]
+        if os.path.isfile(os.path.join(self.h1denv,self.h1drun[:-4]+'_WSP.DAT')):
+            self.wsp_view_dat = [(self.h1d.startdat,False,QColor(28,163,236,150),True,QColor(255,0,255,255))]
+        else:
+            self.wsp_view_dat = [(self.h1d.startdat,True,QColor(28,163,236,150),True,QColor(255,0,255,255))]
+        self.wsp_dict     = ['Anfangs WSP']
+
+        if os.path.isfile(os.path.join(self.h1denv,self.h1drun[:-4]+'_WSP.DAT')):
+            self.wspdat = os.path.join(self.h1denv,self.h1drun[:-4]+'_WSP.DAT')
+            self.df_wsp = pd.read_csv(self.wspdat,sep=',',index_col=1,header=0)
+            self.db_wsp.append((self.mod_plan,self.df_wsp))
+            self.wsp_view_dat.append((os.path.basename(self.wspdat),True,QColor(28,163,236,150),True,QColor(255,0,255,255)))
+            self.wsp_dict.append(self.mod_plan)
 
         #update Profile
         self.knotenNr.blockSignals(True)
@@ -210,21 +235,35 @@ class MainW(QMainWindow, Ui_MainWindow):
         self.idChange(i=i)
         
         #update start
-        try:
-            nodePlot(self)
-            self.node_label = pg.TextItem(color='k',border='k',fill='w')
-            self.vLine_node = pg.InfiniteLine(angle=90, movable=False)
-            self.hLine_node = pg.InfiniteLine(angle=0,  movable=False)
-            nodeMarker(self,self.df_s)
-        except:
-            pass
+#        try:
+        nodePlot(self)
+        self.node_label = pg.TextItem(color='k',border='k',fill='w')
+        self.vLine_node = pg.InfiniteLine(angle=90, movable=False)
+        self.hLine_node = pg.InfiniteLine(angle=0,  movable=False)
+        self.nodeView.addItem(self.node_label)
+        self.nodeView.addItem(self.vLine_node, ignoreBounds=False)
+        self.nodeView.addItem(self.hLine_node, ignoreBounds=False)
+        self.node_label.setZValue(10000)
+        self.vLine_node.setZValue(9999)
+        self.hLine_node.setZValue(9999)
+#            nodeMarker(self,self.df_s)
+#        except:
+#            pass
         
         #update langschnitt
         try:        
             langPlot(self)
-            self.lang_label = pg.TextItem(color='k',border='k',fill='w')
+            self.lang_label = pg.TextItem(color='k',anchor = (0,1),border='k',fill='w')
             self.vLine_lang = pg.InfiniteLine(angle=90, movable=False)
             self.hLine_lang = pg.InfiniteLine(angle=0,  movable=False)
+            self.langView.addItem(self.lang_label)
+            self.lang_label.hide()
+            self.langView.addItem(self.vLine_lang, ignoreBounds=False)
+            self.langView.addItem(self.hLine_lang, ignoreBounds=False)
+            self.lang_label.setTextWidth(150)
+            self.lang_label.setZValue(10000)
+            self.vLine_lang.setZValue(9999)
+            self.hLine_lang.setZValue(9999)
         except:
             pass
         
@@ -292,11 +331,11 @@ class MainW(QMainWindow, Ui_MainWindow):
         load_start(self)
 
         #try updating the existing plot
-        if not ((self.qplotD['axis'][0] is None) or (self.qplotD['axis'][1] is None)):
-            uqplots(self)
-        else:
+        if self.forceplot:
             qplots(self)
             wsp_df_update (self)
+        else:
+            uqplots(self)
 
         if self.Edit:
             self.graphicsView.addItem(self.editable_schnitt)
@@ -304,7 +343,7 @@ class MainW(QMainWindow, Ui_MainWindow):
             plotROI(self)
             self.editable_schnitt.blockSignals(False)
             
-        nodeMarker(self,self.df_s)
+#        nodeMarker(self,self.df_s)
         
         self.knotenNr.blockSignals(False)
         self.station_label.blockSignals(False)
@@ -399,10 +438,48 @@ class MainW(QMainWindow, Ui_MainWindow):
         writeRUN(self.h1drun,self.h1d)
         self.statusbar.showMessage('Ready')
 
+        
+    #look for updates
+    def checkForUpdates(self,clicked=True):
+        try:
+            cver = r'x:\Programme\Hydret1D-GUI\version'
+            with open(cver,'r') as v:
+                line = v.readlines()[0]
+            ver,pfad = line.split(',')
+            
+            if version.parse(ver) > version.parse(__version__):
+                QMessageBox.question(self,'Updates verfügbar!',('Aktuelle Version: '
+                                                                      +__version__+' --> Neuste Version: '
+                                                                      +ver+'\nUm zum Aktualisieren bitte schließen und von unten'+
+                                                                      ' gegebene pfad Updaten!\nPfad: '+
+                                                                      pfad),
+                                 QMessageBox.Ok)
+    
+                    
+            else:
+                if clicked:
+                    QMessageBox.question(self,'Up to Date!',('Aktuelle Version: '
+                                                                          +__version__+'\nVersion Verfügbar: '
+                                                                          +ver),QMessageBox.Ok)
+        except:
+            pass
+
 if __name__ == '__main__':
     appctxt = ApplicationContext()
+    
+    splash_pix = QPixmap('icons/hydret1D.ico')
+    splash     = QSplashScreen(splash_pix,Qt.WindowStaysOnTopHint)
+    splash.setWindowFlags(Qt.WindowStaysOnTopHint | Qt.FramelessWindowHint)
+    splash.setEnabled(False)
+
+    splash.show()
+    splash.showMessage("", Qt.AlignBaseline| Qt.AlignBottom, Qt.white)
+
+    time.sleep(1)
+
     myapp = MainW()
     myapp.show()
+    splash.finish(myapp)
     try:
         if sys.argv[1].lower().endswith('.run'):
             try:
@@ -413,5 +490,6 @@ if __name__ == '__main__':
                 myapp.statusbar.showMessage('Invalid File!')
     except:
         pass
+    
     exit_code = appctxt.app.exec_()
     sys.exit(exit_code)

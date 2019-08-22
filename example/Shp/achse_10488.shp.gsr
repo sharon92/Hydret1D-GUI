@@ -1,0 +1,17 @@
+Golden Software Cartographic Reference Information : Version 1.10
+Projection Name : Unprojected Lat/Long
+Datum Name : World Geodetic System 1984
+Datum Method : Molodensky
+Datum Ellipsoid Type : WGS 84
+Datum Prime Meridian Shift (degrees) : 0
+Datum X-Shift in meters from WGS84 : 0
+Datum Y-Shift in meters from WGS84 : 0
+Datum Z-Shift in meters from WGS84 : 0
+Datum Ellipsoid Radius (meters) : 6378137
+Datum Ellipsoid Flattening : 0.00335281066474748
+Georef Method : Affine Polynomial
+Georef Control Point Count : 4
+Georef Point : 0  2503  3463823.22  5433942.8
+Georef Point : 1622  2503  3488848.0396  5433942.8
+Georef Point : 1622  0  3488848.0396  5472576.3904
+Georef Point : 0  0  3463823.22  5472576.3904

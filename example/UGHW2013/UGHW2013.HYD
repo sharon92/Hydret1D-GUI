@@ -1,0 +1,40 @@
+PROJEKT GRUNDWASSERMODELL SÖLLINGEN/GREFFERN                                                                                                    
+ABFLUSS IM RHEIN OBERHALB STAUSTUFE IFFEZHEIM                                                                                              
+    
+HW 2013 13.05.2013 - 09.07.2013        
+0.00  1371.0 10.0  2743  30.0  0   1    
+ -279    1    2    10    0    0   0   0                                                                                                       
+ 2742    8    30.    3 1.20 0.08                                                                                                                                              
+ 1130 1118 1040 1000  970  950                                                                                                                            
+  937 1937                                                                                                                                               
+NORAIN            
+      1223      1190                                                                                                                                                                             
+QKRA2013.ein                IN 1.0000000                                                                                           
+QWEH2013.ein                IN 1.0000000                                                                                                                                                                                               
+KW Gammbsheim muendet in Rhein
+ 1167 1190 1201 1223 1166    0    0      28725.000     0.0       0.0       0.0
+OW_Wehr.wrb
+1                                                                                                                                                                                                                        
+      1.   0.05   0.200                                                                                                                                                                                                     
+ 946   0                                                                                                                                                                                                                    
+04160946.AUS                                                                                                                                                                                                                
+ 945   0                                                                                                                                                                                                                    
+04160945.AUS                                                                                                                                                                                                                
+ 944   0                                                                                                                                                                                                                    
+04160944.AUS                                                                                                                                                                                                                
+ 943   0                                                                                                                                                                                                                    
+04160943.AUS                                                                                                                                                                                                                
+ 942   0                                                                                                                                                                                                                    
+04160942.AUS                                                                                                                                                                                                                
+ 941   0                                                                                                                                                                                                                    
+04160941.AUS                                                                                                                                                                                                                
+ 940   0                                                                                                                                                                                                                    
+04160940.AUS                                                                                                                                                                                                                
+ 939   0                                                                                                                                                                                                                    
+04160939.AUS                                                                                                                                                                                                                
+ 938   0                                                                                                                                                                                                                    
+04160938.AUS                                                                                                                                                                                                                
+ 937   0                                                                                                                                                                                                                    
+04160937.AUS                                                                                                                                                                                                                
+ 0.0              RK          UGHW2013.PRO                                                                                                                                                                                             
+..\UG130513\UG130513_Start.dat

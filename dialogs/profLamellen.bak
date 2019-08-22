@@ -1,0 +1,386 @@
+# -*- coding: utf-8 -*-
+'''import system modules'''
+import os
+import numpy as np
+import pandas as pd
+from functools           import partial
+from modules.rawh1d      import HYDRET as h1d
+from modules.riverbed    import riv_bed
+
+'''import pyqt5 modules'''
+import pyqtgraph         as     pg
+from PyQt5.QtWidgets     import (QDialog,
+                                 QTableWidgetItem,
+                                 QHeaderView)
+from PyQt5.QtGui      import QColor
+
+from ui.rauDialog        import Ui_rauDialog
+
+
+script_dir = os.getcwd()
+
+class profLamellen(QDialog,Ui_rauDialog):
+
+    def __init__(self, myapp, parent=None):
+        super().__init__(parent)
+        self.setupUi(self)
+        self.main = myapp
+        self.initiate()
+        self.overwrite.stateChanged.connect(self.ovw)
+        self.nodes_table.itemSelectionChanged.connect(self.lcd)
+        self.rauView.getViewBox().sigResized.connect(self.updateViews)
+        self.ok.clicked.connect(self.accept)
+        self.cancel.clicked.connect(self.reject)
+        self.nodes_table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+        comboboxlist = [self.f_xv,self.f_xb,self.vs_xv,self.vs_xb]
+        [combobox.currentIndexChanged.connect(partial(self.vonbischanged,but=combobox)) for combobox in comboboxlist]
+        [spinbox.valueChanged.connect(partial(self.vonbischanged,but=None)) for spinbox in [self.f_kst,self.vg_kst,self.vs_kst]]
+
+    def ovw(self):
+        if self.overwrite.checkState() == 2:
+            self.dataname.setEnabled(False)
+        else:
+            self.dataname.setEnabled(True)
+        
+    def lcd(self):
+
+        self.idx = sorted(set([i.row() for i in self.nodes_table.selectedIndexes()]))
+        if len(self.idx)>0:
+            self.N = self.main.df_pro.loc[int(self.nodes_table.item(self.idx[0],0).text())]
+            self.banks()
+            
+    def banks(self):
+        riv_bed_idx = riv_bed(self.N)[1]
+        
+        #flussbett
+        self.left_fbank = self.N.Y[:riv_bed_idx].argmax()
+        self.right_fbank = riv_bed_idx + self.N.Y[riv_bed_idx:].argmax()
+        
+        #vorland mit vegetation streifen
+        if self.left_fbank < 3:
+            self.left_sbank = 0
+        else:
+            self.left_sbank = self.left_fbank-3
+        
+        if self.right_fbank > len(self.N.X)-4:
+            self.right_sbank = len(self.N.X)-1
+        else:
+            self.right_sbank = self.right_fbank+3
+
+        self.vonbis(add=True)
+    
+    def vonbischanged(self,i,but=None):
+        
+        self.left_fbank  = self.f_xv.currentIndex()
+        self.right_fbank = self.f_xb.currentIndex()
+        
+        self.left_sbank  = self.vs_xv.currentIndex()
+        self.right_sbank = self.vs_xb.currentIndex()
+        
+        idx = [self.left_sbank,self.left_fbank,self.right_fbank,self.right_sbank]
+        
+        if but is None:
+            self.vonbis(add=False)
+        
+        elif sorted(idx) == idx:
+            self.vonbis(add=False)
+            
+        else:
+            bord = [self.vs_xv,self.f_xv,self.f_xb,self.vs_xb].index(but)
+            
+            if bord == 0:
+                if self.left_sbank > self.left_fbank:
+                    self.left_fbank = self.left_sbank
+                if self.left_fbank > self.right_fbank:
+                    self.right_fbank = self.left_fbank
+                if self.right_fbank> self.right_sbank:
+                    self.right_sbank = self.right_fbank
+                    
+            elif bord == 1:
+                if self.left_fbank < self.left_sbank:
+                    self.left_sbank = self.left_fbank
+                if self.left_fbank > self.right_fbank:
+                    self.right_fbank = self.left_fbank
+                if self.right_fbank> self.right_sbank:
+                    self.right_sbank = self.right_fbank
+                    
+            elif bord == 2:
+                if self.right_fbank> self.right_sbank:
+                    self.right_sbank = self.right_fbank
+                if self.right_fbank< self.left_fbank:
+                    self.left_fbank = self.right_fbank
+                if self.left_fbank < self.left_sbank:
+                    self.left_sbank = self.left_fbank
+
+            elif bord == 3:
+                if self.right_sbank< self.right_fbank:
+                    self.right_fbank = self.right_sbank
+                if self.right_fbank< self.left_fbank:
+                    self.left_fbank = self.right_fbank
+                if self.left_fbank < self.left_sbank:
+                    self.left_sbank = self.left_fbank
+            self.vonbis(add=False)
+            
+    def vonbis(self,add=True):
+        [i.blockSignals(True) for i in [self.f_xv,self.f_xb,self.vs_xv,self.vs_xb]]
+        
+        if add:
+            [i.clear() for i in [self.f_xv,self.f_xb,self.vs_xv,self.vs_xb]]
+
+            self.f_xv.addItems(self.N.X.astype(str))
+            self.f_xb.addItems(self.N.X.astype(str))
+            self.vs_xv.addItems(self.N.X.astype(str))
+            self.vs_xb.addItems(self.N.X.astype(str))
+            self.vg_xv.setText(str(self.N.X[0]))
+            self.vg_xb.setText(str(self.N.X[-1]))
+        self.f_kst2.setText(str(self.f_kst.value()))
+        self.vs_kst2.setText(str(self.vs_kst.value()))
+        self.vg_kst2.setText(str(self.vg_kst.value()))
+       
+        self.vs_xv.setCurrentIndex(self.left_sbank)
+        self.f_xv.setCurrentIndex(self.left_fbank)
+        self.f_xb.setCurrentIndex(self.right_fbank)
+        self.vs_xb.setCurrentIndex(self.right_sbank)
+
+        [i.blockSignals(False) for i in [self.f_xv,self.f_xb,self.vs_xv,self.vs_xb]]
+
+        self.plot()
+        
+    def plot(self):
+        '''kst'''
+        k_vg = self.vg_kst.value()
+        k_vs = self.vs_kst.value()
+        k_fb = self.f_kst.value()
+        y                                     = np.full(len(self.N.X),k_vg)
+        y[self.left_sbank:self.right_sbank+1] = k_vs
+        y[self.left_fbank:self.right_fbank+1] = k_fb
+        
+        self.y = y
+
+        if hasattr(self,'profplot') & hasattr(self,'kstplot'):
+            self.profplot.setData(self.N.X,self.N.Y,fillLevel=self.N.Y.min()-0.5)
+            self.kstplot.setData(self.N.X,self.y,fillLevel=np.min(self.y)-1)
+            self.plotarrows(fresh=False)
+            self.rauView.getViewBox().autoRange(items=[self.profplot,self.kstplot,*self.items])
+        else:
+            self.profplot = self.rauView.plot(self.N.X,self.N.Y,pen='k',symbol='d',
+                                             symbolSize=7,symbolPen='r',symbolBrush='r',
+                                             fillLevel=self.N.Y.min()-0.5,
+                                             brush=QColor(165,42,42,150))
+            self.profplot.setZValue(0)
+            #self.profplot.getViewBox().setAspectLocked(lock=True, ratio=1)
+            self.rauView.showAxis('right')
+            self.rauView.getAxis('right').setLabel('kst', color='#0000FF')
+            self.rauView.getAxis('left').setLabel('Höhe', color='#FF0000')
+            self.vb = pg.ViewBox()
+            self.rauView.scene().addItem(self.vb)
+            self.vb.setGeometry(self.rauView.getViewBox().sceneBoundingRect())
+            self.rauView.getAxis('right').linkToView(self.vb)
+            self.vb.setXLink(self.rauView)
+            self.vb.setYRange(0,np.max(self.y)+1)
+            self.rauView.setYRange(np.min(self.N.Y)-0.2,np.max(self.N.Y)+6)
+            self.kstplot = pg.PlotDataItem(self.N.X, self.y, pen='k', symbol='d',
+                                           symbolSize=7,symbolPen='b', symbolBrush='b',
+                                           fillLevel=np.min(self.y)-1,brush=0.6,name='k-strickler')
+            self.kstplot.setZValue(1)
+            self.plotarrows(fresh=True)
+            self.vb.addItem(self.kstplot)
+    
+    def plotarrows(self,fresh=True):
+        ytop = self.N.Y.max()+2
+        lb_s = float(self.vs_xv.currentText())
+        yl_s = self.N.Y[self.vs_xv.currentIndex()]
+        rb_s = float(self.vs_xb.currentText())
+        yr_s = self.N.Y[self.vs_xb.currentIndex()]
+        
+        lb_f = float(self.f_xv.currentText())
+        yl_f = self.N.Y[self.f_xv.currentIndex()]
+        rb_f = float(self.f_xb.currentText())
+        yr_f = self.N.Y[self.f_xb.currentIndex()]
+        
+        if fresh:
+            self.lb_g = pg.PlotDataItem([self.N.X[0],self.N.X[0]],[self.N.Y[0],ytop])
+            self.rb_g = pg.PlotDataItem([self.N.X[-1],self.N.X[-1]],[self.N.Y[-1],ytop])
+            
+            self.lb_s = pg.PlotDataItem([lb_s,lb_s],[yl_s,ytop])
+            self.rb_s = pg.PlotDataItem([rb_s,rb_s],[yr_s,ytop])
+            
+            self.lb_f = pg.PlotDataItem([lb_f,lb_f],[yl_f,ytop])
+            self.rb_f = pg.PlotDataItem([rb_f,rb_f],[yr_f,ytop])
+            
+            self.ltop = pg.PlotDataItem([self.N.X[0],self.N.X[-1]],[ytop,ytop])
+            
+            self.a_l = pg.ArrowItem(angle=0,pen=None,brush='k')
+            self.a_l.setPos(self.N.X[0],ytop)
+    
+            self.a_r = pg.ArrowItem(angle=180,pen=None,brush='k')
+            self.a_r.setPos(self.N.X[-1],ytop)
+            
+            self.text_gl = pg.TextItem(text = 'VG= '+str(self.vg_kst.value()),
+                                      angle=90,anchor=(0.5,0.5),border='k',fill=QColor(0,100,0),color='w')
+            self.text_gl.setPos((self.N.X[0]+lb_s)/2.,ytop)
+            
+            self.text_gr = pg.TextItem(text = 'VG= '+str(self.vg_kst.value()),
+                                      angle=-90,anchor=(0.5,0.5),border='k',fill=QColor(0,100,0),color='w')
+            self.text_gr.setPos((self.N.X[-1]+rb_s)/2.,ytop)
+            
+            self.text_sl = pg.TextItem(text = 'VS= '+str(self.vs_kst.value()),
+                                      angle=90,anchor=(0.5,0.5),border='k',fill='r',color='w')
+            self.text_sl.setPos((lb_f+lb_s)/2.,ytop)
+            
+            self.text_sr = pg.TextItem(text = 'VS= '+str(self.vs_kst.value()),
+                                      angle=-90,anchor=(0.5,0.5),border='k',fill='r',color='w')
+            self.text_sr.setPos((rb_f+rb_s)/2.,ytop)
+            
+            self.text_f = pg.TextItem(text = 'FB= '+str(self.f_kst.value()),
+                                      angle=0,anchor=(0.5,0.5),border='k',fill='b',color='w')
+            self.text_f.setPos((lb_f+rb_f)/2.,ytop)
+            
+            self.items = [self.lb_g,self.rb_g,self.lb_s,self.rb_s,self.lb_f,self.rb_f,
+             self.ltop,self.a_l,self.a_r,self.text_gl,self.text_gr,self.text_sl,self.text_sr,
+             self.text_f]
+            [self.rauView.addItem(i) for i in self.items]
+        else:
+            self.lb_g.setData([self.N.X[0],self.N.X[0]],[self.N.Y[0],ytop])
+            self.rb_g.setData([self.N.X[-1],self.N.X[-1]],[self.N.Y[-1],ytop])
+            
+            self.lb_s.setData([lb_s,lb_s],[yl_s,ytop])
+            self.rb_s.setData([rb_s,rb_s],[yr_s,ytop])
+            
+            self.lb_f.setData([lb_f,lb_f],[yl_f,ytop])
+            self.rb_f.setData([rb_f,rb_f],[yr_f,ytop])
+            
+            self.ltop.setData([self.N.X[0],self.N.X[-1]],[ytop,ytop])
+            
+            self.a_l.setPos(self.N.X[0],ytop)
+            self.a_r.setPos(self.N.X[-1],ytop)
+            
+            self.text_gl.setText('VG= '+str(self.vg_kst.value()))
+            self.text_gl.setPos((self.N.X[0]+lb_s)/2.,ytop)
+            
+            self.text_gr.setText('VG= '+str(self.vg_kst.value()))
+            self.text_gr.setPos((self.N.X[-1]+rb_s)/2.,ytop)
+            
+            self.text_sl.setText('VS= '+str(self.vs_kst.value()))
+            self.text_sl.setPos((lb_s+lb_f)/2.,ytop)
+            
+            self.text_sr.setText('VS= '+str(self.vs_kst.value()))
+            self.text_sr.setPos((rb_s+rb_f)/2.,ytop)
+            
+            self.text_f.setText('FB= '+str(self.f_kst.value()))
+            self.text_f.setPos((lb_f+rb_f)/2.,ytop)
+            
+            #show and hide
+            if self.f_xv.currentIndex() == self.vs_xv.currentIndex():
+                self.text_sl.hide()
+            else:
+                self.text_sl.show()
+            
+            if (self.f_xv.currentText() == self.vg_xv.text()) or (self.vs_xv.currentText()==self.vg_xv.text()):
+                self.text_gl.hide()
+            else:
+                self.text_gl.show()
+            
+            if self.f_xb.currentIndex() == self.vs_xb.currentIndex():
+                self.text_sr.hide()
+            else:
+                self.text_sr.show()
+            
+            if self.f_xb.currentText() == self.vg_xb.text() or (self.vs_xb.currentText()==self.vg_xb.text()):
+                self.text_gr.hide()
+            else:
+                self.text_gr.show()
+                
+    def updateViews(self):
+        try:
+            self.vb.setGeometry(self.rauView.getViewBox().sceneBoundingRect())
+            self.vb.linkedViewChanged(self.rauView.getViewBox(), self.vb.XAxis)
+        except:
+            pass
+        
+    def initiate(self):
+        name = self.main.h1drun.upper().replace('.RUN','')
+        path = self.main.h1denv
+        counter = 0
+        while True:
+            start = name.replace('_rau','')+'_rau'+str(counter)+'_Start.dat'
+            pro   = name.replace('_rau','')+'_rau'+str(counter)+'.pro'
+            hyd   = name.replace('_rau','')+'_rau'+str(counter)+'.hyd'
+            run   = name.replace('_rau','')+'_rau'+str(counter)+'.run'
+            
+            for f in [start,pro,hyd,run]:
+                if os.path.isfile(os.path.join(path,f)):
+                    create = False
+                    break
+                else: create = True
+            if create:
+                break
+            counter +=1
+        self.dataname.setText(name+'_rau'+str(counter))
+        
+        nodes = []
+        for i in self.main.df_pro.index:
+            if -1*i in self.main.df_pro.index:
+                continue
+            else:
+                nodes.append(i)
+        self.nodes_table.setRowCount(len(nodes))
+        for i in range(self.nodes_table.rowCount()):
+            node = nodes[i]
+            self.nodes_table.setItem(i,0,QTableWidgetItem(str(node)))
+            self.nodes_table.setItem(i,1,QTableWidgetItem(str(self.main.df_start.loc[abs(node)]['XL'])))
+            self.nodes_table.setItem(i,2,QTableWidgetItem(str(int(self.main.df_start.loc[abs(node)]['ID']))))
+            self.nodes_table.setItem(i,3,QTableWidgetItem(str(self.main.df_pro.loc[node]['PName'])))
+
+def raumode(self):
+    Popup = profLamellen(self)
+    if Popup.exec_():
+        nodes = []
+        for i in Popup.idx:
+            nodes.append(int(Popup.nodes_table.item(i,0).text()))
+        
+        for i in nodes:
+            self.df_pro.loc[i]['Mode'] = Popup._modus.text()
+            
+            # appending Rauheitsprofil
+            node                       = self.df_pro.loc[i].copy()
+            node.name                  = -1*i
+            node['Mode']               = 'H2'
+            node['PName']              = 'RAUHEITSPROFIL'
+            y = []
+            for t in range(Popup.samplerauY.rowCount()):
+                y.append(float(Popup.samplerauY.item(t,0).text()))
+            node['Y']                  = np.array(y)
+            self.df_pro                = self.df_pro.append(node)
+            
+            #appending Schalterprofil
+            if Popup._schaltercheck.checkState() == 2:
+                nodeS                  = self.df_pro.loc[i].copy()
+                nodeS['Mode']          = 'ZS'
+                nodeS['PName']         = 'SCHALTPROFIL'
+                self.df_pro            = self.df_pro.append(nodeS)
+        
+        #reorder dataframe
+        temp = pd.DataFrame(columns = self.df_pro.columns)
+        idx  = self.df_pro[self.df_pro.index > 0].index
+        for i in idx:
+            node = self.df_pro.loc[i].copy()
+            
+            if -1*i in self.df_pro.index:
+                iloc = np.argwhere(self.df_pro.index==-1*i)[0]
+                for il in iloc:
+                    if self.df_pro.iloc[il].Mode == Popup._lmodus.text():
+                        nodeL = self.df_pro.iloc[il].copy()
+                        temp = temp.append(nodeL)
+                        temp = temp.append(node)
+                for il in iloc:
+                    if self.df_pro.iloc[il].Mode == Popup._smodus.text():
+                        nodeS = self.df_pro.iloc[il].copy()
+                        temp = temp.append(nodeS)
+            else:
+                temp = temp.append(node)
+        del self.df_pro
+        self.df_pro = temp
+        self.saveProject()
+        n_h1d = h1d(hydret_path = self.HydretEnv[0])
+        self.initiate(hyd = n_h1d,i=self.knotenNr.currentIndex())

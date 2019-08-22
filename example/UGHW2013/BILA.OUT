@@ -1,0 +1,46 @@
+1
+
+
+   GESAMTBILANZ FUER DEN SIMULATIONSLAUF
+   -------------------------------------
+
+
+ PROJEKT GRUNDWASSERMODELL SÖLLINGEN/GREFFERN                            
+ ABFLUSS IM RHEIN OBERHALB STAUSTUFE IFFEZHEIM                           
+ ANFANGSKNOTEN                           1130
+ SIMULATIONSDAUER                        1371 H
+ NIEDERSCHLAGSMENGE                      0.00 MM
+
+
+
+                  0.0000     0.0000     0.0000     0.0000     0.0000     0.0000     0.0000    
+ º-------------------------------------------------------º
+ º                                                       º
+ º    GESAMTBILANZ FšR DEN SIMULATIONSLAUF               º
+ º    -------------------------------------              º
+ º                                                       º
+ º    PROJEKT GRUNDWASSERMODELL SÖLLINGEN/GREFFERN       º
+ º    ABFLUSS IM RHEIN OBERHALB STAUSTUFE IFFEZHEIM      º
+ º                                                       º
+ º    ANFANGSKNOTEN                       1130           º
+ º    SIMULATIONSDAUER                    1371      H    º
+ º    GEBIETSNIEDERSCHLAG             0.0000     M**3    º
+ º    FLŽCHE                          0.0000     M**2    º
+ º  ( ZUFLUSS AN EINTRITTSKN.         0.0000     M**3 )  º
+ º  ( ZUFLUSS AM KNOTEN 1130          0.0000     M**3 )  º
+ º    ZUFLUSS VON OBERHALB          - 0.0000     M**3    º
+ º    SEITL. ZUFLUSS (LAND)         - 0.0000     M**3    º
+ º    SEITL. ZUFLUSS (GW)           - 0.0000     M**3    º
+ º    SONSTIGE SEITL. ZUFL.         - 0.0000     M**3    º
+ º    UEBERLAUFMENGE                + 0.0000     M**3    º
+ º    -----------------------------------------------    º
+ º    ABFLUSS - ZUFLUSS              0.99900     M**3    º
+ º                                                       º
+ º-------------------------------------------------------º
+
+
+
+
+
+
+

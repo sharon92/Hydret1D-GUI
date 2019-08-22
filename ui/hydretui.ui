@@ -14,7 +14,7 @@
    <bool>true</bool>
   </property>
   <property name="windowTitle">
-   <string>Hydret1D  v1.1</string>
+   <string>Hydret1D-GUI  v1.1.2</string>
   </property>
   <property name="windowIcon">
    <iconset>
@@ -135,12 +135,17 @@
          </column>
          <column>
           <property name="text">
-           <string>Color</string>
+           <string>WSP</string>
           </property>
          </column>
          <column>
           <property name="text">
-           <string>Fill</string>
+           <string>Fill (WSP)</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>EL</string>
           </property>
          </column>
         </widget>
@@ -237,12 +242,17 @@
             <widget class="QComboBox" name="p_format">
              <item>
               <property name="text">
-               <string>Binär</string>
+               <string>BINÄR</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>Ascii</string>
+               <string>ASCII</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>TRANS</string>
               </property>
              </item>
             </widget>
@@ -367,7 +377,7 @@
             <x>0</x>
             <y>0</y>
             <width>452</width>
-            <height>1048</height>
+            <height>1031</height>
            </rect>
           </property>
           <attribute name="label">
@@ -560,7 +570,7 @@
             <x>0</x>
             <y>0</y>
             <width>452</width>
-            <height>1048</height>
+            <height>1031</height>
            </rect>
           </property>
           <attribute name="label">
@@ -587,6 +597,9 @@
                   <property name="alternatingRowColors">
                    <bool>true</bool>
                   </property>
+                  <attribute name="verticalHeaderVisible">
+                   <bool>false</bool>
+                  </attribute>
                   <column>
                    <property name="text">
                     <string>Knoten</string>
@@ -605,6 +618,16 @@
                   <column>
                    <property name="text">
                     <string>Faktor</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string>Station</string>
+                   </property>
+                  </column>
+                  <column>
+                   <property name="text">
+                    <string>Basis Q</string>
                    </property>
                   </column>
                  </widget>
@@ -714,6 +737,9 @@
                 <attribute name="horizontalHeaderStretchLastSection">
                  <bool>true</bool>
                 </attribute>
+                <attribute name="verticalHeaderVisible">
+                 <bool>false</bool>
+                </attribute>
                 <column>
                  <property name="text">
                   <string>Knoten</string>
@@ -732,7 +758,7 @@
             <x>0</x>
             <y>0</y>
             <width>452</width>
-            <height>1048</height>
+            <height>1031</height>
            </rect>
           </property>
           <attribute name="label">
@@ -764,6 +790,9 @@
             <layout class="QGridLayout" name="gridLayout_8">
              <item row="0" column="0">
               <widget class="QTableWidget" name="p_junnam_table">
+               <property name="alternatingRowColors">
+                <bool>true</bool>
+               </property>
                <attribute name="horizontalHeaderStretchLastSection">
                 <bool>true</bool>
                </attribute>
@@ -776,6 +805,9 @@
              </item>
              <item row="2" column="0">
               <widget class="QTableWidget" name="p_nxj_table">
+               <property name="alternatingRowColors">
+                <bool>true</bool>
+               </property>
                <column>
                 <property name="text">
                  <string>1</string>
@@ -850,6 +882,9 @@
              </item>
              <item row="4" column="0">
               <widget class="QTableWidget" name="p_dxlgam_table">
+               <property name="alternatingRowColors">
+                <bool>true</bool>
+               </property>
                <column>
                 <property name="text">
                  <string>Entfernung[m]</string>
@@ -882,7 +917,7 @@
             <x>0</x>
             <y>0</y>
             <width>452</width>
-            <height>1048</height>
+            <height>1031</height>
            </rect>
           </property>
           <attribute name="label">
@@ -1060,10 +1095,66 @@
               <string>Abflussganglinie [cbm/s]</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_18">
-              <item row="0" column="1">
-               <widget class="QLineEdit" name="p_abg_dat"/>
+              <item row="1" column="8">
+               <widget class="QDoubleSpinBox" name="doubleSpinBox_4"/>
               </item>
-              <item row="0" column="3">
+              <item row="0" column="1">
+               <widget class="QLabel" name="label_57">
+                <property name="text">
+                 <string>Datei</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLineEdit" name="p_abg_dat">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="7">
+               <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
+                <property name="minimumSize">
+                 <size>
+                  <width>80</width>
+                  <height>0</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="6">
+               <widget class="QLabel" name="label_56">
+                <property name="text">
+                 <string>Faktor</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="8">
+               <widget class="QLabel" name="label_96">
+                <property name="text">
+                 <string>Basis Q</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2">
+               <widget class="QToolButton" name="toolButton_2">
+                <property name="text">
+                 <string>...</string>
+                </property>
+                <property name="icon">
+                 <iconset>
+                  <normaloff>../icons/visibility.ico</normaloff>../icons/visibility.ico</iconset>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="7">
+               <widget class="QLabel" name="label_95">
+                <property name="text">
+                 <string>Station</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="4">
                <widget class="QComboBox" name="p_abg_mod">
                 <item>
                  <property name="text">
@@ -1077,31 +1168,24 @@
                 </item>
                </widget>
               </item>
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_57">
-                <property name="text">
-                 <string>Datei</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="5">
-               <widget class="QDoubleSpinBox" name="p_abg_fak">
-                <property name="value">
-                 <double>1.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="2">
+              <item row="0" column="4">
                <widget class="QLabel" name="label_58">
                 <property name="text">
                  <string>Mod</string>
                 </property>
                </widget>
               </item>
-              <item row="0" column="4">
-               <widget class="QLabel" name="label_56">
+              <item row="1" column="6">
+               <widget class="QDoubleSpinBox" name="p_abg_fak">
+                <property name="value">
+                 <double>1.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="3">
+               <widget class="QToolButton" name="toolButton_4">
                 <property name="text">
-                 <string>Faktor</string>
+                 <string>...</string>
                 </property>
                </widget>
               </item>
@@ -1117,10 +1201,63 @@
               <string>Wasserstandsganglinie [m+NN]</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_17">
-              <item row="0" column="1">
-               <widget class="QLineEdit" name="p_wsg_dat"/>
+              <item row="1" column="1">
+               <widget class="QLineEdit" name="p_wsg_dat">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+               </widget>
               </item>
-              <item row="0" column="3">
+              <item row="1" column="6">
+               <widget class="QDoubleSpinBox" name="p_wsg_fak">
+                <property name="value">
+                 <double>1.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="7">
+               <widget class="QLabel" name="label_2">
+                <property name="text">
+                 <string>Station</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="6">
+               <widget class="QLabel" name="label_55">
+                <property name="text">
+                 <string>Faktor</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="8">
+               <widget class="QLabel" name="label_92">
+                <property name="text">
+                 <string>Basis Q</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="8">
+               <widget class="QDoubleSpinBox" name="doubleSpinBox_3"/>
+              </item>
+              <item row="1" column="2">
+               <widget class="QToolButton" name="toolButton">
+                <property name="text">
+                 <string>...</string>
+                </property>
+                <property name="icon">
+                 <iconset>
+                  <normaloff>../icons/visibility.ico</normaloff>../icons/visibility.ico</iconset>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="4">
+               <widget class="QLabel" name="label_54">
+                <property name="text">
+                 <string>Mod</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="4">
                <widget class="QComboBox" name="p_wsg_mod">
                 <item>
                  <property name="text">
@@ -1134,31 +1271,27 @@
                 </item>
                </widget>
               </item>
-              <item row="0" column="4">
-               <widget class="QLabel" name="label_55">
-                <property name="text">
-                 <string>Faktor</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0">
+              <item row="0" column="1">
                <widget class="QLabel" name="label_37">
                 <property name="text">
                  <string>Datei</string>
                 </property>
                </widget>
               </item>
-              <item row="0" column="2">
-               <widget class="QLabel" name="label_54">
-                <property name="text">
-                 <string>Mod</string>
+              <item row="1" column="7">
+               <widget class="QDoubleSpinBox" name="doubleSpinBox">
+                <property name="minimumSize">
+                 <size>
+                  <width>80</width>
+                  <height>0</height>
+                 </size>
                 </property>
                </widget>
               </item>
-              <item row="0" column="5">
-               <widget class="QDoubleSpinBox" name="p_wsg_fak">
-                <property name="value">
-                 <double>1.000000000000000</double>
+              <item row="1" column="3">
+               <widget class="QToolButton" name="toolButton_3">
+                <property name="text">
+                 <string>...</string>
                 </property>
                </widget>
               </item>
@@ -1186,7 +1319,7 @@
             <x>0</x>
             <y>0</y>
             <width>452</width>
-            <height>1048</height>
+            <height>1031</height>
            </rect>
           </property>
           <attribute name="label">
@@ -1277,7 +1410,7 @@
             <x>0</x>
             <y>0</y>
             <width>452</width>
-            <height>1048</height>
+            <height>1031</height>
            </rect>
           </property>
           <attribute name="label">
@@ -1568,7 +1701,7 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>About</string>
     </property>
-    <addaction name="checkforupdate"/>
+    <addaction name="checkver"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -1616,7 +1749,7 @@ p, li { white-space: pre-wrap; }
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_5">
     <layout class="QGridLayout" name="gridLayout_13" rowstretch="1,0,0">
-     <item row="0" column="2" rowspan="3">
+     <item row="0" column="3" rowspan="3">
       <widget class="QTabWidget" name="qp_widget">
        <property name="enabled">
         <bool>true</bool>
@@ -2633,24 +2766,31 @@ p, li { white-space: pre-wrap; }
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="QLabel" name="label_2">
-          <property name="font">
-           <font>
-            <family>Segoe UI</family>
-            <pointsize>9</pointsize>
-            <underline>false</underline>
-           </font>
-          </property>
-          <property name="text">
-           <string>Aspect Ratio:</string>
-          </property>
-         </widget>
-        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QGroupBox" name="arbox">
+       <property name="maximumSize">
+        <size>
+         <width>100</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="title">
+        <string>Aspect Ratio</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
          <widget class="QDoubleSpinBox" name="AspectRatio">
           <property name="decimals">
-           <number>3</number>
+           <number>2</number>
           </property>
           <property name="minimum">
            <double>0.100000000000000</double>
@@ -2663,7 +2803,7 @@ p, li { white-space: pre-wrap; }
        </layout>
       </widget>
      </item>
-     <item row="1" column="0" colspan="2">
+     <item row="1" column="0" colspan="3">
       <widget class="QGroupBox" name="groupBox_5">
        <property name="title">
         <string/>
@@ -2704,7 +2844,7 @@ p, li { white-space: pre-wrap; }
    <property name="minimumSize">
     <size>
      <width>1400</width>
-     <height>353</height>
+     <height>409</height>
     </size>
    </property>
    <property name="font">
@@ -2730,7 +2870,7 @@ p, li { white-space: pre-wrap; }
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_6">
     <layout class="QGridLayout" name="gridLayout_10">
-     <item row="0" column="2" rowspan="3">
+     <item row="2" column="4">
       <widget class="QGroupBox" name="groupBox_13">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -2754,14 +2894,21 @@ p, li { white-space: pre-wrap; }
         <string>View</string>
        </property>
        <layout class="QGridLayout" name="gridLayout_4">
-        <item row="0" column="1">
+        <item row="1" column="1">
          <widget class="QPushButton" name="lp_adddata">
           <property name="text">
            <string>Dateset hinzufügen</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="1" colspan="2">
+        <item row="1" column="2">
+         <widget class="QPushButton" name="lp_removedata">
+          <property name="text">
+           <string>Dataset löschen</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1" colspan="2">
          <widget class="QListWidget" name="lp_listWidget">
           <property name="dragEnabled">
            <bool>true</bool>
@@ -2784,16 +2931,26 @@ p, li { white-space: pre-wrap; }
          </widget>
         </item>
         <item row="0" column="2">
-         <widget class="QPushButton" name="lp_removedata">
+         <widget class="QRadioButton" name="nodeplanview">
           <property name="text">
-           <string>Dataset löschen</string>
+           <string>Plan View</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QRadioButton" name="nodemapview">
+          <property name="text">
+           <string>Map View</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
        </layout>
       </widget>
      </item>
-     <item row="2" column="0" colspan="2">
+     <item row="2" column="1" colspan="2">
       <widget class="PlotWidget" name="nodeView">
        <property name="minimumSize">
         <size>
@@ -2861,42 +3018,6 @@ p, li { white-space: pre-wrap; }
     </layout>
    </widget>
   </widget>
-  <action name="actionProfil">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset>
-     <normaloff>../icons/water.ico</normaloff>../icons/water.ico</iconset>
-   </property>
-   <property name="text">
-    <string>Querprofil</string>
-   </property>
-  </action>
-  <action name="actionLageplan">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset>
-     <normaloff>map-3-24.ico</normaloff>map-3-24.ico</iconset>
-   </property>
-   <property name="text">
-    <string>Lageplan</string>
-   </property>
-  </action>
-  <action name="actionL_ngschnit">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset>
-     <normaloff>long.ico</normaloff>long.ico</iconset>
-   </property>
-   <property name="text">
-    <string>Längschnitt</string>
-   </property>
-  </action>
   <action name="newp">
    <property name="enabled">
     <bool>false</bool>
@@ -3071,7 +3192,7 @@ p, li { white-space: pre-wrap; }
     <string>Tabelle...</string>
    </property>
   </action>
-  <action name="checkforupdate">
+  <action name="checkver">
    <property name="text">
     <string>Updates...</string>
    </property>
@@ -3097,7 +3218,7 @@ p, li { white-space: pre-wrap; }
   <action name="lp_view">
    <property name="icon">
     <iconset>
-     <normaloff>../icons/map-3-24.ico</normaloff>../icons/map-3-24.ico</iconset>
+     <normaloff>../icons/map.ico</normaloff>../icons/map.ico</iconset>
    </property>
    <property name="text">
     <string>Lageplan...</string>
@@ -3114,5 +3235,22 @@ p, li { white-space: pre-wrap; }
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>arbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>AspectRatio</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1425</x>
+     <y>131</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1425</x>
+     <y>139</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

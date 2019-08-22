@@ -5,7 +5,6 @@ Created on Fri May 31 11:28:40 2019
 @author: s.Shaji
 """
 import numpy          as     np
-import pyqtgraph      as     pg
 from modules.riverbed import riv_bed
 from PyQt5.QtWidgets  import QTableWidgetItem,QAbstractItemView
 from PyQt5.QtGui      import QFont,QColor
@@ -22,7 +21,6 @@ def load_qinfo(self,df,i):
             for il in _iloc:
                 if df.iloc[il].Mode == 'H2':
                     self.qplotD['riloc'][n] = il
-                    self.qplotD['rvbox'][n] = pg.ViewBox()
                     self.qplotD['rnode'][n] = df.iloc[il]
             for il in _iloc:
                 if df.iloc[il].Mode == 'ZS':
@@ -30,7 +28,7 @@ def load_qinfo(self,df,i):
                     self.qplotD['siloc'][n] = il
                     self.qplotD['snode'][n] = df.iloc[il]
         else:
-            for key_ in ['rvbox','rnode','riloc','snode','siloc']:
+            for key_ in ['rnode','riloc','snode','siloc']:
                 self.qplotD[key_][n] = None
     
     if not self.qplotD['riloc'][0] is None:

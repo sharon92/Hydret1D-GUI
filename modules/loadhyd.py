@@ -48,9 +48,11 @@ def load_hyd(self):
 
     try:
         pb = self.h1d.format
-        if pb == 'B':
+        if pb[0] == 'B':
             self.p_format.setCurrentIndex(0)
-        else:
+        elif pb[0] == 'T':
+            self.p_format.setCurrentIndex(2)
+        elif pb[0] == 'A':
             self.p_format.setCurrentIndex(1)
     except:
         pass
@@ -457,7 +459,7 @@ def updateHyd(self):
     self.h1d.hyd_f    = self.p_hyd.text()
     self.h1d.out_f    = self.p_aus.text()
     self.h1d.plot_b   = self.p_plot.currentText()[0]
-    self.h1d.format   = self.p_format.currentText()[0]
+    self.h1d.format   = self.p_format.currentText()
     self.h1d.achse    = self.p_achse.text()
     self.h1d.ovfbil   = self.p_ovfbil_2.currentText()
     self.h1d.dhzul    = float(self.p_dhzul.text())

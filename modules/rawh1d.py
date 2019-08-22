@@ -23,7 +23,7 @@ class HYDRET:
             self.out_p = os.path.join(hdir,self.out_f)
             
             self.plot_b = rlines[2][0].upper()
-            self.format = rlines[3][0].upper()
+            self.format = rlines[3].upper()
             #Achse Shapefile
             self.achse = rlines[4].strip()
             
@@ -42,14 +42,31 @@ class HYDRET:
                 self.kstmod = 'keine'
             
             self.readHYD(self.hyd_p)
-            
+    
+    def readFOR(self,varlist,lines,ln):
+        
+        lncount = tcount = lcount = 0
+        while tcount < len(varlist):
+            if lcount < len(lines[ln].split()):
+                try:
+                    varlist[tcount] = float(lines[ln+lncount].split()[lcount])
+                except ValueError:
+                    print(lines[ln+lncount].split()[lcount])
+                tcount +=1
+                lcount +=1
+            else:
+                lncount +=1
+                lcount   =0
+        return ln+lncount+1,varlist
+
     def readHYD(self,hyd_p):
         with open(hyd_p,'r') as hd1:
             lines = hd1.readlines()
         
         cdr =  os.path.dirname(hyd_p)
         os.chdir(cdr)
-        #block1
+        
+        #Project Description
         x = []
         for i in lines[0:4]:
             if i.strip() == '':
@@ -58,134 +75,142 @@ class HYDRET:
                 x.append(i.strip())
         self.comments = '\n'.join(x) 
        
-        #block2
-        self.stime    = float(lines[4].split()[0]) #in hours
-        self.toth     = float(lines[4].split()[1]) #in hours
-        self.dt       = float(lines[4].split()[2]) #in mins
-        self.lead     = int(lines[4].split()[3])
-        self.tinc     = float(lines[4].split()[4])
-        self.itun     = int(lines[4].split()[5])
-        self.ipro     = int(lines[4].split()[6])
+        #Variables
+        varl1 = [0]*7
+        ln,varl1 = self.readFOR(varl1,lines,4)
+        self.stime,self.toth,self.dt,self.lead,self.tinc,self.itun,self.ipro = varl1
+        self.itun,self.ipro = int(self.itun),int(self.ipro)
         
-        self.nl       = int(lines[5].split()[0])
-        self.njunc    = int(lines[5].split()[1])
-        self.nqin    = int(lines[5].split()[2])
-        self.latinf   = int(lines[5].split()[3])
-        self.nweirs   = int(lines[5].split()[4])
-        self.ngates   = int(lines[5].split()[5])
-        self.nret     = int(lines[5].split()[6])
-        self.nstore   = int(lines[5].split()[7])
+        varl2 = [0]*8
+        ln,varl2 = self.readFOR(varl2,lines,ln)
+        self.nl,self.njunc,self.nqin,self.latinf,self.nweirs,self.ngates,self.nret,self.nstore=list(map(int,varl2))
         
-        self.list_    = int(lines[6].split()[0])
-        self.nwel     = int(lines[6].split()[1])
-        self.dtwel    = float(lines[6].split()[2]) #in mins
-        self.idown    = int(lines[6].split()[3])
-        self.tol      = float(lines[6].split()[4])
-        self.convec   = float(lines[6].split()[5])
+        varl3 = [0]*6
+        ln,varl3 = self.readFOR(varl3,lines,ln)
+        self.list_ ,self.nwel,self.dtwel,self.idown,self.tol,self.convec=varl3
+        self.list_,self.nwel,self.idown = int(self.list_),int(self.nwel),int(self.idown)
         
-        self.kwel     = list(map(int, lines[7].split()))
+        #Hydrographs
+        self.kwel = [None]*self.nwel
+        ln,self.kwel = self.readFOR(self.kwel,lines,ln)
+        self.kwel = list(map(int,self.kwel))
+    
+        #kstime
+        if self.kstmod == 'KSTIME':
+            self.kstimedata = lines[ln].strip()
+            ln =+1
         
-        #block 3
-        self.rain     = lines[8].strip()
+        #Rainfall Data
+        self.rain     = lines[ln].strip()
+        ln +=1
         
-        #block 4
-        self.nupe     = list(map(int, lines[9].split()))
+        #inflow Nodes
+        self.nupe     = list(map(int, lines[ln].split()))
+        ln +=1
         
         self.quinf_,self.timmod,self.faktor = [],[],[]
         self.q_station,self.q_basis = [],[]
-        for q in range(self.nqin):
-            self.quinf_.append(lines[10+q][0:28].strip())
-            self.timmod.append(lines[10+q][28:30].strip())
-            self.faktor.append(float(lines[10+q][30:40]))
+        for q in range(int(self.nqin)):
+            self.quinf_.append(lines[ln+q][0:28].strip())
+            self.timmod.append(lines[ln+q][28:30].strip())
+            self.faktor.append(float(lines[ln+q][30:40]))
             try:
-                self.q_station.append(float(lines[10+q][40:50]))
-                self.q_basis.append(float(lines[10+q][50:60]))
+                self.q_station.append(float(lines[ln+q][40:50]))
+                self.q_basis.append(float(lines[ln+q][50:60]))
             except:
                 self.q_station.append('')
                 self.q_basis.append('')
             
-        #block 5
-        b5 = 10+self.nqin
+        #Junctions
+        ln = ln+self.nqin
         if not self.njunc == 0:
             self.junnam,self.nxj,self.dxl,self.gam = [],[],[],[]
             for ji in range(self.njunc):
-                self.junnam.append(lines[b5+ji*2].strip())
-                self.nxj.append(list(map(int, lines[b5+ji*2+1].split()[0:7])))
-                self.dxl.append(float(lines[b5+ji*2+1].split()[7]))
-                self.gam.append(list(map(float, lines[b5+ji*2+1].split()[8:])))
+                self.junnam.append(lines[ln+ji*2].strip())
+                self.nxj.append(list(map(int, lines[ln+ji*2+1].split()[0:7])))
+                self.dxl.append(float(lines[ln+ji*2+1].split()[7]))
+                self.gam.append(list(map(float, lines[ln+ji*2+1].split()[8:])))
                 
-        #block 6
-        b6 = b5+2*self.njunc
+        #Downstream boundary conditions
+        ln = ln+2*self.njunc
         if self.idown == 1:
-            self.weir_par = list(map(float,lines[b6].split()))
-            b6 = b6+1
+            self.weir_par = list(map(float,lines[ln].split()))
+            ln +=1
         elif self.idown == 2:
             self.qh_tabelle = []
-            _qhcount = int(lines[b6].split())
-            _i = 1
-            while not len(self.qh_tabelle) == _qhcount:
-                _qh = list(map(float,lines[b6+_i].split()))
-                [self.qh_tabelle.append(_qht) for _qht in list(zip(_qh[::2],_qh[1::2]))]
-                _i +=1
-            b6 = b6+ _i
-            
+            _qhcount = int(lines[ln].split())
+            if _qhcount>0:
+                ln += 1
+                while not len(self.qh_tabelle) == _qhcount:
+                    _qh = list(map(float,lines[ln].split()))
+                    [self.qh_tabelle.append(_qht) for _qht in list(zip(_qh[::2],_qh[1::2]))]
+                    ln +=1
         elif (self.idown == 3) or (self.idown == 4):
-            self.rb = lines[b6].strip()
-            b6 = b6+1
+            self.rb = lines[ln].strip()
+            ln += 1
         
-        #block7
-        b7 = b6
-        if not self.latinf == 0:
-            self.naq = int(lines[b7].strip())
-            if self.naq>0:
-                self.gwpar = []
+        #Lateral Inflow
+        lat = 2
+        if self.latinf > 0:
+            self.naq = int(lines[ln].strip())
+            self.gwpar = []
+            ln +=1
+            if self.naq > 1000:
+                #code for coupling groundwater data with GWE file format
+                self.gwe = lines[ln].strip()
+                ln +=1
+                for k in range(self.naq-1000):
+                    ln = ln+k
+                    self.gwpar.append(list(map(float,(lines[ln].split()))))
+                ln +=1
+
+            elif self.naq > 0:
                 for k in range(self.naq):
-                    self.gwpar.append(list(map(float,(lines[b7+1+k].split()))))
-            b7 = b7+self.naq+1
-        
-        #block 8
-        b8 = b7
-        if not self.latinf == 0:
+                    ln = ln +k
+                    self.gwpar.append(list(map(float,(lines[ln].split()))))
+                ln += 1
+            
+            
             self.lie,self.latcom,self.zdat,self.gangv= [],[],[],[]
             for li in range(self.latinf):
-
-                self.lie.append(int(lines[b8+li*2].split()[0]))
+                self.lie.append(int(lines[ln+li*lat].split()[0]))
                 try:
-                    latcom = int(lines[b8+li*2].split()[1])
+                    latcom = int(lines[ln+li*lat].split()[1])
                     self.latcom.append(latcom)
                 except:
                     latcom = 0
                     self.latcom.append(0)
                 if latcom == 0:
                     try:
-                        self.zdat.append(lines[b8+li*2+1][0:60].strip())
+                        self.zdat.append(lines[ln+li*lat+1][0:60].strip())
                     except:
-                        self.zdat.append(lines[b8+li*2+1].strip())
+                        self.zdat.append(lines[ln+li*lat+1].strip())
                 elif latcom == 2:
-                    self.gangv.append(lines[b8+li*2+1].strip())
-                    
-        #block 9
-        b9 = b8+self.latinf*2
-        if not self.nweirs == 0:
+                    self.gangv.append(lines[ln+li*lat+1].strip())
+                elif latcom == 1:
+                    lat = 1
+        
+        ln = ln+self.latinf*lat
+        #weirs
+        if self.nweirs > 0:
             self.weir_info = []
             for wi in range(self.nweirs):
-                self.weir_info.append(lines[b9+wi])
+                self.weir_info.append(lines[ln+wi])
 
-        #block 10
-        b10 = b9+self.nweirs
-        if not self.ngates == 0:
+        #Gates
+        ln = ln+self.nweirs
+        if self.ngates > 0:
             self.igate,self.iaga,self.gatdat = [],[],[]
             for ig in range(self.ngates):
-                fl = lines[b10+ig*2]
-                sl = lines[b10+ig*2 +1]
+                fl = lines[ln]
                 if len(fl.split()) < 3:
-                    self.iaga.append(float(fl[-1]))
-                    self.igate.append(int(fl[0]))
-                    if float(fl[-1]) >= 0:
-                        gi = 2
+                    self.iaga.append(float(fl.split()[-1]))
+                    self.igate.append(int(fl.split()[0]))
+                    if float(fl.split()[-1]) >= 0:
+                        ln +=1
+                        sl = lines[ln]
                         self.gatdat.append(['','','','','','','',sl.split()[0]])
                     else:
-                        gi = 1
                         self.gatdat.append(['','','','','','','',''])
                 else:
                     mod = fl[0]
@@ -198,18 +223,17 @@ class HYDRET:
                         except:
                             par.append('')
                     if float(fl[10:20]) >= 0:
-                        gi=2
+                        ln +=1
+                        sl = lines[ln]
                         self.gatdat.append([mod,*par,sl.split()[0]])
                     else:
-                        gi = 1
                         self.gatdat.append([mod,*par,''])
-            b10 = b10+self.ngates*gi
+                ln +=1
         
-        #block 11
-        b11              = b10
-        self.slo         = float(lines[b11][:18])
-        self.xsecmo      = lines[b11][18:20]
-        self.prodat = lines[b11][20:].strip()
+        #Read channel geometry
+        self.slo     = float(lines[ln][:10])
+        self.xsecmo  = lines[ln][18:20]
+        self.prodat  = lines[ln][20:].strip()
         if '\\' in self.prodat:
             pbroken = self.prodat.split('\\')
             for cdir in pbroken[:-1]:
@@ -221,11 +245,11 @@ class HYDRET:
         assert os.path.exists(self.propath), 'PRO-Datei Pfad Pruefen!'
         os.chdir(cdr)
         self.readPRO(self.propath)
+        ln +=1
         
         #block12
-        b12      = b11+1
         if self.nl < 0:
-            self.startdat = lines[b12].strip()
+            self.startdat = lines[ln].strip()
 
             if '\\' in self.startdat:
                 sbroken = self.startdat.split('\\')
@@ -237,14 +261,31 @@ class HYDRET:
             self.startpath = os.path.join(os.getcwd(),sdat)
             assert os.path.exists(self.startpath), 'Start-Datei Pfad Pruefen!'
             os.chdir(cdr)
-            b12 = b12+1
-        else:
-            self.startpath = hyd_p
-            self.hyd_startdat = b12
-            b12 = b12+self.nl+1
+            ln +=1
+#        else:
+#            self.startpath = hyd_p
+#            self.hyd_startdat = ln
+#            ln = ln+self.nl+1
         self.readSTART(self.startpath)
-        #TODO:- Block 13, retentionsflaeche
-    
+        
+        #Retentionsflaeche
+        if self.nret > 0:
+            self.retdat = []
+            if self.ovfbil[:3] == 'OVF':
+                for nsi in range(self.nstore):
+                    self.retdat.append(lines[ln+nsi].split())
+                ln = ln+nsi+1
+            else:
+                
+                self.nverb = [None]*self.nstore
+                ln,self.nverb = self.readFOR(self.nverb,lines,ln)
+                self.nverb = list(map(int,self.nverb))
+                self.nspe = [[None]*i for i in self.nverb]
+                for nsi in range(int(self.nstore)):
+                    ln,self.nspe[nsi] = self.readFOR(self.nspe[nsi],lines,ln)
+                    self.nspe[nsi] = list(map(int,self.nspe[nsi]))
+                    self.retdat.append(lines[ln].split())
+                    ln +=1
 
             
     def readPRO(self,pro_path):
@@ -457,7 +498,15 @@ def writeHYD(hydName,h1d):
     lines.append((' {:>10}'*6+'\n').format(h1d.list_,h1d.nwel,h1d.dtwel,h1d.idown,
                                      h1d.tol,h1d.convec))
     lines.append((' {:>6}'*h1d.nwel+'\n').format(*h1d.kwel))
-    
+
+#lines.append(('{:>10}'*7+''*20+
+#              ('Simulation: {Startzeit, Gesamtzeit, Zeitschritt}, Gang-stützstellen,Gang-stützweite, Uhrzeit Schalter, Vorschunsteureung Schalter\n')).format(h1d.stime,h1d.toth,h1d.dt,h1d.lead,
+#                                 h1d.tinc,h1d.itun,h1d.ipro))
+#lines.append(('{:>10}'*8+''*10+'\n').format(h1d.nl,h1d.njunc,h1d.nqin,h1d.latinf,
+#                                 h1d.nweirs,h1d.ngates,h1d.nret,h1d.nstore))
+#lines.append(('{:>10}'*6+''*30+'\n').format(h1d.list_,h1d.nwel,h1d.dtwel,h1d.idown,
+#                                 h1d.tol,h1d.convec))
+#lines.append(('{:>6}'*h1d.nwel+'\n').format(*h1d.kwel))
     #Niederschlagsdaten
     lines.append(h1d.rain+'\n')
     

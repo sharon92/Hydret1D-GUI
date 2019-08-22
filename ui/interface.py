@@ -2,12 +2,14 @@
 '''import system modules'''
 import sys
 import os
+from functools            import partial
 
 '''import pyqt5 modules'''
 import pyqtgraph          as     pg
-from PyQt5.QtGui          import QIcon,QPixmap
+from PyQt5.QtCore         import Qt
+from PyQt5.QtGui          import QIcon,QPixmap#,QColor
 from PyQt5.QtWidgets      import QHeaderView
-from functools            import partial
+
 
 
 from dialogs.nodeGen      import nodegenwinshow
@@ -15,6 +17,7 @@ from dialogs.nodeRenum    import renumber
 from dialogs.nodeTable    import spreadwin
 from dialogs.profLamellen import raumode
 from dialogs.runHydret    import runModel
+from dialogs.settings     import settingswin
 
 from modules.loaddata    import dataadd,dataremove
 from modules.editsection  import (knoten_label,
@@ -26,7 +29,7 @@ from modules.plotting     import (updateViews,update_schnitt,
                                   plan_name,gewUnmark,ulangPlot,
                                   undo_but,redo_but,del_but,
                                   xyMarker,xyUnmark,
-                                  colorpicker,
+                                  colorpicker,nodePlot,
                                   _handlecopy,
                                   _handlepaste,
                                   loadresult,update_wsp,
@@ -55,7 +58,13 @@ def connections(self):
     self.stop_editing.triggered.connect(self.FinishEditing)
     self.savep.triggered.connect(self.saveProject)
     self.loadwsp_2.triggered.connect(partial(loadresult,self))
-    #self.closef.triggered.connect(MainW.restoreState(STATE))
+    if os.path.isfile(os.path.join(SCRIPT_DIR,'defaults','default_dict.pickle')):
+        self.dpath = os.path.join(SCRIPT_DIR,'defaults','default_dict.pickle')
+    else:
+        self.dpath = 'None'
+    self.settings.triggered.connect(partial(settingswin,self,self.dpath))
+    self.checkver.triggered.connect(partial(self.checkForUpdates,clicked=True))
+    self.closeall.triggered.connect(self.close)
     #self.saveasp.triggered.connect(self.savePRO)
     
     #dialog windows
@@ -77,15 +86,10 @@ def connections(self):
     self.p_ovfbil_2.currentIndexChanged.connect(partial(ovfmode,self))
     
     #Profil Props
-    self.qschnp = ['VK','RK','VF','RF','DF','OF','H2','RS','ZS']
-    self.qschnt = [1,2,3,4,5,6,7,8,9]
-    self.itype_dict = {1:('h',6,'k'),
-                       2:('s',6,'r'),
-                       3:('p',6,'k'),
-                       4:('o',6,'b'),
-                       5:('+',9,'k'),
-                       9:('d',9,'b'),
-                       0:('star',10,'g')}
+    self.qschnp  = ['VK','RK','VF','RF','DF','OF','H2','RS','ZS']
+    self.qschnt  = [1,2,3,4,5,6,7,8,9]
+    self.symbols = ['h','s','p','o','+','d','star'] 
+    self.penstyle= [Qt.SolidLine,Qt.DashLine,Qt.DotLine,Qt.DashDotLine,Qt.DashDotDotLine]
     
     self.knotenNr.currentIndexChanged.connect(self.idChange)
     self.station_label.currentIndexChanged.connect(self.idChange)
@@ -100,8 +104,8 @@ def connections(self):
     self.lp_removedata.clicked.connect(partial(dataremove,self))
     
     #plotting
-    self.ratio = 1
     self.AspectRatio.valueChanged.connect(partial(changeAR,self))
+    self.arbox.toggled.connect(partial(changeAR,self))
     self.p_plan.editingFinished.connect(partial(plan_name,self))
     self.p_wspdat.itemDoubleClicked.connect(partial(colorpicker,self))
     self.langView.scene().sigMouseMoved.connect(partial(pointer_lang,self))
@@ -120,6 +124,8 @@ def connections(self):
     self._rquer.toggled.connect(self.toggle)
     self._rrau.toggled.connect(self.toggle)
     self._rschalter.toggled.connect(self.toggle)
+    self.nodemapview.toggled.connect(partial(nodePlot,self))
+    self.nodeplanview.toggled.connect(partial(nodePlot,self))
     
     #under editing mode
     self.undo.clicked.connect(partial(undo_but,self))
@@ -184,7 +190,7 @@ def initiateBeautify(self):
     self.wsp_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
     
     self.p_wspdat.horizontalHeader().setSectionResizeMode(0,QHeaderView.Stretch)
-    for i in range(4):
+    for i in range(5):
         self.p_wspdat.horizontalHeader().setSectionResizeMode(i+1,QHeaderView.ResizeToContents)
     
     self.p_weir_table.horizontalHeader().setSectionResizeMode(9,QHeaderView.Stretch)

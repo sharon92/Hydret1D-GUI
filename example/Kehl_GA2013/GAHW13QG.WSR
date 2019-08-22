@@ -1,0 +1,16 @@
+GAHW2013.QCHBINR              Eingabedatei (QCH oder HCH) (A12,A5)
+GAHW13QG.DAT                   Ausgabedatei fr Grapher
+ 714 2743 0.020833333 41407.0  Gesamtknotenzahl, auszug. Zeitschritte, DT [h], Start
+ 11   1   1                    Knotenzahl KMAX, Fenster, 1/0  alles/Max. nicht
+1186  b     Pegel UW KWK PEG 020
+1168  c     Pegel Kehl-Kronenhof KWK PEG 021
+1115  d     Pegel Kehl-Hafenmole
+1013  e     Pegel Freistett
+1000  f     Wehr Gambsheim
+ 586  n     OW Wehr Willstätt
+ 585  o     UW Wehr Willstätt
+ 460  p     OW Rampe Neumühl
+ 459  q     UW Rampe Neumühl
+ 772  r     Zulauf oben
+1052  s     E-BW Rhein-km 303,80 
+

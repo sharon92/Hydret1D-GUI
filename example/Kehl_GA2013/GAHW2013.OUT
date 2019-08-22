@@ -1,0 +1,84 @@
+
+
+ SIMULATIONSLAUF VOM  9. AUG   19 UM  15:43:33  UHR
+
+
+ RHEIN oberhalb GAMBSHEIM km 290,4 bis 309,0 / STICHTAG 19.04.99                 
+ Pegel Kehl-Kronenhof bei km 292,245 = MSt. 16755.0 m = Kn. 7167                 
+ Pegel Freistett      bei km 307,700 = MSt.  5300.0 m = Kn. 1013                 
+ Q = 1500.0(KRAFTWERK) + 215.9 KWK) + 53.0(KINZIG) = 1769.0 m**3/s               
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+ SIMULATIONSPARAMETER
+ --------------------
+     BEGINN DER SIMULATION                                             0: 0  UHR
+     GESAMTE SIMULATIONSDAUER                               57 TAG(E)  3: 0  STD
+     ZEITSCHRITT                                                      10.00  MIN
+     ANZAHL VON GANGLINIENSTUETZSTELLEN                                2743
+     ABSTAND DER GANGLINIENSTUETZSTELLEN                              30.00  MIN
+     ANZAHL DER INTERPOLATIONSINTERVALLE                                  3
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+ PARAMETER DES GEWAESSERSYSTEMS
+ ------------------------------
+     ANZAHL DER GEWAESSERABSCHNITTE                                     713
+     GESAMTZAHL DER KNOTEN                                              714
+     ANZAHL DER VERBINDUNGSKNOTEN                                         4
+     ANZAHL DER ZUFLUSSGANGLINIEN                                         5
+     ANZAHL DER GEWAESSERABSCHNITTE MIT SEITLICHEM ZUFLUSS                1
+     ANZAHL DER WEHRE IM GEWAESSERNETZ                                    5
+     ANZAHL DER KONTROLLBAUWERKE                                          0
+     ANZAHL DER KNOTEN MIT RETENTIONSFLAECHEN                             0
+     ANZAHL DER UEBERFLUTUNGSFLAECHEN                                     0
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+ STEUERPARAMETER
+ ---------------
+     AUSDRUCKFREQUENZ FUER ERGEBNISTABELLEN                            2742
+     ANZAHL DER AUSGEDRUCKTEN GANGLINIEN                                  6
+     ZEITSCHRITT FUER DEN GANGLINIENAUSDRUCK                          30.00  MIN
+     KENNZAHL FUER DIE UNTERE RANDBEDINGUNG                               3
+     OBERGRENZE FUER DIE FROUDEZAHL                                    1.50
+     MINIMALE WASSERTIEFE FUER DIE VERWENDUNG KONVEKTIVER TERME        0.08  M
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+1
+
+          ZUFLUSSGANGLINIEN {CBM/SEC}
+          ---------------------------
+
+  KNOTEN      1536      1531      1517       772      1186
+ 
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+
+          ZUSAMMENFLUESSE (VERBINDUNGSKNOTEN)
+          -----------------------------------
+
+     LFD.NR.     ENTFERNUNG     UNTERSTROMIGER     ENERGIEVERLUSTKOEFFIZIENTEN
+               VOM NAECHSTEN        KNOTEN
+               ZUSAMMENFLUSS
+                     {M}
+        1          700.00           1523                0.00    0.00    0.00
+        2          575.00           1502                0.00    0.00    0.00
+        3        11350.00           1113                0.00    0.00    0.00
+        4        11050.00           1110                0.00    0.00    0.00
+
+
+
+          RANDBEDINGUNG AM GEBIETSAUSLASS
+          -------------------------------
+
+
+
+
+     ALS RANDBEDINGUNG WURDE EINE WASSERSTANDSGANGLINIE VERWENDET
+
+        WASSERSTAND
+          {M+NN}
+
