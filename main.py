@@ -58,6 +58,7 @@ class MainW(QMainWindow, Ui_MainWindow):
         self.changes = 0
         self.statusbar = self.statusBar
         self.statusbar.showMessage('Ready')
+        self.src_path = SCRIPT_DIR
         
         #Docks
         self.tabifyDockWidget(self.qp_dock,self.ls_dock)
@@ -95,7 +96,6 @@ class MainW(QMainWindow, Ui_MainWindow):
         #Beautify GUI
         self.script_dir = SCRIPT_DIR
         initiateBeautify(self)
-        
         #look for updates
         self.checkForUpdates(clicked=False)
     
@@ -119,7 +119,7 @@ class MainW(QMainWindow, Ui_MainWindow):
         if DOUBLECLICK_FILE:
             self.HydretEnv = (sys.argv[1],'')
         else:    
-            self.HydretEnv = QFileDialog.getOpenFileName(caption='Hydret Projekt Öffnen (H1D/RUN File)',filter="*.run*;;*.h1d*")
+            self.HydretEnv = QFileDialog.getOpenFileName(caption='Hydret Projekt Öffnen (Hydret GUI/RUN File)',filter="*.run*;;*.hgui*")
 
         if self.HydretEnv[0] != '':
             
@@ -134,6 +134,7 @@ class MainW(QMainWindow, Ui_MainWindow):
         self.h1d = hyd
         self.savep.setEnabled(True)
         self.saveasp.setEnabled(True)
+        self.savehyd.setEnabled(True)
         self.run.setEnabled(True)
         self.loadwsp_2.setEnabled(True)
         self.node_renumber.setEnabled(True)
@@ -235,20 +236,13 @@ class MainW(QMainWindow, Ui_MainWindow):
         self.idChange(i=i)
         
         #update start
-#        try:
-        nodePlot(self)
         self.node_label = pg.TextItem(color='k',border='k',fill='w')
         self.vLine_node = pg.InfiniteLine(angle=90, movable=False)
         self.hLine_node = pg.InfiniteLine(angle=0,  movable=False)
-        self.nodeView.addItem(self.node_label)
-        self.nodeView.addItem(self.vLine_node, ignoreBounds=False)
-        self.nodeView.addItem(self.hLine_node, ignoreBounds=False)
         self.node_label.setZValue(10000)
         self.vLine_node.setZValue(9999)
         self.hLine_node.setZValue(9999)
-#            nodeMarker(self,self.df_s)
-#        except:
-#            pass
+        nodePlot(self)
         
         #update langschnitt
         try:        
@@ -277,9 +271,11 @@ class MainW(QMainWindow, Ui_MainWindow):
         i = index of combo box (0,1,2...n)
         '''
         #blocking signals to prevent infinite loops
+        self.statusbar.showMessage('Ready')
         self.knotenNr.blockSignals(True)
         self.station_label.blockSignals(True)
         self.schnittName_label.blockSignals(True)
+
         self.changes = 0
         self.knotenNr.setCurrentIndex(i)
 
@@ -305,6 +301,7 @@ class MainW(QMainWindow, Ui_MainWindow):
             df   = self.df_pro.copy()
             self.df_s = self.df_start
             
+
         #Plot q1 Node
         self.loc   = int(self.knotenNr.currentText())
         self.iloc  = (self.df_pro.index.tolist()).index(self.loc)
@@ -324,27 +321,29 @@ class MainW(QMainWindow, Ui_MainWindow):
         #unmark highlighted nodes if any
         self.graphicsView.scene().sigMouseClicked.emit(QEvent.MouseButtonPress)
         
-        #set display information for Querschnitts
-        load_qinfo(self,df,i)
-
-        #set labels from start file
-        load_start(self)
-
-        #try updating the existing plot
-        if self.forceplot:
-            qplots(self)
-            wsp_df_update (self)
-        else:
-            uqplots(self)
-
-        if self.Edit:
-            self.graphicsView.addItem(self.editable_schnitt)
-            self.editable_schnitt.blockSignals(True)
-            plotROI(self)
-            self.editable_schnitt.blockSignals(False)
-            
-#        nodeMarker(self,self.df_s)
-        
+        try:
+            #set display information for Querschnitts
+            load_qinfo(self,df,i)
+    
+            #set labels from start file
+            load_start(self)
+    
+            #try updating the existing plot
+            if self.forceplot:
+                qplots(self)
+                wsp_df_update (self)
+            else:
+                uqplots(self)
+    
+            if self.Edit:
+                self.graphicsView.addItem(self.editable_schnitt)
+                self.editable_schnitt.blockSignals(True)
+                plotROI(self)
+                self.editable_schnitt.blockSignals(False)
+                
+            nodeMarker(self,self.df_s)
+        except:
+            self.statusbar.showMessage('Error plotting Knoten: '+str(self.loc))
         self.knotenNr.blockSignals(False)
         self.station_label.blockSignals(False)
         self.schnittName_label.blockSignals(False)
@@ -385,6 +384,7 @@ class MainW(QMainWindow, Ui_MainWindow):
         STATE_EDIT = update_labels(myapp)
         self.Edit = False
         self = update_labels(myapp)
+        self.savepro.setEnabled(True)
         self.graphicsView.showLabel('left',show=False)
         saveEdits = QMessageBox.question(self,'Editor',"Save Edits?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         
@@ -438,7 +438,27 @@ class MainW(QMainWindow, Ui_MainWindow):
         writeRUN(self.h1drun,self.h1d)
         self.statusbar.showMessage('Ready')
 
-        
+    def savePro(self):
+        if os.path.isfile(self.h1d.propath):
+            text = self.h1d.prodat+ ' existiert! Überschreiben?'
+            q = QMessageBox.question(self,'Save Pro',text,QMessageBox.Yes,QMessageBox.No)
+            
+            if q == QMessageBox.Yes:
+                self.statusbar.showMessage('Saving PRO...')
+                writePRO(self.h1d.prodat,self.df_pro)
+                self.statusbar.showMessage('Ready')
+                
+    def saveHyd(self):
+        updateHyd(self)
+        if os.path.isfile(self.h1d.hyd_p):
+            text = self.h1d.hyd_f+ ' existiert! Überschreiben?'
+            q = QMessageBox.question(self,'Save Hyd',text,QMessageBox.Yes,QMessageBox.No)
+            
+            if q == QMessageBox.Yes:
+                self.statusbar.showMessage('Saving HYD...')
+                writeHYD(self.h1d.hyd_p,self.h1d)
+                self.statusbar.showMessage('Ready')
+                
     #look for updates
     def checkForUpdates(self,clicked=True):
         try:

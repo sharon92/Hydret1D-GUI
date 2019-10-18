@@ -3,8 +3,6 @@
 import os
 import numpy as np
 import pandas as pd
-import json
-import re
 from PyQt5.QtWidgets import QTableWidgetItem
 
 class HYDRET:
@@ -30,10 +28,7 @@ class HYDRET:
             self.achse = rlines[4].strip()
             
             #OVFBIL
-            try:
-                self.ovfbil = rlines[5].split()[0]
-            except:
-                self.ovfbil = 'keine'
+            self.ovfbil = rlines[5].split()[0]
             
             try:
                 self.dhzul,self.dhrelzul,self.dvrelzul = list(map(float, rlines[6].split()[0:3]))
@@ -71,7 +66,6 @@ class HYDRET:
         cdr =  os.path.dirname(hyd_p)
         os.chdir(cdr)
         
-        HydDict = {}
         #Project Description
         x = []
         for i in lines[0:4]:
@@ -80,44 +74,27 @@ class HYDRET:
             else:
                 x.append(i.strip())
         self.comments = '\n'.join(x) 
-        HydDict['Title'] = self.comments
-        
+       
         #Variables
         varl1 = [0]*7
         ln,varl1 = self.readFOR(varl1,lines,4)
         self.stime,self.toth,self.dt,self.lead,self.tinc,self.itun,self.ipro = varl1
         self.itun,self.ipro = int(self.itun),int(self.ipro)
-        HydDict['stime'] = self.stime
-        HydDict['toth']  = self.toth
-        HydDict['dt']    = self.dt
-        HydDict['lead']  = self.lead
-        HydDict['tinc']  = self.tinc
-        HydDict['itun']  = self.itun
-        HydDict['ipro']  = self.ipro
         
         varl2 = [0]*8
         ln,varl2 = self.readFOR(varl2,lines,ln)
         self.nl,self.njunc,self.nqin,self.latinf,self.nweirs,self.ngates,self.nret,self.nstore=list(map(int,varl2))
-        HydDict['nl'] = self.nl
         
         varl3 = [0]*6
         ln,varl3 = self.readFOR(varl3,lines,ln)
         self.list_ ,self.nwel,self.dtwel,self.idown,self.tol,self.convec=varl3
         self.list_,self.nwel,self.idown = int(self.list_),int(self.nwel),int(self.idown)
-
-        HydDict['list_'] = self.list_
-        HydDict['idown']  = self.idown
-        HydDict['tol']    = self.tol
-        HydDict['convec']  = self.convec
         
         #Hydrographs
         self.kwel = [None]*self.nwel
         ln,self.kwel = self.readFOR(self.kwel,lines,ln)
         self.kwel = list(map(int,self.kwel))
-        
-        HydDict['Ganglinien'] = {'nwel': self.nwel,
-                                 'dtwel': self.dtwel,
-                                 'kwel': self.kwel}
+    
         #kstime
         if self.kstmod == 'KSTIME':
             self.kstimedata = lines[ln].strip()
@@ -126,43 +103,25 @@ class HYDRET:
         #Rainfall Data
         self.rain     = lines[ln].strip()
         ln +=1
-        HydDict['rain']  = self.rain
         
         #inflow Nodes
         self.nupe     = list(map(int, lines[ln].split()))
         ln +=1
         
-        HydDict['inflowNodes']  = {'nqin': self.nqin}
-                                   
         self.quinf_,self.timmod,self.faktor = [],[],[]
         self.q_station,self.q_basis = [],[]
         for q in range(int(self.nqin)):
-            try:
-                self.quinf_.append(lines[ln+q][0:28].strip())
-            except:
-                self.quinf_.append('')
-            try:
-                self.timmod.append(lines[ln+q][28:30].strip())
-            except:
-                self.timmod.append('')
-            try:
-                self.faktor.append(float(lines[ln+q][30:40]))
-            except:
-                self.faktor.append('')
+            self.quinf_.append(lines[ln+q][0:28].strip())
+            self.timmod.append(lines[ln+q][28:30].strip())
+            self.faktor.append(float(lines[ln+q][30:40]))
             try:
                 self.q_station.append(float(lines[ln+q][40:50]))
-            except:
-                self.q_station.append('')
-            try:
                 self.q_basis.append(float(lines[ln+q][50:60]))
             except:
+                self.q_station.append('')
                 self.q_basis.append('')
-        
-        for nqi in range(self.nqin):
-            HydDict['inflowNodes'][nqi] = (self.nupe[nqi],self.quinf_[nqi],self.timmod[nqi],
-                                           self.faktor[nqi],self.q_station[nqi],self.q_basis[nqi])
+            
         #Junctions
-        HydDict['Junctions']  = {'njunc': self.njunc}
         ln = ln+self.nqin
         if not self.njunc == 0:
             self.junnam,self.nxj,self.dxl,self.gam = [],[],[],[]
@@ -171,15 +130,11 @@ class HYDRET:
                 self.nxj.append(list(map(int, lines[ln+ji*2+1].split()[0:7])))
                 self.dxl.append(float(lines[ln+ji*2+1].split()[7]))
                 self.gam.append(list(map(float, lines[ln+ji*2+1].split()[8:])))
-
-        for nqi in range(self.njunc):
-            HydDict['Junctions'][nqi] = (self.junnam[nqi],self.nxj[nqi],self.dxl[nqi],self.gam[nqi])
-
+                
         #Downstream boundary conditions
         ln = ln+2*self.njunc
         if self.idown == 1:
             self.weir_par = list(map(float,lines[ln].split()))
-            HydDict['Randbedingung'] = {'Weir':self.weir_par}
             ln +=1
         elif self.idown == 2:
             self.qh_tabelle = []
@@ -190,26 +145,19 @@ class HYDRET:
                     _qh = list(map(float,lines[ln].split()))
                     [self.qh_tabelle.append(_qht) for _qht in list(zip(_qh[::2],_qh[1::2]))]
                     ln +=1
-            HydDict['Randbedingung'] = {'Qh-Tabelle':self.qh_tabelle}
         elif (self.idown == 3) or (self.idown == 4):
             self.rb = lines[ln].strip()
-            HydDict['Randbedingung'] = {'Datei':self.rb}
             ln += 1
         
         #Lateral Inflow
         lat = 2
-        HydDict['latinf'] = {'latinf': self.latinf}
-        
         if self.latinf > 0:
             self.naq = int(lines[ln].strip())
             self.gwpar = []
-            HydDict['latinf']['naq']   = self.naq
-            
             ln +=1
             if self.naq > 1000:
                 #code for coupling groundwater data with GWE file format
                 self.gwe = lines[ln].strip()
-                HydDict['latinf']['gwe'] = self.gwe
                 ln +=1
                 for k in range(self.naq-1000):
                     ln = ln+k
@@ -221,8 +169,7 @@ class HYDRET:
                     ln = ln +k
                     self.gwpar.append(list(map(float,(lines[ln].split()))))
                 ln += 1
-
-            HydDict['latinf']['gwpar'] = self.gwpar
+            
             
             self.lie,self.latcom,self.zdat,self.gangv= [],[],[],[]
             for li in range(self.latinf):
@@ -238,28 +185,20 @@ class HYDRET:
                         self.zdat.append(lines[ln+li*lat+1][0:60].strip())
                     except:
                         self.zdat.append(lines[ln+li*lat+1].strip())
-                    HydDict['latinf'][li] = (self.lie[li],self.latcom[li],self.zdat[li])
                 elif latcom == 2:
                     self.gangv.append(lines[ln+li*lat+1].strip())
-                    HydDict['latinf'][li] = (self.lie[li],self.latcom[li],self.gangv[li])
                 elif latcom == 1:
                     lat = 1
-                    HydDict['latinf'][li] = (self.lie[li],self.latcom[li])
-
-        ln = ln+self.latinf*lat
         
+        ln = ln+self.latinf*lat
         #weirs
-        HydDict['weirs'] = {'nweirs': self.nweirs}
         if self.nweirs > 0:
             self.weir_info = []
             for wi in range(self.nweirs):
                 self.weir_info.append(lines[ln+wi])
-            for wi in range(self.nweirs):
-                HydDict['weirs'][wi] = self.weir_info[wi]
 
         #Gates
         ln = ln+self.nweirs
-        HydDict['gates'] = {'ngates': self.ngates}
         if self.ngates > 0:
             self.igate,self.iaga,self.gatdat = [],[],[]
             for ig in range(self.ngates):
@@ -290,7 +229,6 @@ class HYDRET:
                     else:
                         self.gatdat.append([mod,*par,''])
                 ln +=1
-                HydDict['gates'][ig] = (self.igate[ig],self.iaga[ig],self.gatdat[ig])
         
         #Read channel geometry
         self.slo     = float(lines[ln][:10])
@@ -306,19 +244,13 @@ class HYDRET:
         self.propath = os.path.join(os.getcwd(),pdat)
         assert os.path.exists(self.propath), 'PRO-Datei Pfad Pruefen!'
         os.chdir(cdr)
-        
-        HydDict['slo'] = self.slo
-        HydDict['xsecmo'] = self.xsecmo
-        HydDict['prodat'] = self.prodat
-        HydDict['propath'] = self.propath
-        
         self.readPRO(self.propath)
         ln +=1
         
         #block12
         if self.nl < 0:
             self.startdat = lines[ln].strip()
-            HydDict['startdat'] = self.startdat
+
             if '\\' in self.startdat:
                 sbroken = self.startdat.split('\\')
                 for cdir in sbroken[:-1]:
@@ -327,8 +259,7 @@ class HYDRET:
             else:
                 sdat = self.startdat
             self.startpath = os.path.join(os.getcwd(),sdat)
-            HydDict['startpath'] = self.startpath
-            assert os.path.exists(self.startpath), ('Start-Datei Pfad existiert nicht!: '+self.startpath)
+            assert os.path.exists(self.startpath), 'Start-Datei Pfad Pruefen!'
             os.chdir(cdr)
             ln +=1
 #        else:
@@ -338,16 +269,14 @@ class HYDRET:
         self.readSTART(self.startpath)
         
         #Retentionsflaeche
-        HydDict['Retentionsflaeche'] = {'nret':self.nret,
-                                        'nstore':self.nstore}
         if self.nret > 0:
             self.retdat = []
             if self.ovfbil[:3] == 'OVF':
                 for nsi in range(self.nstore):
                     self.retdat.append(lines[ln+nsi].split())
-                    HydDict['Retentionsflaeche'][nsi] = self.retdat[nsi]
                 ln = ln+nsi+1
             else:
+                
                 self.nverb = [None]*self.nstore
                 ln,self.nverb = self.readFOR(self.nverb,lines,ln)
                 self.nverb = list(map(int,self.nverb))
@@ -356,18 +285,14 @@ class HYDRET:
                     ln,self.nspe[nsi] = self.readFOR(self.nspe[nsi],lines,ln)
                     self.nspe[nsi] = list(map(int,self.nspe[nsi]))
                     self.retdat.append(lines[ln].split())
-                    HydDict['Retentionsflaeche'][nsi] = (self.nspe[nsi],self.retdat[nsi])
                     ln +=1
-                    
-        self.HydDict = HydDict
-#        with open(hyd_p.upper().replace('.HYD','.json'),'w') as jsonf:
-#            json.dump(self.HydDict,jsonf,indent=4)
 
+            
     def readPRO(self,pro_path):
         with open(pro_path,'r') as prof:
             proflines = prof.readlines()
         
-        idx = []
+        idx = []        
         for i,il in enumerate(proflines):
             if 'STATION' in il:
                 idx.append(i)
@@ -410,7 +335,7 @@ class HYDRET:
             if i == idx[-1]: block = proflines[i+1:]
             else: block = proflines[i+1:idx[n+1]]
             
-            xy = np.hstack([np.float_(re.split('\s+|,',b.strip())) for b in block])
+            xy = np.hstack([np.float_(b.split()) for b in block])
 
             df_pro.iloc[n]['X']            = xy[::2]
             df_pro.iloc[n]['Y']            = xy[1::2]
@@ -661,12 +586,11 @@ def writeRUN(run,h1d):
         lines.append('kein              #OVFBIL\n')
     else:
          lines.append(h1d.ovfbil+' '*10+'#OVFBIL\n')
-    if not h1d.dhzul == '':
-        lines.append('{:0.3f}  {:0.3f}  {:0.3f}   DHZUL Mindestwert, DHRELZUL bezogen auf Wassertiefe,DVRELZUL\n'.format(h1d.dhzul,h1d.dhrelzul,h1d.dvrelzul))
-        if h1d.kstmod == 'Aus':
-            lines.append('Kein         Verkrautung')
-        else:
-            lines.append('KSTIME         Verkrautung')
+    lines.append('{:0.3f}  {:0.3f}  {:0.3f}   DHZUL Mindestwert, DHRELZUL bezogen auf Wassertiefe,DVRELZUL\n'.format(h1d.dhzul,h1d.dhrelzul,h1d.dvrelzul))
+    if h1d.kstmod == 'Aus':
+        lines.append('Kein         Verkrautung')
+    else:
+        lines.append('KSTIME         Verkrautung')
     
     with open(run,'w') as out:
         for i in lines:

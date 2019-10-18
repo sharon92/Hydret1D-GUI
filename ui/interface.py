@@ -17,6 +17,7 @@ from dialogs.nodeRenum    import renumber
 from dialogs.nodeTable    import spreadwin
 from dialogs.profLamellen import raumode
 from dialogs.runHydret    import runModel
+from dialogs.inflowdat    import datshow
 from dialogs.settings     import settingswin
 
 from modules.loaddata    import dataadd,dataremove
@@ -57,6 +58,8 @@ def connections(self):
     self.start_editing.triggered.connect(self.initiateEditing)
     self.stop_editing.triggered.connect(self.FinishEditing)
     self.savep.triggered.connect(self.saveProject)
+    self.savepro.triggered.connect(self.savePro)
+    self.savehyd.triggered.connect(self.saveHyd)
     self.loadwsp_2.triggered.connect(partial(loadresult,self))
     if os.path.isfile(os.path.join(SCRIPT_DIR,'defaults','default_dict.pickle')):
         self.dpath = os.path.join(SCRIPT_DIR,'defaults','default_dict.pickle')
@@ -84,12 +87,18 @@ def connections(self):
     self.p_ngates.valueChanged.connect(partial(defGates,self))
     self.p_latinf.valueChanged.connect(partial(lateralInflows,self))
     self.p_ovfbil_2.currentIndexChanged.connect(partial(ovfmode,self))
+    self.p_wsg_view.clicked.connect(partial(datshow,self,num=-3))
+    self.p_abg_view.clicked.connect(partial(datshow,self,num=-4))
     
     #Profil Props
     self.qschnp  = ['VK','RK','VF','RF','DF','OF','H2','RS','ZS']
     self.qschnt  = [1,2,3,4,5,6,7,8,9]
     self.symbols = ['h','s','p','o','+','d','star'] 
     self.penstyle= [Qt.SolidLine,Qt.DashLine,Qt.DotLine,Qt.DashDotLine,Qt.DashDotDotLine]
+    
+    #data props
+    self.timmod = ['IN','IM','ST','MA']
+    self.latcom_schalt = ['0','1','2']
     
     self.knotenNr.currentIndexChanged.connect(self.idChange)
     self.station_label.currentIndexChanged.connect(self.idChange)
@@ -124,8 +133,9 @@ def connections(self):
     self._rquer.toggled.connect(self.toggle)
     self._rrau.toggled.connect(self.toggle)
     self._rschalter.toggled.connect(self.toggle)
-    self.nodemapview.toggled.connect(partial(nodePlot,self))
-    self.nodeplanview.toggled.connect(partial(nodePlot,self))
+    self.buttonGroup.buttonToggled.connect(partial(nodePlot,self))
+#    self.nodemapview.toggled.connect(partial(nodePlot,self))
+#    self.nodeplanview.toggled.connect(partial(nodePlot,self))
     
     #under editing mode
     self.undo.clicked.connect(partial(undo_but,self))
@@ -184,7 +194,18 @@ def initiateBeautify(self):
     icon15 = QIcon()
     icon15.addPixmap(QPixmap(os.path.join(SCRIPT_DIR,"icons","map.ico")), QIcon.Normal,QIcon.Off)
     self.lp_view.setIcon(icon15)
-    
+    icon16 = QIcon()
+    icon16.addPixmap(QPixmap(os.path.join(SCRIPT_DIR,"icons","save_pro.ico")), QIcon.Normal,QIcon.Off)
+    self.savepro.setIcon(icon16)
+    icon17 = QIcon()
+    icon17.addPixmap(QPixmap(os.path.join(SCRIPT_DIR,"icons","save_hyd.ico")), QIcon.Normal,QIcon.Off)
+    self.savehyd.setIcon(icon17)
+    icon18 = QIcon()
+    icon18.addPixmap(QPixmap(os.path.join(SCRIPT_DIR,"icons","visibility.ico")), QIcon.Normal,QIcon.Off)
+    self.p_wsg_view.setIcon(icon18)
+    icon19 = QIcon()
+    icon19.addPixmap(QPixmap(os.path.join(SCRIPT_DIR,"icons","visibility.ico")), QIcon.Normal,QIcon.Off)
+    self.p_abg_view.setIcon(icon19)
     #set table sizes for nicer display
     self.coords_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
     self.wsp_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
@@ -202,12 +223,12 @@ def initiateBeautify(self):
     self.p_gate_table.horizontalHeader().setSectionResizeMode(9,QHeaderView.Stretch)
     
     self.p_lie_table.horizontalHeader().setSectionResizeMode(1,QHeaderView.Stretch)
-    for i in [0,2,3,4,5,6]:
+    for i in [0,2,3,4,5]:
         self.p_lie_table.horizontalHeader().setSectionResizeMode(i,QHeaderView.ResizeToContents)
 
     self.p_nxj_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
     self.p_dxlgam_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
     
     self.p_nupe.horizontalHeader().setSectionResizeMode(1,QHeaderView.Stretch)
-    for i in [0,2,3]:
+    for i in [0,2,3,4]:
         self.p_nupe.horizontalHeader().setSectionResizeMode(i,QHeaderView.ResizeToContents)

@@ -4,15 +4,16 @@ Created on Fri May 31 11:28:40 2019
 
 @author: s.Shaji
 """
-
-from PyQt5.QtWidgets import QTableWidgetItem
-
+import os
+from PyQt5.QtGui       import QIcon,QPixmap
+from PyQt5.QtWidgets   import QTableWidgetItem,QToolButton,QComboBox,QDoubleSpinBox
+from dialogs.inflowdat import datshow
+from functools         import partial
 # =============================================================================
 # load hyd here
 # =============================================================================
 
 def load_hyd(self):
-    
     '''RUN'''
     try:
         plan = self.h1d.variante
@@ -104,30 +105,30 @@ def load_hyd(self):
     '''HYD'''
     try:
         st = self.h1d.stime
-        self.p_stime.setText(str(st))
+        self.p_stime.setValue(st)
     except:
         pass
 
     try:
         toth = self.h1d.toth
-        self.p_toth.setText(str(toth))
+        self.p_toth.setValue(toth)
     except:
         pass
     try:
         dt = self.h1d.dt
-        self.p_dt.setText(str(dt))
+        self.p_dt.setValue(dt)
     except:
         pass
 
     try:
         lead = self.h1d.lead
-        self.p_lead.setText(str(lead))
+        self.p_lead.setValue(lead)
     except:
         pass
 
     try:
         tinc = self.h1d.tinc
-        self.p_tinc.setText(str(tinc))
+        self.p_tinc.setValue(tinc)
     except:
         pass
 
@@ -142,7 +143,7 @@ def load_hyd(self):
         pass
 
     try:
-        self.p_nl.setText(str(self.h1d.nl))
+        self.p_nl.setValue(self.h1d.nl)
     except:
         pass
     
@@ -167,7 +168,7 @@ def load_hyd(self):
         pass
 
     try:
-        self.p_convec.setText(str(self.h1d.convec))
+        self.p_convec.setValue(self.h1d.convec)
     except:
         pass
     
@@ -178,19 +179,38 @@ def load_hyd(self):
         for wi in range(self.h1d.nqin):
             self.p_nupe.setItem(wi,0,QTableWidgetItem(str(self.h1d.nupe[wi])))
             self.p_nupe.setItem(wi,1,QTableWidgetItem(str(self.h1d.quinf_[wi])))
-            self.p_nupe.setItem(wi,2,QTableWidgetItem(str(self.h1d.timmod[wi])))
-            self.p_nupe.setItem(wi,3,QTableWidgetItem(str(self.h1d.faktor[wi])))
+            
+            cbox = QComboBox(self.p_nupe)
+            cbox.addItems(self.timmod)
+            cbox.setCurrentText(self.h1d.timmod[wi])
+            self.p_nupe.setCellWidget(wi,2,cbox)
+            
+            dsbox = QDoubleSpinBox(self.p_nupe)
+            dsbox.setMaximum(1e6)
+            dsbox.setMinimum(-1e6)
+            try:
+                dsbox.setValue(self.h1d.faktor[wi])
+            except:
+                dsbox.setValue(1)
+            self.p_nupe.setCellWidget(wi,3,dsbox)
+            
+            btn = QToolButton(self.p_nupe)
+            icon = QIcon()
+            icon.addPixmap(QPixmap(os.path.join(self.src_path,"icons","visibility.ico")), QIcon.Normal,QIcon.Off)
+            btn.setIcon(icon)
+            self.p_nupe.setCellWidget(wi,4, btn)
+            btn.clicked.connect(partial(datshow,self,num=wi))
     except:
         pass
     
     #ganglinien
     try:
-        self.p_list_.setText(str(self.h1d.list_))
+        self.p_list_.setValue(self.h1d.list_)
     except:
         pass
     
     try:
-        self.p_dtwel.setText(str(self.h1d.dtwel))
+        self.p_dtwel.setValue(self.h1d.dtwel)
     except:
         pass
 
@@ -227,28 +247,22 @@ def load_hyd(self):
              self.g_wehr.setEnabled(False)
              self.normalabfluss.setEnabled(False)
              self.p_wsg_dat.setText(self.h1d.rb[0:28])
-             if self.h1d.rb[28:30] == 'IN':
-                 self.p_wsg_mod.setCurrentIndex(0)
-             elif self.h1d.rb[28:30] == 'ST':
-                 self.p_wsg_mod.setCurrentIndex(1)
+             self.p_wsg_mod.setCurrentText(self.h1d.rb[28:30])
              try:
-                 self.p_wsg_fak.setValue(float(self.h1d.rb[30:]))
-             except:
-                 pass
+                 self.p_wsg_fak.setValue(float(self.h1d.rb[30:].split()[0]))
+             except:pass
+         
          elif self.h1d.idown == 4:
              self.g_wsg.setEnabled(False)
              self.g_abg.setEnabled(True)
              self.g_wehr.setEnabled(False)
              self.normalabfluss.setEnabled(False)
              self.p_abg_dat.setText(self.rb[0:28])
-             if self.rb[28:30] == 'IN':
-                 self.p_abg_mod.setCurrentIndex(0)
-             elif self.rb[28:30] == 'ST':
-                 self.p_abg_mod.setCurrentIndex(1)
+             self.p_abg_mod.setCurrentText(self.h1d.rb[28:30])
              try:
-                 self.p_abg_fak.setValue(float(self.rb[30:]))
-             except:
-                 pass
+                 self.p_abg_fak.setValue(float(self.h1d.rb[30:].split()[0]))
+             except: pass
+         
          elif self.h1d.idown == 1:
              self.g_wsg.setEnabled(False)
              self.g_abg.setEnabled(False)
@@ -259,8 +273,8 @@ def load_hyd(self):
              self.p_wehr_h.setValue(self.h1d.weir_par[2])
              try:
                  self.p_wehr_qm.setValue(self.h1d.weir_par[3])
-             except:
-                 pass
+             except: pass
+         
          elif self.h1d.idown == 2:
               self.g_wsg.setEnabled(False)
               self.g_abg.setEnabled(False)
@@ -280,27 +294,43 @@ def load_hyd(self):
         self.p_lie_table.setRowCount(self.h1d.latinf)
         for wi in range(self.h1d.latinf):
             self.p_lie_table.setItem(wi,0,QTableWidgetItem(str(self.h1d.lie[wi])))
-            self.p_lie_table.setItem(wi,6,QTableWidgetItem(str(self.h1d.latcom[wi])))
             try:
                 self.p_lie_table.setItem(wi,1,QTableWidgetItem(str(self.h1d.zdat[wi][0:28])))
             except:
                 pass
             try:
-                self.p_lie_table.setItem(wi,2,QTableWidgetItem(str(self.h1d.zdat[wi][28:30])))
+                cbox = QComboBox(self.p_lie_table)
+                cbox.addItems(self.timmod)
+                self.p_lie_table.setCellWidget(wi,2,cbox)
+                cbox.currentText(self.h1d.zdat[wi][28:30])
             except:
                 pass
             try:
-                self.p_lie_table.setItem(wi,3,QTableWidgetItem(str(self.h1d.zdat[wi][30:40])))
+                cbox2 = QComboBox(self.p_lie_table)
+                cbox2.addItems(self.latcom_schalt)
+                self.p_lie_table.setCellWidget(wi,4,cbox2)
+                cbox2.currentText(str(self.h1d.latcom[wi]))
             except:
                 pass
             try:
-                self.p_lie_table.setItem(wi,4,QTableWidgetItem(str(self.h1d.zdat[wi][40:50])))
+                dsbox = QDoubleSpinBox(self.p_lie_table)
+                dsbox.setMaximum(1e6)
+                dsbox.setMinimum(-1e6)
+                try:
+                    dsbox.setValue(self.h1d.zdat[wi][30:40])
+                except:
+                    dsbox.setValue(1)
+                self.p_lie_table.setCellWidget(wi,3,dsbox)
             except:
                 pass
             try:
-                self.p_lie_table.setItem(wi,5,QTableWidgetItem(str(self.h1d.zdat[wi][50:60])))
-            except:
-                pass
+                btn = QToolButton(self.p_lie_table)
+                icon = QIcon()
+                icon.addPixmap(QPixmap(os.path.join(self.src_path,"icons","visibility.ico")), QIcon.Normal,QIcon.Off)
+                btn.setIcon(icon)
+                self.p_lie_table.setCellWidget(wi,5,btn)
+                btn.clicked.connect(partial(datshow,self,num=('latinflow',wi)))
+            except:pass
     except:
         pass
     
@@ -355,15 +385,31 @@ def load_hyd(self):
 
 def inflowNodes(self):
     self.p_nupe.setRowCount(self.p_nqin.value())
-    try:
-        for wi in range(self.h1d.nqin):
-            self.p_nupe.setItem(wi,0,QTableWidgetItem(str(self.h1d.nupe[wi])))
-            self.p_nupe.setItem(wi,1,QTableWidgetItem(str(self.h1d.quinf_[wi])))
-            self.p_nupe.setItem(wi,2,QTableWidgetItem(str(self.h1d.timmod[wi])))
-            self.p_nupe.setItem(wi,3,QTableWidgetItem(str(self.h1d.faktor[wi])))
-    except:
-        pass
-    
+    for wi in range(self.p_nqin.value()):
+        btn = QToolButton(self.p_nupe)
+        icon = QIcon()
+        icon.addPixmap(QPixmap(os.path.join(self.src_path,"icons","visibility.ico")), QIcon.Normal,QIcon.Off)
+        btn.setIcon(icon)
+        self.p_nupe.setCellWidget(wi,4, btn)
+        btn.clicked.connect(partial(datshow,self,num=wi))
+        cbox = QComboBox(self.p_nupe)
+        cbox.addItems(self.timmod)
+        self.p_nupe.setCellWidget(wi,2,cbox)
+
+        dsbox = QDoubleSpinBox(self.p_nupe)
+        dsbox.setMaximum(1e6)
+        dsbox.setMinimum(-1e6)
+        dsbox.setValue(1)
+        self.p_nupe.setCellWidget(wi,3,dsbox)
+        
+        if hasattr(self,'h1d'):
+            if wi < len(self.h1d.nupe): 
+                self.p_nupe.setItem(wi,0,QTableWidgetItem(str(self.h1d.nupe[wi])))
+                self.p_nupe.setItem(wi,1,QTableWidgetItem(str(self.h1d.quinf_[wi])))
+                self.p_nupe.setItem(wi,3,QTableWidgetItem(str(self.h1d.faktor[wi])))
+                cbox.setCurrentText(self.h1d.timmod[wi])
+                dsbox.setValue(self.h1d.faktor[wi])
+
 def printCurves(self):
     self.p_kwel_table.setRowCount(self.p_nwel.value())
     try:
@@ -431,18 +477,43 @@ def defJunctions(self):
     
 def lateralInflows(self):
     self.p_lie_table.setRowCount(self.p_latinf.value())
-    try:
-        for wi in range(self.h1d.latinf):
+
+    for wi in range(self.p_latinf.value()):
+        try:
+            cbox = QComboBox(self.p_lie_table)
+            cbox.addItems(self.timmod)
+            self.p_lie_table.setCellWidget(wi,2,cbox)
+            try:
+                cbox.currentText(self.h1d.zdat[wi][28:30])
+            except:pass
+
+            cbox2 = QComboBox(self.p_lie_table)
+            cbox2.addItems(self.latcom_schalt)
+            self.p_lie_table.setCellWidget(wi,4,cbox2)
+            try:
+                cbox2.currentText(str(self.h1d.latcom[wi]))
+            except:
+                pass
+            
+            dsbox = QDoubleSpinBox(self.p_lie_table)
+            dsbox.setMaximum(1e6)
+            dsbox.setMinimum(-1e6)
+            try:
+                dsbox.setValue(self.h1d.zdat[wi][30:40])
+            except:
+                dsbox.setValue(1)
+            self.p_lie_table.setCellWidget(wi,3,dsbox)
+
+            btn = QToolButton(self.p_lie_table)
+            icon = QIcon()
+            icon.addPixmap(QPixmap(os.path.join(self.src_path,"icons","visibility.ico")), QIcon.Normal,QIcon.Off)
+            btn.setIcon(icon)
+            self.p_lie_table.setCellWidget(wi,5,btn)
+            btn.clicked.connect(partial(datshow,self,num=('latinflow',wi)))
+            
             self.p_lie_table.setItem(wi,0,QTableWidgetItem(str(self.h1d.lie[wi])))
-            self.p_lie_table.setItem(wi,6,QTableWidgetItem(str(self.h1d.latcom[wi])))
-            for ni in range(4):
-                self.p_lie_table.setItem(wi,1,QTableWidgetItem(str(self.h1d.zdat[wi][0:28])))
-                self.p_lie_table.setItem(wi,2,QTableWidgetItem(str(self.h1d.zdat[wi][28:30])))
-                self.p_lie_table.setItem(wi,3,QTableWidgetItem(str(self.h1d.zdat[wi][30:40])))
-                self.p_lie_table.setItem(wi,4,QTableWidgetItem(str(self.h1d.zdat[wi][40:50])))
-                self.p_lie_table.setItem(wi,5,QTableWidgetItem(str(self.h1d.zdat[wi][50:60])))
-    except:
-        pass
+            self.p_lie_table.setItem(wi,1,QTableWidgetItem(str(self.h1d.zdat[wi][0:28])))
+        except:pass
 
 def ovfmode(self,i):
     if self.Edit:
@@ -450,7 +521,7 @@ def ovfmode(self,i):
             self.ovf_modbox.setEnabled(False)
         elif (i ==1) or (i==2):
             self.ovf_modbox.setEnabled(True)
-			
+
 # =============================================================================
 # Update Data from input
 # =============================================================================
@@ -462,25 +533,35 @@ def updateHyd(self):
     self.h1d.format   = self.p_format.currentText()
     self.h1d.achse    = self.p_achse.text()
     self.h1d.ovfbil   = self.p_ovfbil_2.currentText()
-    self.h1d.dhzul    = float(self.p_dhzul.text())
-    self.h1d.dhrelzul = float(self.p_dhrelzul.text())
-    self.h1d.dvrelzul = float(self.p_dvrelzul.text())
+    try:
+        self.h1d.dhzul    = float(self.p_dhzul.text())
+    except:
+        self.h1d.dhzul    = ''
+    try:
+        self.h1d.dhrelzul = float(self.p_dhrelzul.text())
+    except:
+        self.h1d.dhrelzul = ''
+    try:
+        self.h1d.dvrelzul = float(self.p_dvrelzul.text())
+    except:
+        self.h1d.dvrelzul =''
+        
     self.h1d.kstmod   = self.p_kstmod.currentText()
     
     '''HYD'''
-    self.h1d.stime = float(self.p_stime.text())
-    self.h1d.toth  = float(self.p_toth.text())
-    self.h1d.dt    = float(self.p_dt.text())
-    self.h1d.lead  = int(self.p_lead.text())
-    self.h1d.tinc  = float(self.p_tinc.text())
+    self.h1d.stime = self.p_stime.value()
+    self.h1d.toth  = self.p_toth.value()
+    self.h1d.dt    = self.p_dt.value()
+    self.h1d.lead  = self.p_lead.value()
+    self.h1d.tinc  = self.p_tinc.value()
     self.h1d.itun  = self.p_itun.currentIndex()
     self.h1d.ipro  = self.p_ipro.currentIndex()
-    self.h1d.nl    = int(self.p_nl.text())
+    self.h1d.nl    = self.p_nl.value()
     self.h1d.rain  = self.p_rain.text()
     self.h1d.nret  = self.p_nret.value()
     self.h1d.nstore= self.p_nstore.value()
     self.h1d.tol   = self.p_tol.value()
-    self.h1d.convec= float(self.p_convec.text())
+    self.h1d.convec= self.p_convec.value()
     
     '''Zuflüsse'''
     self.h1d.nqin  = self.p_nqin.value()
@@ -492,13 +573,13 @@ def updateHyd(self):
     for wi in range(self.h1d.nqin):
         self.h1d.nupe[wi]   = int(self.p_nupe.item(wi,0).text())
         self.h1d.quinf_[wi] = self.p_nupe.item(wi,1).text()
-        self.h1d.timmod[wi] = self.p_nupe.item(wi,2).text()
-        self.h1d.faktor[wi] = float(self.p_nupe.item(wi,3).text())
+        self.h1d.timmod[wi] = self.p_nupe.cellWidget(wi,2).currentText()
+        self.h1d.faktor[wi] = self.p_nupe.cellWidget(wi,3).value()
 
     
     '''ganglinien'''
-    self.h1d.list_ = int(self.p_list_.text())
-    self.h1d.dtwel = float(self.p_dtwel.text())
+    self.h1d.list_ = self.p_list_.value()
+    self.h1d.dtwel = self.p_dtwel.value()
     self.h1d.nwel  = self.p_nwel.value()
     self.h1d.kwel  = [None]*self.h1d.nwel
     for wi in range(self.h1d.nwel):
@@ -547,9 +628,12 @@ def updateHyd(self):
     self.h1d.zdat   = ['']*self.h1d.latinf
     for wi in range(self.h1d.latinf):
         self.h1d.lie[wi]    = int(self.p_lie_table.item(wi,0).text())
-        self.h1d.latcom[wi] = int(self.p_lie_table.item(wi,6).text())
-        self.h1d.zdat[wi]   = (self.p_lie_table.item(wi,1).text()+self.p_lie_table.item(wi,2).text()
-        +self.p_lie_table.item(wi,3).text()+self.p_lie_table.item(wi,4).text()+self.p_lie_table.item(wi,5).text())
+        self.h1d.latcom[wi] = int(self.p_lie_table.cellWidget(wi,4).currentText())
+        self.h1d.zdat[wi]   = (self.p_lie_table.item(wi,1).text()+
+                              self.p_lie_table.cellWidget(wi,2).currentText()+
+                              self.p_lie_table.cellWidget(wi,3).currentText())#+
+#                              self.p_lie_table.item(wi,4).text()+
+#                              self.p_lie_table.item(wi,5).text())
     
     '''Weirs and gates'''
     self.h1d.nweirs        = self.p_nweirs.value()

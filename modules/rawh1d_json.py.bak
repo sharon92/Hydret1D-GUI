@@ -4,7 +4,6 @@ import os
 import numpy as np
 import pandas as pd
 import json
-import re
 from PyQt5.QtWidgets import QTableWidgetItem
 
 class HYDRET:
@@ -30,10 +29,7 @@ class HYDRET:
             self.achse = rlines[4].strip()
             
             #OVFBIL
-            try:
-                self.ovfbil = rlines[5].split()[0]
-            except:
-                self.ovfbil = 'keine'
+            self.ovfbil = rlines[5].split()[0]
             
             try:
                 self.dhzul,self.dhrelzul,self.dvrelzul = list(map(float, rlines[6].split()[0:3]))
@@ -172,7 +168,7 @@ class HYDRET:
                 self.dxl.append(float(lines[ln+ji*2+1].split()[7]))
                 self.gam.append(list(map(float, lines[ln+ji*2+1].split()[8:])))
 
-        for nqi in range(self.njunc):
+        for nqi in range(self.njun):
             HydDict['Junctions'][nqi] = (self.junnam[nqi],self.nxj[nqi],self.dxl[nqi],self.gam[nqi])
 
         #Downstream boundary conditions
@@ -238,13 +234,13 @@ class HYDRET:
                         self.zdat.append(lines[ln+li*lat+1][0:60].strip())
                     except:
                         self.zdat.append(lines[ln+li*lat+1].strip())
-                    HydDict['latinf'][li] = (self.lie[li],self.latcom[li],self.zdat[li])
                 elif latcom == 2:
                     self.gangv.append(lines[ln+li*lat+1].strip())
-                    HydDict['latinf'][li] = (self.lie[li],self.latcom[li],self.gangv[li])
                 elif latcom == 1:
                     lat = 1
-                    HydDict['latinf'][li] = (self.lie[li],self.latcom[li])
+                    
+            for li in range(self.latinf):
+                HydDict['latinf'][li] = (self.lie[li],self.latcom[li],self.zdat[li],self.gangv[li])
 
         ln = ln+self.latinf*lat
         
@@ -328,7 +324,7 @@ class HYDRET:
                 sdat = self.startdat
             self.startpath = os.path.join(os.getcwd(),sdat)
             HydDict['startpath'] = self.startpath
-            assert os.path.exists(self.startpath), ('Start-Datei Pfad existiert nicht!: '+self.startpath)
+            assert os.path.exists(self.startpath), 'Start-Datei Pfad Pruefen!'
             os.chdir(cdr)
             ln +=1
 #        else:
@@ -360,8 +356,8 @@ class HYDRET:
                     ln +=1
                     
         self.HydDict = HydDict
-#        with open(hyd_p.upper().replace('.HYD','.json'),'w') as jsonf:
-#            json.dump(self.HydDict,jsonf,indent=4)
+        with open(hyd_p.upper().replace('.HYD','.json'),'w') as jsonf:
+            json.dump(self.HydDict,jsonf)
 
     def readPRO(self,pro_path):
         with open(pro_path,'r') as prof:
@@ -410,7 +406,7 @@ class HYDRET:
             if i == idx[-1]: block = proflines[i+1:]
             else: block = proflines[i+1:idx[n+1]]
             
-            xy = np.hstack([np.float_(re.split('\s+|,',b.strip())) for b in block])
+            xy = np.hstack([np.float_(b.split()) for b in block])
 
             df_pro.iloc[n]['X']            = xy[::2]
             df_pro.iloc[n]['Y']            = xy[1::2]
@@ -661,12 +657,11 @@ def writeRUN(run,h1d):
         lines.append('kein              #OVFBIL\n')
     else:
          lines.append(h1d.ovfbil+' '*10+'#OVFBIL\n')
-    if not h1d.dhzul == '':
-        lines.append('{:0.3f}  {:0.3f}  {:0.3f}   DHZUL Mindestwert, DHRELZUL bezogen auf Wassertiefe,DVRELZUL\n'.format(h1d.dhzul,h1d.dhrelzul,h1d.dvrelzul))
-        if h1d.kstmod == 'Aus':
-            lines.append('Kein         Verkrautung')
-        else:
-            lines.append('KSTIME         Verkrautung')
+    lines.append('{:0.3f}  {:0.3f}  {:0.3f}   DHZUL Mindestwert, DHRELZUL bezogen auf Wassertiefe,DVRELZUL\n'.format(h1d.dhzul,h1d.dhrelzul,h1d.dvrelzul))
+    if h1d.kstmod == 'Aus':
+        lines.append('Kein         Verkrautung')
+    else:
+        lines.append('KSTIME         Verkrautung')
     
     with open(run,'w') as out:
         for i in lines:

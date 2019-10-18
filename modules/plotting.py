@@ -293,6 +293,8 @@ def langPlot(self):
     self.lsplot.setZValue(1000)
     self.langView.invertX(True)
     self.langView.showGrid(x=True,y=True)
+    self.langView.showAxis('right')
+    self.langView.showAxis('top')
     
     plot_wspL(self)
     gewMarker(self)
@@ -305,17 +307,17 @@ def nodePlot(self):
     s_gid,s_start = [],[]
     for n,i in enumerate(rshp.records()):
         s_gid.append(i['GEW_ID'])
-        s_start.append(i['SSTART'])
+        s_start.append(i['SSTART'])  #offset from starting point of the polyline
 
-    nTyp = self.df_start['ITYPE'].values
-    nID  = self.df_start['ID'].values
+    nTyp = self.df_start['ITYPE']
+    nID  = self.df_start['ID']
     nXL  = self.df_start['XL'].values
     
     nX,nY = self.df_start.X.values,self.df_start.Y.values
     
     naughty_list = []
     self.nodeView.addLegend()
-    for gid in np.unique(nID):
+    for gid in nID.unique():
         try:
             idx      = s_gid.index(gid)
             offset   = s_start[idx]
@@ -328,6 +330,10 @@ def nodePlot(self):
         except:
             naughty_list.append(gid)
             self.statusbar.showMessage('ID missing in Start.dat...')
+    
+    if len(naughty_list)>0:
+        self.nodeplanview.setChecked(True)
+        self.statusbar.showMessage('ID missing in Achse.shp to properly display Map View')
     nplotbank = []
     if self.nodemapview.isChecked():
         #achse plot
@@ -336,7 +342,7 @@ def nodePlot(self):
         except:
             pass
     
-        for i in sorted(set(self.df_start['ITYPE'].values)):
+        for i in nTyp.unique():
             if not i in naughty_list:
                 if i not in [1,2,3,4,5,6,8,9]:
                     na = 'Sonstiges'
@@ -355,36 +361,33 @@ def nodePlot(self):
                     nplot.setZValue(100)
                     nplotbank.append(nplot)
         self.nodeView.invertX(False)
+        
         if (self.df_s.loc[self.loc]['ID'] not in naughty_list) & (self.df_s.loc[self.loc2]['ID'] not in naughty_list):
             xk1     = float(self.df_s.loc[self.loc]['X'])
             yk1     = float(self.df_s.loc[self.loc]['Y'])
             xk2     = float(self.df_s.loc[self.loc2]['X'])
             yk2     = float(self.df_s.loc[self.loc2]['Y'])
+
+        self.nodeView.showAxis('top')
+        self.nodeView.showAxis('bottom')
         
-            self.pro_mark = self.nodeView.plot([xk1,xk2],[yk1,yk2],pen=None,symbol='o',symbolSize='10',
-                                               symbolPen='b',symbolBrush='b')
-            self.nodeitem = pg.TextItem(text=str(self.loc),angle=0,border='k',fill='w',color='b')
-            self.nodeView.addItem(self.nodeitem)
-            self.nodeitem.setPos(xk1,yk1)
-            self.nodeitem2 = pg.TextItem(text=str(self.loc2),angle=0,border='k',fill='w',color='b')
-            self.nodeView.addItem(self.nodeitem2)
-            self.nodeitem2.setPos(xk2,yk2)
-            self.nodeView.setAspectLocked(lock=True, ratio=1)
-    
     elif self.nodeplanview.isChecked():
-        for idx in np.unique(nID):
+        legbank = []
+        for fakex,idx in enumerate(nID.unique()):
             nidx     = np.where(nID == idx)
-            pbank = []
-            pbank.append(self.nodeView.plot(nXL[nidx],np.full(len(nXL[nidx]),idx),pen=pg.mkPen(width=2,color='k')))
-            for i in sorted(set(nTyp[nidx])):
+            lplot    = self.nodeView.plot(np.full(len(nXL[nidx]),(fakex+1)*100),nXL[nidx],pen=pg.mkPen(width=1))
+            nplotbank.append(lplot)
+            
+            nTyp_id = nTyp[nID == idx]
+            for i in nTyp_id.unique():
                 if i not in [1,2,3,4,5,6,8,9]:
                     na = 'Sonstiges'
                 else:
                     na = self.gi_ityp.itemText(i-1)
-                i1 = np.where(nTyp[nidx] == i)
-                if i not in pbank:
+                i1 = np.where((nID == idx) & (nTyp == i))
+                if i not in legbank:
                     if self.plotdefaults['i'+str(i)][1]:
-                        nplot = self.nodeView.plot(nXL[i1],np.full(len(nXL[i1]),idx),
+                        nplot = self.nodeView.plot(np.full(len(nXL[i1]),(fakex+1)*100),nXL[i1],
                                                    symbol=self.symbols[self.plotdefaults['i'+str(i)][2]],
                                                    pen=pg.mkPen(None),
                                                    symbolSize=self.plotdefaults['i'+str(i)][3],
@@ -393,10 +396,9 @@ def nodePlot(self):
                                                    name=na)
                         nplot.setZValue(100)
                         nplotbank.append(nplot)
-                    pbank.append(i)
                 else:
                     if self.plotdefaults['i'+str(i)][1]:
-                        nplot = self.nodeView.plot(nXL[i1],np.full(len(nXL[i1]),idx),
+                        nplot = self.nodeView.plot(np.full(len(nXL[i1]),(fakex+1)*100),nXL[i1],
                                                    symbol=self.symbols[self.plotdefaults['i'+str(i)][2]],
                                                    pen=pg.mkPen(None),
                                                    symbolSize=self.plotdefaults['i'+str(i)][3],
@@ -404,24 +406,33 @@ def nodePlot(self):
                                                    symbolBrush=self.plotdefaults['i'+str(i)][0])
                         nplot.setZValue(100)
                         nplotbank.append(nplot)
-                        
-        if (self.df_s.loc[self.loc]['ID'] not in naughty_list) & (self.df_s.loc[self.loc2]['ID'] not in naughty_list):
-            xk1     = float(self.df_s.loc[self.loc]['XL'])
-            yk1     = float(self.df_s.loc[self.loc]['ID'])
-            xk2     = float(self.df_s.loc[self.loc2]['XL'])
-            yk2     = float(self.df_s.loc[self.loc2]['ID'])
+                legbank.append(i)
+            id_text = pg.TextItem(text='ID: '+str(idx),fill='y',angle=90,color='k',anchor=(0,0.5))
+            id_text.setPos((fakex+1)*100-2,nXL[nidx].min())
+            self.nodeView.addItem(id_text)
+            legbank.append(i)
+
+        yk1     = float(self.df_s.loc[self.loc]['XL'])
+        id1     = float(self.df_s.loc[self.loc]['ID'])
+        yk2     = float(self.df_s.loc[self.loc2]['XL'])
+        id2     = float(self.df_s.loc[self.loc2]['ID'])
         
-            self.pro_mark = self.nodeView.plot([xk1,xk2],[yk1,yk2],pen=None,symbol='o',symbolSize='10',
-                                               symbolPen='b',symbolBrush='b')
-            self.nodeitem = pg.TextItem(text=str(self.loc),angle=0,border='k',fill='w',color='b')
-            self.nodeView.addItem(self.nodeitem)
-            self.nodeitem.setPos(xk1,yk1)
-            self.nodeitem2 = pg.TextItem(text=str(self.loc2),angle=0,border='k',fill='w',color='b')
-            self.nodeView.addItem(self.nodeitem2)
-            self.nodeitem2.setPos(xk2,yk2)
-        self.nodeView.setAspectLocked(None)
-        self.nodeView.invertX(True)
+        xk1     = (list(nID.unique()).index(id1)+1)*100
+        xk2     = (list(nID.unique()).index(id2)+1)*100
             
+        self.nodeView.setAspectLocked(None)
+        self.nodeView.showAxis('top',show=False)
+        self.nodeView.showAxis('bottom',show=False)
+
+    self.pro_mark = self.nodeView.plot([xk1,xk2],[yk1,yk2],pen=None,symbol='o',symbolSize='10',
+                                       symbolPen='b',symbolBrush='b')
+    self.nodeitem = pg.TextItem(text=str(self.loc),angle=0,border='k',fill='w',color='b')
+    self.nodeView.addItem(self.nodeitem)
+    self.nodeitem.setPos(xk1,yk1)
+    self.nodeitem2 = pg.TextItem(text=str(self.loc2),angle=0,border='k',fill='w',color='b')
+    self.nodeView.addItem(self.nodeitem2)
+    self.nodeitem2.setPos(xk2,yk2)
+    self.nodeView.showAxis('right')
     self.nodeView.getViewBox().autoRange(items=nplotbank)
 
 '''use when loading WSP'''
@@ -823,17 +834,27 @@ def xyUnmark(self,event):
 def nodeMarker(self,df):
     if hasattr(self,'pro_mark'):
         if (self.loc in df.index) & (self.loc2 in df.index):
-            xk1     = float(df.loc[self.loc]['X'])
-            yk1     = float(df.loc[self.loc]['Y'])
-            xk2     = float(df.loc[self.loc2]['X'])
-            yk2     = float(df.loc[self.loc2]['Y'])
-        
+            if self.nodemapview.isChecked():
+                xk1     = float(df.loc[self.loc]['X'])
+                yk1     = float(df.loc[self.loc]['Y'])
+                xk2     = float(df.loc[self.loc2]['X'])
+                yk2     = float(df.loc[self.loc2]['Y'])
+                
+            elif self.nodeplanview.isChecked():
+                yk1     = float(self.df_s.loc[self.loc]['XL'])
+                id1     = float(self.df_s.loc[self.loc]['ID'])
+                yk2     = float(self.df_s.loc[self.loc2]['XL'])
+                id2     = float(self.df_s.loc[self.loc2]['ID'])
+                
+                xk1     = (list(df['ID'].unique()).index(id1)+1)*100
+                xk2     = (list(df['ID'].unique()).index(id2)+1)*100
+            
             self.pro_mark.setData([xk1,xk2],[yk1,yk2])
             self.nodeitem.setText(str(self.loc))
             self.nodeitem.setPos(xk1,yk1)
             self.nodeitem2.setText(str(self.loc2))
             self.nodeitem2.setPos(xk2,yk2)
-
+            
 #Mark Gewässer achse in Node View
 def gewMarker(self):
     i= int(self.lang_ID.currentText())
@@ -1105,29 +1126,37 @@ def pointer_lang(self,evt):
         pass
 
 def pointer_node(self,evt):
-    try:
-        mousePoint = self.nodeView.getViewBox().mapSceneToView(evt)
-        xi = mousePoint.x()
-        yi = mousePoint.y()
-        
-        pt    = np.array([xi,yi])
-        nodes = np.array(list(zip(self.df_start['X'].values,self.df_start['Y'].values)))
-        dist  = np.linalg.norm(nodes - pt, ord=2, axis=1)
-        
-        nearest = sorted(list(zip(dist,self.df_start.index)))[0]
-        try:
-            sname = self.df_pro.loc[nearest[1]]['PName']
-        except:
-            sname = '--'
+    
+    if self.nodemapview.isChecked():
 
-        self.node_label.setText('Node: '+ str(nearest[1])+'\nStation: '+str(self.df_start.loc[nearest[1]]['XL'])+
-                                 '\nSchnitt: '+sname)
-        self.node_label.setPos(self.df_start.loc[nearest[1]]['X'],self.df_start.loc[nearest[1]]['Y'])
+        try:
             
-        self.vLine_node.setPos(self.df_start.loc[nearest[1]]['X'])
-        self.hLine_node.setPos(self.df_start.loc[nearest[1]]['Y'])
-    except:
-        pass
+            self.nodeView.addItem(self.node_label)
+            self.nodeView.addItem(self.vLine_node, ignoreBounds=False)
+            self.nodeView.addItem(self.hLine_node, ignoreBounds=False)
+            
+            mousePoint = self.nodeView.getViewBox().mapSceneToView(evt)
+            xi = mousePoint.x()
+            yi = mousePoint.y()
+            
+            pt    = np.array([xi,yi])
+            nodes = np.array(list(zip(self.df_start['X'].values,self.df_start['Y'].values)))
+            dist  = np.linalg.norm(nodes - pt, ord=2, axis=1)
+            
+            nearest = sorted(list(zip(dist,self.df_start.index)))[0]
+            try:
+                sname = self.df_pro.loc[nearest[1]]['PName']
+            except:
+                sname = '--'
+    
+            self.node_label.setText('Node: '+ str(nearest[1])+'\nStation: '+str(self.df_start.loc[nearest[1]]['XL'])+
+                                     '\nSchnitt: '+sname)
+            self.node_label.setPos(self.df_start.loc[nearest[1]]['X'],self.df_start.loc[nearest[1]]['Y'])
+                
+            self.vLine_node.setPos(self.df_start.loc[nearest[1]]['X'])
+            self.hLine_node.setPos(self.df_start.loc[nearest[1]]['Y'])
+        except:
+            pass
 
 def pointer_q1(self,evt):
     try:
