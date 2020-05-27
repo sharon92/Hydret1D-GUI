@@ -6,17 +6,20 @@ import copy
 from functools           import partial
 
 '''import pyqt5 modules'''
+from PyQt5               import uic
 from PyQt5.QtWidgets     import QDialog,QColorDialog
 from PyQt5.QtGui         import QColor
-from ui.defaults         import Ui_settings
 from modules.rawh1d      import HYDRET as h1d
 
+import sys
 script_dir = os.getcwd()
+SCRIPT_DIR = os.path.dirname(os.path.realpath(sys.argv[0]))
+ui         = os.path.join(SCRIPT_DIR,'ui','defaults.ui')
 
-class defaultColors(QDialog, Ui_settings):
+class defaultColors(QDialog):
     def __init__(self, dpath=None,parent=None):
         super().__init__(parent)
-        self.setupUi(self)
+        uic.loadUi(ui,self)
         self.ok.clicked.connect(self.accept)
         self.cancel.clicked.connect(self.reject)
         
@@ -175,7 +178,7 @@ def settingswin(self,dpath):
         
         self.plotdefaults = Popup.defaultvals
         
-        if hasattr(self,'HydretEnv'):
-            n_h1d = h1d(hydret_path = self.HydretEnv[0])
+        if hasattr(self,'h1drunpath'):
+            n_h1d = h1d(hydret_path = self.h1drunpath)
             self.initiate(hyd = n_h1d,i=self.knotenNr.currentIndex())
 

@@ -6,19 +6,21 @@ import numpy as np
 from modules.rawh1d    import HYDRET as h1d
 
 '''import pyqt5 modules'''
+from PyQt5               import uic
 from PyQt5.QtWidgets     import (QDialog,
                                  QTableWidgetItem,
                                  QHeaderView)
 
-from ui.nodegenDialog    import Ui_nodegenDialog
-
+import sys
 script_dir = os.getcwd()
+SCRIPT_DIR = os.path.dirname(os.path.realpath(sys.argv[0]))
+ui         = os.path.join(SCRIPT_DIR,'ui','nodegenDialog.ui')
 
-class nodeGen(QDialog, Ui_nodegenDialog):
+class nodeGen(QDialog):
     
     def __init__(self, myapp, parent=None):
         super().__init__(parent)
-        self.setupUi(self)
+        uic.loadUi(ui,self)
         self.main = myapp
         self.kno_widget.itemSelectionChanged.connect(self.itemChange)
         self.count.valueChanged.connect(self.addSchnitt)
@@ -233,6 +235,6 @@ def nodegenwinshow(self):
             self.df_pro = self.df_pro.loc[pidx,:]
             self.df_pro.set_index(keys='Node',inplace=True)
             self.saveProject()
-            n_h1d = h1d(hydret_path = self.HydretEnv[0])
+            n_h1d = h1d(hydret_path = h1drunpath)
             self.initiate(hyd = n_h1d,i=self.knotenNr.currentIndex())
         pass

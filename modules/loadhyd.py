@@ -5,6 +5,7 @@ Created on Fri May 31 11:28:40 2019
 @author: s.Shaji
 """
 import os
+from modules.rawh1d    import readHQ
 from PyQt5.QtGui       import QIcon,QPixmap
 from PyQt5.QtWidgets   import QTableWidgetItem,QToolButton,QComboBox,QDoubleSpinBox
 from dialogs.inflowdat import datshow
@@ -15,29 +16,58 @@ from functools         import partial
 
 def load_hyd(self):
     '''RUN'''
-    try:
-        plan = self.h1d.variante
-        self.p_plan.setText(str(plan))
-    except:
-        self.p_plan.setText('HQXXX')
-    try:
-        com = self.h1d.comments
-        self.p_comments.setText(str(com))
-    except:
-        pass
+    try:self.projektname.setText(self.hguiname)
+    except: self.projektname.setText(os.path.splitext(os.path.basename(self.h1drunpath))[0]+'.hgui')
+
+    try:self.p_plan.setText(self.h1d.variante)
+    except:self.p_plan.setText('HQXXX')
     
-    try:
-        hyd_f = self.h1d.hyd_f
-        self.p_hyd.setText(str(hyd_f))
-    except:
-        pass
+    try:self.p_comments.setText(self.h1d.comments)
+    except:pass
+    
+    try:self.p_hyd.setText(self.h1d.hyd_f)
+    except:pass
+  
+    try: self.p_run.setText(self.h1drun)
+    except: pass
+    
+    try:self.p_aus.setText(self.h1d.out_f)
+    except:pass
 
-    try:
-        aus = self.h1d.out_f
-        self.p_aus.setText(str(aus))
-    except:
-        pass
-
+    #try to locate and load QCH
+    dirp = os.path.dirname(self.h1d.hyd_p)
+    fnam = os.path.splitext(self.h1d.out_f)[0]+'.QCH'
+    if not fnam in os.listdir(dirp):
+        fnam = os.path.splitext(self.h1d.out_f)[0]+'.qch'
+    fpath = os.path.join(dirp,fnam)
+    if os.path.isfile(fpath):
+        self.h1d.qch_f = fnam
+        self.h1d.qch_p = fpath
+        self.p_qch.setText(str(fnam))
+        try:
+            self.qz_df = readHQ(self,fpath,form=self.h1d.format[0])
+        except:pass
+    
+    #try to locate and load hch
+    dirp = os.path.dirname(self.h1d.hyd_p)
+    fnam = os.path.splitext(self.h1d.out_f)[0]+'.HCH'
+    if not fnam in os.listdir(dirp):
+        fnam = os.path.splitext(self.h1d.out_f)[0]+'.hch'
+    fpath = os.path.join(dirp,fnam)
+    if os.path.isfile(fpath):
+        self.h1d.hch_f = fnam
+        self.h1d.hch_p = fpath
+        self.p_hch.setText(str(fnam))
+        try:
+            self.hz_df = readHQ(self,fpath,form=self.h1d.format[0])
+        except:pass
+    
+    if hasattr(self,'qz_df') & hasattr(self,'hz_df'):
+        self.lzeitslider.setEnabled(True)
+        self.lzeitslider.setMaximum(int(self.h1d.lead)-1)
+        self.lzeitslider.setTickInterval(1)
+        self.lzeitslider.setSingleStep(1)
+        
     try:
         pb = self.h1d.plot_b
         if pb == 'J':
@@ -58,11 +88,8 @@ def load_hyd(self):
     except:
         pass
     
-    try:
-        ach = self.h1d.achse
-        self.p_achse.setText(str(ach))
-    except:
-        pass
+    try: self.p_achse.setText(self.h1d.achse)
+    except:pass
     
     try:
         ovf = self.h1d.ovfbil
@@ -77,19 +104,19 @@ def load_hyd(self):
 
     try:
         zul = self.h1d.dhzul
-        self.p_dhzul.setText(str(zul))
+        self.p_dhzul.setValue(zul)
     except:
         pass
     
     try:
         relzul = self.h1d.dhrelzul
-        self.p_dhrelzul.setText(str(relzul))
+        self.p_dhrelzul.setValue(relzul)
     except:
         pass
 
     try:
         vrelzul = self.h1d.dvrelzul
-        self.p_dvrelzul.setText(str(vrelzul))
+        self.p_dvrelzul.setValue(vrelzul)
     except:
         pass
 
@@ -353,7 +380,7 @@ def load_hyd(self):
         for wi in range(self.h1d.ngates):
             self.p_gate_table.setItem(wi,0,QTableWidgetItem(str(self.h1d.igate[wi])))
             self.p_gate_table.setItem(wi,2,QTableWidgetItem(str(self.h1d.iaga[wi])))
-            for n,i in enumerate([1,3,4,5,6,7,8,9]):
+            for n,i in enumerate([1,*range(3,12)]):
                 self.p_gate_table.setItem(wi,i,QTableWidgetItem(str(self.h1d.gatdat[wi][n])))
     except:
         pass
@@ -391,7 +418,7 @@ def inflowNodes(self):
         icon.addPixmap(QPixmap(os.path.join(self.src_path,"icons","visibility.ico")), QIcon.Normal,QIcon.Off)
         btn.setIcon(icon)
         self.p_nupe.setCellWidget(wi,4, btn)
-        btn.clicked.connect(partial(datshow,self,num=wi))
+        btn.clicked.connect(partial(datshow,self,num=wi,idx=None))
         cbox = QComboBox(self.p_nupe)
         cbox.addItems(self.timmod)
         self.p_nupe.setCellWidget(wi,2,cbox)
@@ -428,11 +455,11 @@ def idown_change(self):
     self.g_abg.setEnabled(boo[3])
          
 def normq(self):
-    self.normalabfluss.setRowCount(self.qhtcount.value())
+    self.g_qhtab.setRowCount(self.qhtcount.value())
     try:
         for wi in range(len(self.h1d.qh_tabelle)):
-            self.normalabfluss.setItem(wi,0,QTableWidgetItem(str(self.h1d.qh_tabelle[wi][0])))
-            self.normalabfluss.setItem(wi,1,QTableWidgetItem(str(self.h1d.qh_tabelle[wi][1])))
+            self.g_qhtab.setItem(wi,0,QTableWidgetItem(str(self.h1d.qh_tabelle[wi][0])))
+            self.g_qhtab.setItem(wi,1,QTableWidgetItem(str(self.h1d.qh_tabelle[wi][1])))
     except:
         pass
     
@@ -444,6 +471,12 @@ def defWeirs(self):
                 for v in range(9):
                     self.p_weir_table.setItem(wi,v,QTableWidgetItem(str(self.h1d.weir_info[wi][0+v*10:10+v*10].strip())))
                 self.p_weir_table.setItem(wi,9,QTableWidgetItem(str(self.h1d.weir_info[wi][90:].strip())))
+                btn = QToolButton(self.p_weir_table)
+                icon = QIcon()
+                icon.addPixmap(QPixmap(os.path.join(self.src_path,"icons","visibility.ico")), QIcon.Normal,QIcon.Off)
+                btn.setIcon(icon)
+                self.p_weir_table.setCellWidget(wi,10, btn)
+                btn.clicked.connect(partial(datshow,self,num=-6,idx=wi))
             except:
                 pass
     except:
@@ -455,8 +488,14 @@ def defGates(self):
         for wi in range(self.h1d.ngates):
             self.p_gate_table.setItem(wi,0,QTableWidgetItem(str(self.h1d.igate[wi])))
             self.p_gate_table.setItem(wi,2,QTableWidgetItem(str(self.h1d.iaga[wi])))
-            for n,i in enumerate([1,3,4,5,6,7,8,9]):
+            for n,i in enumerate([1,*range(3,12)]):
                 self.p_gate_table.setItem(wi,i,QTableWidgetItem(str(self.h1d.gatdat[wi][n])))
+            btn = QToolButton(self.p_gate_table)
+            icon = QIcon()
+            icon.addPixmap(QPixmap(os.path.join(self.src_path,"icons","visibility.ico")), QIcon.Normal,QIcon.Off)
+            btn.setIcon(icon)
+            self.p_gate_table.setCellWidget(wi,12, btn)
+            btn.clicked.connect(partial(datshow,self,num=-5,idx=wi))
     except:
         pass
         
@@ -534,15 +573,15 @@ def updateHyd(self):
     self.h1d.achse    = self.p_achse.text()
     self.h1d.ovfbil   = self.p_ovfbil_2.currentText()
     try:
-        self.h1d.dhzul    = float(self.p_dhzul.text())
+        self.h1d.dhzul    = self.p_dhzul.value()
     except:
         self.h1d.dhzul    = ''
     try:
-        self.h1d.dhrelzul = float(self.p_dhrelzul.text())
+        self.h1d.dhrelzul = self.p_dhrelzul.value()
     except:
         self.h1d.dhrelzul = ''
     try:
-        self.h1d.dvrelzul = float(self.p_dvrelzul.text())
+        self.h1d.dvrelzul = self.p_dvrelzul.value()
     except:
         self.h1d.dvrelzul =''
         
@@ -631,7 +670,7 @@ def updateHyd(self):
         self.h1d.latcom[wi] = int(self.p_lie_table.cellWidget(wi,4).currentText())
         self.h1d.zdat[wi]   = (self.p_lie_table.item(wi,1).text()+
                               self.p_lie_table.cellWidget(wi,2).currentText()+
-                              self.p_lie_table.cellWidget(wi,3).currentText())#+
+                              self.p_lie_table.cellWidget(wi,3).value())#+
 #                              self.p_lie_table.item(wi,4).text()+
 #                              self.p_lie_table.item(wi,5).text())
     
@@ -653,7 +692,7 @@ def updateHyd(self):
         self.h1d.igate[wi] = int(self.p_gate_table.item(wi,0).text())
         self.h1d.iaga[wi]  = float(self.p_gate_table.item(wi,2).text())
         x = []
-        for n,i in enumerate([1,3,4,5,6,7,8,9]):
+        for n,i in enumerate([1,*range(3,12)]):
             x.append(self.p_gate_table.item(wi,i).text())
         self.h1d.gatdat[wi] = x
 

@@ -6,15 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1891</width>
-    <height>1637</height>
+    <width>1878</width>
+    <height>1487</height>
    </rect>
+  </property>
+  <property name="font">
+   <font>
+    <family>Segoe UI</family>
+    <pointsize>9</pointsize>
+   </font>
   </property>
   <property name="acceptDrops">
    <bool>true</bool>
   </property>
   <property name="windowTitle">
-   <string>Hydret1D-GUI  v1.1.2</string>
+   <string>Hydret1D-GUI  v1.2.5</string>
   </property>
   <property name="windowIcon">
    <iconset>
@@ -28,210 +34,720 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
-    <item row="10" column="2">
-     <widget class="QGroupBox" name="groupBox_3">
+    <item row="1" column="0">
+     <widget class="QToolBox" name="toolBox">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>400</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>500</width>
+        <height>16777215</height>
+       </size>
+      </property>
       <property name="font">
        <font>
         <family>Segoe UI</family>
         <pointsize>9</pointsize>
        </font>
       </property>
-      <property name="title">
-       <string/>
-      </property>
-      <layout class="QGridLayout" name="_2">
-       <item row="6" column="1">
-        <widget class="QComboBox" name="p_xsecmo">
-         <item>
-          <property name="text">
-           <string>VK</string>
+      <widget class="QWidget" name="runf">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>400</width>
+         <height>1099</height>
+        </rect>
+       </property>
+       <attribute name="label">
+        <string>Projekt</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_27">
+        <item row="1" column="0" colspan="2">
+         <widget class="QTextBrowser" name="p_comments">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>100</height>
+           </size>
           </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>RK</string>
+          <property name="undoRedoEnabled">
+           <bool>true</bool>
           </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>VF</string>
+          <property name="readOnly">
+           <bool>false</bool>
           </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>RF</string>
+         </widget>
+        </item>
+        <item row="8" column="0" colspan="2">
+         <widget class="QGroupBox" name="groupBox_15">
+          <property name="title">
+           <string>Plot</string>
           </property>
-         </item>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_27">
-         <property name="text">
-          <string>Start-Datei</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0" colspan="4">
-        <widget class="QLabel" name="listOrdner">
-         <property name="text">
-          <string>Profil, Geometrie und WSP-Datein:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="0">
-        <widget class="QLabel" name="label_66">
-         <property name="text">
-          <string>Default-Modus</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="2">
-        <widget class="QLabel" name="label_91">
-         <property name="text">
-          <string>Gefälle</string>
-         </property>
-        </widget>
-       </item>
-       <item row="13" column="0" colspan="4">
-        <widget class="QLabel" name="p_name">
-         <property name="text">
-          <string>Projekt:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="3">
-        <widget class="QLineEdit" name="p_prodat"/>
-       </item>
-       <item row="2" column="1">
-        <widget class="QLineEdit" name="p_startdat"/>
-       </item>
-       <item row="2" column="2">
-        <widget class="QLabel" name="label_65">
-         <property name="text">
-          <string>Profil-Datei</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="3">
-        <widget class="QDoubleSpinBox" name="p_slo"/>
-       </item>
-       <item row="12" column="0" colspan="4">
-        <widget class="QTableWidget" name="p_wspdat">
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>150</height>
-          </size>
-         </property>
-         <property name="acceptDrops">
-          <bool>true</bool>
-         </property>
-         <property name="alternatingRowColors">
-          <bool>true</bool>
-         </property>
-         <property name="sortingEnabled">
-          <bool>true</bool>
-         </property>
-         <column>
-          <property name="text">
-           <string>Datei</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>Plan</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>View</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>WSP</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>Fill (WSP)</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>EL</string>
-          </property>
-         </column>
-        </widget>
-       </item>
-       <item row="8" column="0" colspan="4">
-        <widget class="QLabel" name="label_67">
-         <property name="text">
-          <string>WSP-Datein:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="14" column="0" colspan="4">
-        <widget class="QToolBox" name="toolBox">
-         <widget class="QWidget" name="runf">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>452</width>
-            <height>1031</height>
-           </rect>
-          </property>
-          <attribute name="label">
-           <string>Projekt-Datein</string>
-          </attribute>
-          <layout class="QFormLayout" name="formLayout_8">
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_10">
-             <property name="text">
-              <string>Plan</string>
+          <layout class="QGridLayout" name="gridLayout_19">
+           <item row="3" column="0" colspan="6">
+            <widget class="QListWidget" name="ls_listWidget">
+             <property name="editTriggers">
+              <set>QAbstractItemView::DoubleClicked</set>
+             </property>
+             <property name="dragEnabled">
+              <bool>true</bool>
+             </property>
+             <property name="dragDropMode">
+              <enum>QAbstractItemView::InternalMove</enum>
+             </property>
+             <property name="defaultDropAction">
+              <enum>Qt::MoveAction</enum>
+             </property>
+             <property name="alternatingRowColors">
+              <bool>true</bool>
+             </property>
+             <property name="selectionMode">
+              <enum>QAbstractItemView::SingleSelection</enum>
+             </property>
+             <property name="selectionBehavior">
+              <enum>QAbstractItemView::SelectRows</enum>
+             </property>
+             <property name="selectionRectVisible">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QLineEdit" name="p_plan">
+           <item row="0" column="0">
+            <widget class="QCheckBox" name="play_lzeit">
              <property name="text">
               <string/>
              </property>
+             <property name="icon">
+              <iconset>
+               <normaloff>../icons/resume.bmp</normaloff>../icons/resume.bmp</iconset>
+             </property>
             </widget>
            </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_16">
-             <property name="text">
-              <string>Hydret-Datei</string>
+           <item row="0" column="1" colspan="5">
+            <widget class="QSlider" name="lzeitslider">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="pageStep">
+              <number>5</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="tickInterval">
+              <number>1</number>
              </property>
             </widget>
            </item>
            <item row="1" column="1">
+            <widget class="QSpinBox" name="fps">
+             <property name="minimum">
+              <number>1</number>
+             </property>
+             <property name="maximum">
+              <number>99999</number>
+             </property>
+             <property name="value">
+              <number>60</number>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_99">
+             <property name="maximumSize">
+              <size>
+               <width>30</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>FPS</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QDateTimeEdit" name="show_simdatetime">
+             <property name="accelerated">
+              <bool>true</bool>
+             </property>
+             <property name="displayFormat">
+              <string>dd.MM.yyyy HH:mm</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="5">
+            <widget class="QLCDNumber" name="lzeitlcd">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="autoFillBackground">
+              <bool>true</bool>
+             </property>
+             <property name="segmentStyle">
+              <enum>QLCDNumber::Flat</enum>
+             </property>
+             <property name="intValue" stdset="0">
+              <number>1</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLineEdit" name="projektname"/>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLineEdit" name="p_plan">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_45">
+          <property name="text">
+           <string>Projekt</string>
+          </property>
+          <property name="buddy">
+           <cstring>projektname</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QDateTimeEdit" name="sim_datetime">
+          <property name="displayFormat">
+           <string>dd.MM.yyyy HH:mm</string>
+          </property>
+         </widget>
+        </item>
+        <item row="10" column="1">
+         <spacer name="verticalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_29">
+          <property name="text">
+           <string>Beschreibung</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_10">
+          <property name="text">
+           <string>Szenario</string>
+          </property>
+          <property name="buddy">
+           <cstring>p_plan</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="label_95">
+          <property name="text">
+           <string>Simulation DateTime</string>
+          </property>
+          <property name="buddy">
+           <cstring>sim_datetime</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="9" column="0" colspan="2">
+         <widget class="QGroupBox" name="groupBox_2">
+          <property name="title">
+           <string>Dateien</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_28">
+           <item row="5" column="0">
+            <widget class="QLabel" name="label_18">
+             <property name="text">
+              <string>Out-Datei</string>
+             </property>
+             <property name="buddy">
+              <cstring>p_aus</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_27">
+             <property name="text">
+              <string>Start-Datei</string>
+             </property>
+             <property name="buddy">
+              <cstring>p_startdat</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_21">
+             <property name="text">
+              <string>Gewässerachse</string>
+             </property>
+             <property name="buddy">
+              <cstring>p_achse</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_65">
+             <property name="text">
+              <string>Profil-Datei</string>
+             </property>
+             <property name="buddy">
+              <cstring>p_prodat</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="p_startdat"/>
+           </item>
+           <item row="0" column="2">
+            <widget class="QToolButton" name="browse_fstart">
+             <property name="text">
+              <string>...</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="label_96">
+             <property name="text">
+              <string>Abfluss-Datei</string>
+             </property>
+             <property name="buddy">
+              <cstring>p_qch</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_16">
+             <property name="text">
+              <string>Hydret-Datei</string>
+             </property>
+             <property name="buddy">
+              <cstring>p_hyd</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_98">
+             <property name="text">
+              <string>Run-Datei</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="label_97">
+             <property name="text">
+              <string>Wasserstand-Datei</string>
+             </property>
+             <property name="buddy">
+              <cstring>p_hch</cstring>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="p_prodat"/>
+           </item>
+           <item row="2" column="1">
             <widget class="QLineEdit" name="p_hyd">
              <property name="text">
               <string/>
              </property>
             </widget>
            </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="label_18">
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="p_run"/>
+           </item>
+           <item row="4" column="1">
+            <widget class="QLineEdit" name="p_achse"/>
+           </item>
+           <item row="5" column="1">
+            <widget class="QLineEdit" name="p_aus"/>
+           </item>
+           <item row="6" column="1">
+            <widget class="QLineEdit" name="p_qch"/>
+           </item>
+           <item row="7" column="1">
+            <widget class="QLineEdit" name="p_hch"/>
+           </item>
+           <item row="1" column="2">
+            <widget class="QToolButton" name="browse_fpro">
              <property name="text">
-              <string>Ausgabe-Datei</string>
+              <string>...</string>
              </property>
             </widget>
            </item>
-           <item row="3" column="1">
-            <widget class="QLineEdit" name="p_aus"/>
+           <item row="2" column="2">
+            <widget class="QToolButton" name="browse_hyd">
+             <property name="text">
+              <string>...</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="2">
+            <widget class="QToolButton" name="browse_run">
+             <property name="text">
+              <string>...</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="2">
+            <widget class="QToolButton" name="browse_achse">
+             <property name="text">
+              <string>...</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="2">
+            <widget class="QToolButton" name="browse_out">
+             <property name="text">
+              <string>...</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="2">
+            <widget class="QToolButton" name="browse_qch">
+             <property name="text">
+              <string>...</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="2">
+            <widget class="QToolButton" name="browse_hch">
+             <property name="text">
+              <string>...</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="parameters">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>421</width>
+         <height>1082</height>
+        </rect>
+       </property>
+       <attribute name="label">
+        <string>Simulation Parameters</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QGroupBox" name="groupBox_6">
+          <property name="title">
+           <string>Simulation</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_23">
+           <item row="1" column="3">
+            <widget class="QDoubleSpinBox" name="p_toth">
+             <property name="maximum">
+              <double>10000000.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QLabel" name="label_31">
+             <property name="text">
+              <string>Zeitschritt [min]</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_36">
+             <property name="text">
+              <string>Gewässerabschnitte</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="3">
+            <widget class="QDoubleSpinBox" name="p_dt">
+             <property name="maximum">
+              <double>1000000.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>10.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_28">
+             <property name="text">
+              <string>Startzeit [h] </string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QDoubleSpinBox" name="p_stime">
+             <property name="showGroupSeparator" stdset="0">
+              <bool>false</bool>
+             </property>
+             <property name="maximum">
+              <double>10000000.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QLabel" name="label_30">
+             <property name="text">
+              <string>Gesamtzeit [h]</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QSpinBox" name="p_nl">
+             <property name="minimum">
+              <number>-10000</number>
+             </property>
+             <property name="maximum">
+              <number>10000</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_7">
+          <property name="title">
+           <string>Ganglinien</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_22">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_32">
+             <property name="text">
+              <string>Stützstellen </string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QSpinBox" name="p_lead">
+             <property name="maximum">
+              <number>10000</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QLabel" name="label_33">
+             <property name="text">
+              <string>Stützweite [min]</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QDoubleSpinBox" name="p_tinc">
+             <property name="maximum">
+              <double>1000000.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>30.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_10">
+          <property name="title">
+           <string/>
+          </property>
+          <layout class="QFormLayout" name="formLayout">
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_34">
+             <property name="text">
+              <string>Uhrzeit Schalter</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QComboBox" name="p_itun">
+             <item>
+              <property name="text">
+               <string>Minuten (gerundet)</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Minuten und Sekunden</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_35">
+             <property name="text">
+              <string>Vorschubsteuerung Schalter</string>
+             </property>
+            </widget>
            </item>
            <item row="4" column="0">
-            <widget class="QLabel" name="label_19">
+            <widget class="QLabel" name="label_11">
              <property name="text">
-              <string>Plot Bool</string>
+              <string>Niederschlagsdaten</string>
              </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="label_42">
+             <property name="text">
+              <string>Retentionsflächen</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="label_43">
+             <property name="text">
+              <string>Überflutungsflächen</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QComboBox" name="p_ipro">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Schlater 0: Sparvorschub für Testruns&lt;/p&gt;&lt;p&gt;	(keine neuen Seiten)&lt;/p&gt;&lt;p&gt;	Querschnittsdaten: Ja&lt;/p&gt;&lt;p&gt;	Overflowtabelle:     Ja&lt;/p&gt;&lt;p&gt;Schalter 1: wie 0, aber ohne Ausdruck der Querschnittsdaten&lt;/p&gt;&lt;p&gt;	Querschnittsdaten: nein&lt;/p&gt;&lt;p&gt;	Overflowtabelle:     nein&lt;/p&gt;&lt;p&gt;Schalter 2: &lt;/p&gt;&lt;p&gt;	Querschnittsdaten: Ja&lt;/p&gt;&lt;p&gt;	Overflowtabelle:     Nein&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <item>
+              <property name="text">
+               <string>0</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>1</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>2</string>
+              </property>
+             </item>
             </widget>
            </item>
            <item row="4" column="1">
+            <widget class="QLineEdit" name="p_rain">
+             <property name="placeholderText">
+              <string>NORAIN</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QSpinBox" name="p_nret"/>
+           </item>
+           <item row="6" column="1">
+            <widget class="QSpinBox" name="p_nstore"/>
+           </item>
+           <item row="7" column="1">
+            <widget class="QDoubleSpinBox" name="p_tol">
+             <property name="maximum">
+              <double>20.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="label_48">
+             <property name="text">
+              <string>Maximal zulässige Froude-Zahl</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="0">
+            <widget class="QLabel" name="label_49">
+             <property name="text">
+              <string>Mindesttiefe für konvektiven [m] </string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="1">
+            <widget class="QDoubleSpinBox" name="p_convec"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_3">
+          <property name="title">
+           <string>Profil</string>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QLabel" name="label_66">
+             <property name="text">
+              <string>Profil-Modus</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="p_xsecmo">
+             <item>
+              <property name="text">
+               <string>VK</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>RK</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>VF</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>RF</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_91">
+             <property name="text">
+              <string>Gefälle</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="p_slo"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_13">
+          <property name="title">
+           <string/>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_29">
+           <item row="0" column="1">
             <widget class="QComboBox" name="p_plot">
              <item>
               <property name="text">
@@ -245,50 +761,7 @@
              </item>
             </widget>
            </item>
-           <item row="5" column="0">
-            <widget class="QLabel" name="label_20">
-             <property name="text">
-              <string>Ausgabe Format</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="1">
-            <widget class="QComboBox" name="p_format">
-             <item>
-              <property name="text">
-               <string>BINÄR</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>ASCII</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>TRANS</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="7" column="0">
-            <widget class="QLabel" name="label_21">
-             <property name="text">
-              <string>Gewässerachse</string>
-             </property>
-            </widget>
-           </item>
-           <item row="7" column="1">
-            <widget class="QLineEdit" name="p_achse"/>
-           </item>
-           <item row="9" column="0">
-            <widget class="QLabel" name="label_22">
-             <property name="text">
-              <string>Overflow Mode</string>
-             </property>
-            </widget>
-           </item>
-           <item row="9" column="1">
+           <item row="1" column="1">
             <widget class="QComboBox" name="p_ovfbil_2">
              <item>
               <property name="text">
@@ -307,14 +780,61 @@
              </item>
             </widget>
            </item>
-           <item row="11" column="0">
+           <item row="0" column="3">
+            <widget class="QLabel" name="label_20">
+             <property name="text">
+              <string>Ausgabe Format</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_23">
+             <property name="text">
+              <string>WSP Dämpfung ab</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="4">
+            <widget class="QComboBox" name="p_format">
+             <item>
+              <property name="text">
+               <string>BINÄR</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>ASCII</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>TRANS</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="1" column="3">
             <widget class="QLabel" name="label_26">
              <property name="text">
               <string>Verkrautung Modus</string>
              </property>
             </widget>
            </item>
-           <item row="11" column="1">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_19">
+             <property name="text">
+              <string>Plot Bool</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_22">
+             <property name="text">
+              <string>Overflow Mode</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="4">
             <widget class="QComboBox" name="p_kstmod">
              <property name="toolTip">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;KSTMOD&lt;/p&gt;&lt;p&gt;hier WELLEN mit Prozentwerten (3 Klassen) für saisonabhängige Verkrautung&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -331,1048 +851,103 @@
              </item>
             </widget>
            </item>
-           <item row="12" column="0">
-            <widget class="QLabel" name="label_23">
-             <property name="text">
-              <string>WSP Dämpfung ab</string>
-             </property>
-            </widget>
+           <item row="2" column="1">
+            <widget class="QDoubleSpinBox" name="p_dhzul"/>
            </item>
-           <item row="12" column="1">
-            <widget class="QLineEdit" name="p_dhzul">
-             <property name="toolTip">
-              <string>DHZUL</string>
-             </property>
-            </widget>
-           </item>
-           <item row="13" column="0">
-            <widget class="QLabel" name="label_24">
-             <property name="text">
-              <string>DHRELZUL</string>
-             </property>
-            </widget>
-           </item>
-           <item row="13" column="1">
-            <widget class="QLineEdit" name="p_dhrelzul">
-             <property name="toolTip">
-              <string>DHRELZUL</string>
-             </property>
-            </widget>
-           </item>
-           <item row="14" column="0">
+           <item row="3" column="0">
             <widget class="QLabel" name="label_25">
              <property name="text">
               <string>dV/dt Dämpfung ab</string>
              </property>
             </widget>
            </item>
-           <item row="14" column="1">
-            <widget class="QLineEdit" name="p_dvrelzul">
-             <property name="toolTip">
-              <string>DVRELZUL</string>
-             </property>
-            </widget>
+           <item row="3" column="1">
+            <widget class="QDoubleSpinBox" name="p_dvrelzul"/>
            </item>
-           <item row="16" column="0">
-            <widget class="QLabel" name="label_29">
+           <item row="2" column="3">
+            <widget class="QLabel" name="label_24">
              <property name="text">
-              <string>Beschreibung</string>
+              <string>Dhrelzul</string>
              </property>
             </widget>
            </item>
-           <item row="16" column="1">
-            <widget class="QTextBrowser" name="p_comments"/>
+           <item row="2" column="4">
+            <widget class="QDoubleSpinBox" name="p_dhrelzul"/>
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="parameters">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>452</width>
-            <height>1031</height>
-           </rect>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
           </property>
-          <attribute name="label">
-           <string>Simulation Parameters</string>
-          </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout">
-           <item>
-            <widget class="QGroupBox" name="groupBox_6">
-             <property name="title">
-              <string>Simulation</string>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_23">
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_28">
-                <property name="text">
-                 <string>Startzeit [h] </string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="3">
-               <widget class="QDoubleSpinBox" name="p_toth">
-                <property name="maximum">
-                 <double>10000000.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QDoubleSpinBox" name="p_stime">
-                <property name="showGroupSeparator" stdset="0">
-                 <bool>false</bool>
-                </property>
-                <property name="maximum">
-                 <double>10000000.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="2">
-               <widget class="QLabel" name="label_30">
-                <property name="text">
-                 <string>Gesamtzeit [h]</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="label_36">
-                <property name="text">
-                 <string>Gewässerabschnitte</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="3">
-               <widget class="QDoubleSpinBox" name="p_dt">
-                <property name="maximum">
-                 <double>1000000.000000000000000</double>
-                </property>
-                <property name="singleStep">
-                 <double>10.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="2">
-               <widget class="QLabel" name="label_31">
-                <property name="text">
-                 <string>Zeitschritt [min]</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QSpinBox" name="p_nl">
-                <property name="minimum">
-                 <number>-10000</number>
-                </property>
-                <property name="maximum">
-                 <number>10000</number>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item>
-            <widget class="QGroupBox" name="groupBox_7">
-             <property name="title">
-              <string>Ganglinien</string>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_22">
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_32">
-                <property name="text">
-                 <string>Stützstellen </string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QSpinBox" name="p_lead">
-                <property name="maximum">
-                 <number>10000</number>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="2">
-               <widget class="QLabel" name="label_33">
-                <property name="text">
-                 <string>Stützweite [min]</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="3">
-               <widget class="QDoubleSpinBox" name="p_tinc">
-                <property name="maximum">
-                 <double>1000000.000000000000000</double>
-                </property>
-                <property name="singleStep">
-                 <double>30.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item>
-            <widget class="QGroupBox" name="groupBox_10">
-             <property name="title">
-              <string/>
-             </property>
-             <layout class="QFormLayout" name="formLayout">
-              <item row="1" column="0">
-               <widget class="QLabel" name="label_34">
-                <property name="text">
-                 <string>Uhrzeit Schalter</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QComboBox" name="p_itun">
-                <item>
-                 <property name="text">
-                  <string>Minuten (gerundet)</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Minuten und Sekunden</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QLabel" name="label_35">
-                <property name="text">
-                 <string>Vorschubsteuerung Schalter</string>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="0">
-               <widget class="QLabel" name="label_11">
-                <property name="text">
-                 <string>Niederschlagsdaten</string>
-                </property>
-               </widget>
-              </item>
-              <item row="5" column="0">
-               <widget class="QLabel" name="label_42">
-                <property name="text">
-                 <string>Retentionsflächen</string>
-                </property>
-               </widget>
-              </item>
-              <item row="6" column="0">
-               <widget class="QLabel" name="label_43">
-                <property name="text">
-                 <string>Überflutungsflächen</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QComboBox" name="p_ipro">
-                <property name="toolTip">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Schlater 0: Sparvorschub für Testruns&lt;/p&gt;&lt;p&gt;	(keine neuen Seiten)&lt;/p&gt;&lt;p&gt;	Querschnittsdaten: Ja&lt;/p&gt;&lt;p&gt;	Overflowtabelle:     Ja&lt;/p&gt;&lt;p&gt;Schalter 1: wie 0, aber ohne Ausdruck der Querschnittsdaten&lt;/p&gt;&lt;p&gt;	Querschnittsdaten: nein&lt;/p&gt;&lt;p&gt;	Overflowtabelle:     nein&lt;/p&gt;&lt;p&gt;Schalter 2: &lt;/p&gt;&lt;p&gt;	Querschnittsdaten: Ja&lt;/p&gt;&lt;p&gt;	Overflowtabelle:     Nein&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                </property>
-                <item>
-                 <property name="text">
-                  <string>0</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>1</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>2</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-              <item row="4" column="1">
-               <widget class="QLineEdit" name="p_rain">
-                <property name="placeholderText">
-                 <string>NORAIN</string>
-                </property>
-               </widget>
-              </item>
-              <item row="5" column="1">
-               <widget class="QSpinBox" name="p_nret"/>
-              </item>
-              <item row="6" column="1">
-               <widget class="QSpinBox" name="p_nstore"/>
-              </item>
-              <item row="7" column="1">
-               <widget class="QDoubleSpinBox" name="p_tol">
-                <property name="maximum">
-                 <double>20.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="7" column="0">
-               <widget class="QLabel" name="label_48">
-                <property name="text">
-                 <string>Maximal zulässige Froude-Zahl</string>
-                </property>
-               </widget>
-              </item>
-              <item row="8" column="0">
-               <widget class="QLabel" name="label_49">
-                <property name="text">
-                 <string>Mindesttiefe für konvektiven [m] </string>
-                </property>
-               </widget>
-              </item>
-              <item row="8" column="1">
-               <widget class="QDoubleSpinBox" name="p_convec"/>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item>
-            <spacer name="verticalSpacer_2">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="zufgang">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>452</width>
-            <height>1031</height>
-           </rect>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
           </property>
-          <attribute name="label">
-           <string>Zuflussknoten und Ganglinie(n)</string>
-          </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_9">
-           <item>
-            <widget class="QGroupBox" name="groupBox_8">
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="zufgang">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>400</width>
+         <height>1099</height>
+        </rect>
+       </property>
+       <attribute name="label">
+        <string>Zuflussknoten und Ganglinie(n)</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_9">
+        <item>
+         <widget class="QGroupBox" name="groupBox_8">
+          <property name="font">
+           <font>
+            <family>Segoe UI</family>
+            <pointsize>9</pointsize>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="title">
+           <string>Zuflüsse von Oberhalb</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_5">
+           <item row="1" column="1">
+            <widget class="QSpinBox" name="p_nqin">
              <property name="font">
               <font>
+               <family>Segoe UI</family>
                <pointsize>9</pointsize>
                <weight>50</weight>
                <bold>false</bold>
               </font>
              </property>
-             <property name="title">
-              <string>Zuflüsse von Oberhalb</string>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_5">
-              <item row="1" column="1">
-               <widget class="QSpinBox" name="p_nqin">
-                <property name="font">
-                 <font>
-                  <pointsize>9</pointsize>
-                  <weight>50</weight>
-                  <bold>false</bold>
-                 </font>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="label_50">
-                <property name="font">
-                 <font>
-                  <pointsize>9</pointsize>
-                  <weight>50</weight>
-                  <bold>false</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Anzahl der Eintrittsknoten:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0" colspan="2">
-               <widget class="QTableWidget" name="p_nupe">
-                <property name="alternatingRowColors">
-                 <bool>true</bool>
-                </property>
-                <attribute name="verticalHeaderVisible">
-                 <bool>false</bool>
-                </attribute>
-                <column>
-                 <property name="text">
-                  <string>Knoten</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>Datei</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>Mod</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>Faktor</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>View</string>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <family>Segoe UI</family>
-                  </font>
-                 </property>
-                 <property name="icon">
-                  <iconset>
-                   <normaloff>../icons/visibility.ico</normaloff>../icons/visibility.ico</iconset>
-                 </property>
-                </column>
-               </widget>
-              </item>
-             </layout>
             </widget>
            </item>
-           <item>
-            <widget class="QGroupBox" name="groupBox_9">
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_50">
              <property name="font">
               <font>
+               <family>Segoe UI</family>
                <pointsize>9</pointsize>
                <weight>50</weight>
                <bold>false</bold>
               </font>
              </property>
-             <property name="title">
-              <string>Ganglinien</string>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_6">
-              <item row="1" column="1">
-               <widget class="QSpinBox" name="p_nwel">
-                <property name="maximum">
-                 <number>1000000</number>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QLabel" name="label_52">
-                <property name="text">
-                 <string>Ausdruckzeitschritt [min]</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="2" rowspan="6">
-               <widget class="QTableWidget" name="p_kwel_table">
-                <property name="maximumSize">
-                 <size>
-                  <width>120</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="alternatingRowColors">
-                 <bool>true</bool>
-                </property>
-                <property name="showGrid">
-                 <bool>true</bool>
-                </property>
-                <attribute name="horizontalHeaderStretchLastSection">
-                 <bool>true</bool>
-                </attribute>
-                <attribute name="verticalHeaderVisible">
-                 <bool>false</bool>
-                </attribute>
-                <column>
-                 <property name="text">
-                  <string>Knoten</string>
-                 </property>
-                </column>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QSpinBox" name="p_list_">
-                <property name="maximum">
-                 <number>100000</number>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_38">
-                <property name="font">
-                 <font>
-                  <pointsize>9</pointsize>
-                  <weight>50</weight>
-                  <bold>false</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Ausdruck Frequenz</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="label_51">
-                <property name="text">
-                 <string>Ganglinien (count)</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QDoubleSpinBox" name="p_dtwel">
-                <property name="maximum">
-                 <double>10000000.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="junctions">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>452</width>
-            <height>1031</height>
-           </rect>
-          </property>
-          <attribute name="label">
-           <string>Junctions</string>
-          </attribute>
-          <layout class="QGridLayout" name="gridLayout_24">
-           <item row="4" column="1">
-            <widget class="QLabel" name="label_53">
              <property name="text">
-              <string>Parameters</string>
+              <string>Anzahl der Eintrittsknoten:</string>
              </property>
             </widget>
            </item>
-           <item row="1" column="1" colspan="2">
-            <widget class="QTableWidget" name="p_junnam_table">
-             <property name="alternatingRowColors">
-              <bool>true</bool>
-             </property>
-             <attribute name="horizontalHeaderStretchLastSection">
-              <bool>true</bool>
-             </attribute>
-             <column>
-              <property name="text">
-               <string>Junctions Beschreibung</string>
-              </property>
-             </column>
-            </widget>
-           </item>
-           <item row="5" column="1" colspan="2">
-            <widget class="QTableWidget" name="p_dxlgam_table">
-             <property name="alternatingRowColors">
-              <bool>true</bool>
-             </property>
-             <column>
-              <property name="text">
-               <string>Entfernung[m]</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>koeff1</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>koeff2</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>koeff3</string>
-              </property>
-             </column>
-            </widget>
-           </item>
-           <item row="0" column="2">
-            <widget class="QSpinBox" name="p_njunc"/>
-           </item>
-           <item row="0" column="1">
-            <widget class="QLabel" name="label_44">
-             <property name="text">
-              <string>Junctions</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QLabel" name="label_46">
-             <property name="text">
-              <string>Verbindungsknoten:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1" colspan="2">
-            <widget class="QTableWidget" name="p_nxj_table">
-             <property name="alternatingRowColors">
-              <bool>true</bool>
-             </property>
-             <column>
-              <property name="text">
-               <string>1</string>
-              </property>
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;erster einmündender Strang&lt;/p&gt;&lt;p&gt;direkt oberhalb des Verbindungsknotensgelegner Knoten des ersten einmündenden Gewässerstranges&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>2</string>
-              </property>
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;zweiter einmündender Strang&lt;/p&gt;&lt;p&gt;Anfangsknoten des ersten einmündenden Gewässerstranges&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>3</string>
-              </property>
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;direkt oberhalb des Verbindungsknotensgelegener Knoten des zweiten einmündenden Gewässerstranges&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>4</string>
-              </property>
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Anfangsknoten des zweiten einmündenden Gewässerstranges&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>5</string>
-              </property>
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;dritter einmündender Strang&lt;/p&gt;&lt;p&gt;direkt unterhalb des Verbindungsknotensgelegener Knoten&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>6</string>
-              </property>
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;direkt oberhalb des Verbindungsknotensgelegner Knoten des dritten einmündender Gewässerstranges&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>7</string>
-              </property>
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Anfangsknoten des dritten einmündenden Gewässerstranges&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Annahme: sind nur zwei einmündende Stränge vorhanden, so sind 6 und 7 gleich Null zu setzen&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </column>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="bconds">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>452</width>
-            <height>1031</height>
-           </rect>
-          </property>
-          <attribute name="label">
-           <string>Untere Randbedingungen</string>
-          </attribute>
-          <layout class="QGridLayout" name="gridLayout_11">
-           <item row="0" column="1">
-            <widget class="QComboBox" name="p_idown">
-             <property name="currentIndex">
-              <number>0</number>
-             </property>
-             <item>
-              <property name="text">
-               <string>Rechteckwehr</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Normalabfluss</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Wasserstandsganglinie</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Abflussganglinie</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="5" column="0" colspan="2">
-            <widget class="QGroupBox" name="normalabfluss">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="title">
-              <string>Normalabfluss</string>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_14">
-              <item row="0" column="1">
-               <widget class="QSpinBox" name="qhtcount"/>
-              </item>
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_94">
-                <property name="text">
-                 <string>Count</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="2">
-               <widget class="QTableWidget" name="g_qhtab">
-                <property name="alternatingRowColors">
-                 <bool>true</bool>
-                </property>
-                <attribute name="horizontalHeaderStretchLastSection">
-                 <bool>true</bool>
-                </attribute>
-                <column>
-                 <property name="text">
-                  <string>Q [m³/s]</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>h [m]</string>
-                 </property>
-                </column>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_47">
-             <property name="font">
-              <font>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>Untere Randbedingungen:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="0" colspan="2">
-            <widget class="QGroupBox" name="g_wsg">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="title">
-              <string>Wasserstandsganglinie [m+NN]</string>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_17">
-              <item row="0" column="3">
-               <widget class="QLabel" name="label_54">
-                <property name="text">
-                 <string>Mod</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="3">
-               <widget class="QComboBox" name="p_wsg_mod">
-                <item>
-                 <property name="text">
-                  <string>IN</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>ST</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>MA</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>IM</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QLineEdit" name="p_wsg_dat">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="5">
-               <widget class="QLabel" name="label_55">
-                <property name="text">
-                 <string>Faktor</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QLabel" name="label_37">
-                <property name="text">
-                 <string>Datei</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="5">
-               <widget class="QDoubleSpinBox" name="p_wsg_fak">
-                <property name="value">
-                 <double>1.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="2">
-               <widget class="QToolButton" name="p_wsg_view">
-                <property name="text">
-                 <string>...</string>
-                </property>
-                <property name="icon">
-                 <iconset>
-                  <normaloff>../icons/visibility.ico</normaloff>../icons/visibility.ico</iconset>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item row="8" column="0">
-            <spacer name="verticalSpacer">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="4" column="0" colspan="2">
-            <widget class="QGroupBox" name="g_wehr">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="title">
-              <string>Rechteckwehr</string>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_16">
-              <item row="0" column="0">
-               <widget class="QLabel" name="label_59">
-                <property name="text">
-                 <string>Wehrbreite</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QDoubleSpinBox" name="p_wehr_k">
-                <property name="decimals">
-                 <number>4</number>
-                </property>
-                <property name="value">
-                 <double>0.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QDoubleSpinBox" name="p_wehr_b">
-                <property name="decimals">
-                 <number>4</number>
-                </property>
-                <property name="value">
-                 <double>0.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="label_60">
-                <property name="text">
-                 <string>Abflussbeiwert</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="2">
-               <widget class="QLabel" name="label_62">
-                <property name="text">
-                 <string>Höhe des Wehrkrone</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="3">
-               <widget class="QDoubleSpinBox" name="p_wehr_h">
-                <property name="decimals">
-                 <number>4</number>
-                </property>
-                <property name="value">
-                 <double>0.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="2">
-               <widget class="QLabel" name="label_61">
-                <property name="text">
-                 <string>Maximaler Abfluss</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="3">
-               <widget class="QDoubleSpinBox" name="p_wehr_qm">
-                <property name="decimals">
-                 <number>4</number>
-                </property>
-                <property name="value">
-                 <double>0.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item row="7" column="0" colspan="2">
-            <widget class="QGroupBox" name="g_abg">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="title">
-              <string>Abflussganglinie [cbm/s]</string>
-             </property>
-             <layout class="QGridLayout" name="gridLayout_18">
-              <item row="1" column="1">
-               <widget class="QLineEdit" name="p_abg_dat">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="3">
-               <widget class="QComboBox" name="p_abg_mod">
-                <item>
-                 <property name="text">
-                  <string>IN</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>ST</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>MA</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>IM</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QLabel" name="label_57">
-                <property name="text">
-                 <string>Datei</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="5">
-               <widget class="QDoubleSpinBox" name="p_abg_fak">
-                <property name="value">
-                 <double>1.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="2">
-               <widget class="QToolButton" name="p_abg_view">
-                <property name="text">
-                 <string>...</string>
-                </property>
-                <property name="icon">
-                 <iconset>
-                  <normaloff>../icons/visibility.ico</normaloff>../icons/visibility.ico</iconset>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="5">
-               <widget class="QLabel" name="label_56">
-                <property name="text">
-                 <string>Faktor</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="3">
-               <widget class="QLabel" name="label_58">
-                <property name="text">
-                 <string>Mod</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="p_szufgang">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>452</width>
-            <height>1031</height>
-           </rect>
-          </property>
-          <attribute name="label">
-           <string>Seitliche Zuflussganglinie(n)</string>
-          </attribute>
-          <layout class="QGridLayout" name="gridLayout_8">
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_63">
-             <property name="text">
-              <string>Gewässerabschnitt mit seitlichem Zufluss:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_39">
-             <property name="text">
-              <string>Lateral Inflows</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QSpinBox" name="p_latinf">
-             <property name="maximum">
-              <number>9999</number>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0" colspan="2">
-            <widget class="QTableWidget" name="p_lie_table">
-             <property name="sizeAdjustPolicy">
-              <enum>QAbstractScrollArea::AdjustToContents</enum>
-             </property>
+           <item row="2" column="0" colspan="2">
+            <widget class="QTableWidget" name="p_nupe">
              <property name="alternatingRowColors">
               <bool>true</bool>
              </property>
@@ -1401,245 +976,954 @@
              </column>
              <column>
               <property name="text">
-               <string>Schalter</string>
-              </property>
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Schlater (Latcom) für dir Brechnung des seitlichen Zuflusses&lt;/p&gt;&lt;p&gt;über GW-Modell&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Latcom = 0: Keine Berechnung&lt;/p&gt;&lt;p&gt;Latcom = 1: Berechnung über Drainage-modell&lt;/p&gt;&lt;p&gt;Latcom = 2: Berechnung der seitlichen Zuflussganglinie über Einheitsganglinienverfahren&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
                <string>View</string>
+              </property>
+              <property name="font">
+               <font>
+                <family>Segoe UI</family>
+               </font>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>../icons/visibility.ico</normaloff>../icons/visibility.ico</iconset>
               </property>
              </column>
             </widget>
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="page">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>452</width>
-            <height>1031</height>
-           </rect>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_9">
+          <property name="font">
+           <font>
+            <family>Segoe UI</family>
+            <pointsize>9</pointsize>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
           </property>
-          <attribute name="label">
-           <string>Wehre und Steuerbare Durchlässe</string>
-          </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_13">
-           <item>
-            <layout class="QFormLayout" name="formLayout_15">
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_40">
-               <property name="text">
-                <string>Weirs</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QSpinBox" name="p_nweirs">
-               <property name="maximum">
-                <number>99999</number>
-               </property>
-              </widget>
-             </item>
-            </layout>
+          <property name="title">
+           <string>Ganglinien</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_6">
+           <item row="1" column="1">
+            <widget class="QSpinBox" name="p_nwel">
+             <property name="maximum">
+              <number>1000000</number>
+             </property>
+            </widget>
            </item>
-           <item>
-            <widget class="QTableWidget" name="p_weir_table">
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_52">
+             <property name="text">
+              <string>Ausdruckzeitschritt [min]</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2" rowspan="6">
+            <widget class="QTableWidget" name="p_kwel_table">
+             <property name="maximumSize">
+              <size>
+               <width>120</width>
+               <height>16777215</height>
+              </size>
+             </property>
              <property name="alternatingRowColors">
               <bool>true</bool>
              </property>
+             <property name="showGrid">
+              <bool>true</bool>
+             </property>
+             <attribute name="horizontalHeaderStretchLastSection">
+              <bool>true</bool>
+             </attribute>
+             <attribute name="verticalHeaderVisible">
+              <bool>false</bool>
+             </attribute>
              <column>
               <property name="text">
                <string>Knoten</string>
               </property>
-              <property name="toolTip">
-               <string>Knoten Nummer</string>
+             </column>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QSpinBox" name="p_list_">
+             <property name="maximum">
+              <number>100000</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_38">
+             <property name="font">
+              <font>
+               <family>Segoe UI</family>
+               <pointsize>9</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Ausdruck Frequenz</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_51">
+             <property name="text">
+              <string>Ganglinien (count)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QDoubleSpinBox" name="p_dtwel">
+             <property name="maximum">
+              <double>10000000.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="junctions">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>400</width>
+         <height>1099</height>
+        </rect>
+       </property>
+       <attribute name="label">
+        <string>Junctions</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_24">
+        <item row="4" column="1">
+         <widget class="QLabel" name="label_53">
+          <property name="text">
+           <string>Parameters</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1" colspan="2">
+         <widget class="QTableWidget" name="p_junnam_table">
+          <property name="alternatingRowColors">
+           <bool>true</bool>
+          </property>
+          <attribute name="horizontalHeaderStretchLastSection">
+           <bool>true</bool>
+          </attribute>
+          <column>
+           <property name="text">
+            <string>Junctions Beschreibung</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+        <item row="5" column="1" colspan="2">
+         <widget class="QTableWidget" name="p_dxlgam_table">
+          <property name="alternatingRowColors">
+           <bool>true</bool>
+          </property>
+          <column>
+           <property name="text">
+            <string>Entfernung[m]</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>koeff1</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>koeff2</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>koeff3</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QSpinBox" name="p_njunc"/>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="label_44">
+          <property name="text">
+           <string>Junctions</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLabel" name="label_46">
+          <property name="text">
+           <string>Verbindungsknoten:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1" colspan="2">
+         <widget class="QTableWidget" name="p_nxj_table">
+          <property name="alternatingRowColors">
+           <bool>true</bool>
+          </property>
+          <column>
+           <property name="text">
+            <string>1</string>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;erster einmündender Strang&lt;/p&gt;&lt;p&gt;direkt oberhalb des Verbindungsknotensgelegner Knoten des ersten einmündenden Gewässerstranges&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>2</string>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;zweiter einmündender Strang&lt;/p&gt;&lt;p&gt;Anfangsknoten des ersten einmündenden Gewässerstranges&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>3</string>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;direkt oberhalb des Verbindungsknotensgelegener Knoten des zweiten einmündenden Gewässerstranges&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>4</string>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Anfangsknoten des zweiten einmündenden Gewässerstranges&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>5</string>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;dritter einmündender Strang&lt;/p&gt;&lt;p&gt;direkt unterhalb des Verbindungsknotensgelegener Knoten&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>6</string>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;direkt oberhalb des Verbindungsknotensgelegner Knoten des dritten einmündender Gewässerstranges&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>7</string>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Anfangsknoten des dritten einmündenden Gewässerstranges&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Annahme: sind nur zwei einmündende Stränge vorhanden, so sind 6 und 7 gleich Null zu setzen&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="bconds">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>400</width>
+         <height>1099</height>
+        </rect>
+       </property>
+       <attribute name="label">
+        <string>Untere Randbedingungen</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_11">
+        <item row="0" column="1">
+         <widget class="QComboBox" name="p_idown">
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <item>
+           <property name="text">
+            <string>Rechteckwehr</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Normalabfluss</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Wasserstandsganglinie</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Abflussganglinie</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="5" column="0" colspan="2">
+         <widget class="QGroupBox" name="normalabfluss">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="title">
+           <string>Normalabfluss</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_14">
+           <item row="0" column="1">
+            <widget class="QSpinBox" name="qhtcount"/>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_94">
+             <property name="text">
+              <string>Count</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QTableWidget" name="g_qhtab">
+             <property name="alternatingRowColors">
+              <bool>true</bool>
+             </property>
+             <attribute name="horizontalHeaderStretchLastSection">
+              <bool>true</bool>
+             </attribute>
+             <column>
+              <property name="text">
+               <string>Q [m³/s]</string>
               </property>
              </column>
              <column>
               <property name="text">
-               <string>Höhe</string>
-              </property>
-              <property name="toolTip">
-               <string>Höhe</string>
+               <string>h [m]</string>
               </property>
              </column>
-             <column>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_47">
+          <property name="font">
+           <font>
+            <family>Segoe UI</family>
+            <pointsize>9</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Untere Randbedingungen:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0" colspan="2">
+         <widget class="QGroupBox" name="g_wsg">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="title">
+           <string>Wasserstandsganglinie [m+NN]</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_17">
+           <item row="0" column="3">
+            <widget class="QLabel" name="label_54">
+             <property name="text">
+              <string>Mod</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="3">
+            <widget class="QComboBox" name="p_wsg_mod">
+             <item>
               <property name="text">
-               <string>Breite</string>
+               <string>IN</string>
               </property>
-              <property name="toolTip">
-               <string>Breite</string>
-              </property>
-             </column>
-             <column>
+             </item>
+             <item>
               <property name="text">
-               <string>μ</string>
+               <string>ST</string>
               </property>
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;μ &amp;lt;0: beliebiger Querschnitt&lt;/p&gt;&lt;p&gt;μ &amp;gt;0: Trapezquerschnitt mit Böschungsneigung links und rechts&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </column>
-             <column>
+             </item>
+             <item>
               <property name="text">
-               <string>wneil</string>
+               <string>MA</string>
               </property>
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;wenn μ&amp;gt;0&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Trapezquerschnitt mit Böschungsneigung links&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </column>
-             <column>
+             </item>
+             <item>
               <property name="text">
-               <string>wneir</string>
+               <string>IM</string>
               </property>
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;wenn μ&amp;gt;0&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Trapezquerschnitt mit Böschungsneigung rechts&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </column>
-             <column>
+             </item>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="p_wsg_dat"/>
+           </item>
+           <item row="0" column="5">
+            <widget class="QLabel" name="label_55">
+             <property name="text">
+              <string>Faktor</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="label_37">
+             <property name="text">
+              <string>Datei</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="5">
+            <widget class="QDoubleSpinBox" name="p_wsg_fak">
+             <property name="value">
+              <double>1.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QToolButton" name="p_wsg_view">
+             <property name="text">
+              <string>...</string>
+             </property>
+             <property name="icon">
+              <iconset>
+               <normaloff>../icons/visibility.ico</normaloff>../icons/visibility.ico</iconset>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="8" column="0">
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="4" column="0" colspan="2">
+         <widget class="QGroupBox" name="g_wehr">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="title">
+           <string>Rechteckwehr</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_16">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_59">
+             <property name="text">
+              <string>Wehrbreite</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QDoubleSpinBox" name="p_wehr_k">
+             <property name="decimals">
+              <number>4</number>
+             </property>
+             <property name="value">
+              <double>0.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QDoubleSpinBox" name="p_wehr_b">
+             <property name="decimals">
+              <number>4</number>
+             </property>
+             <property name="value">
+              <double>0.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_60">
+             <property name="text">
+              <string>Abflussbeiwert</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QLabel" name="label_62">
+             <property name="text">
+              <string>Höhe des Wehrkrone</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QDoubleSpinBox" name="p_wehr_h">
+             <property name="decimals">
+              <number>4</number>
+             </property>
+             <property name="value">
+              <double>0.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QLabel" name="label_61">
+             <property name="text">
+              <string>Maximaler Abfluss</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="3">
+            <widget class="QDoubleSpinBox" name="p_wehr_qm">
+             <property name="decimals">
+              <number>4</number>
+             </property>
+             <property name="value">
+              <double>0.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="7" column="0" colspan="2">
+         <widget class="QGroupBox" name="g_abg">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="title">
+           <string>Abflussganglinie [cbm/s]</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_18">
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="p_abg_dat"/>
+           </item>
+           <item row="1" column="3">
+            <widget class="QComboBox" name="p_abg_mod">
+             <item>
               <property name="text">
-               <string>iraus</string>
+               <string>IN</string>
               </property>
-              <property name="toolTip">
-               <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+             </item>
+             <item>
+              <property name="text">
+               <string>ST</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>MA</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>IM</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="label_57">
+             <property name="text">
+              <string>Datei</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="5">
+            <widget class="QDoubleSpinBox" name="p_abg_fak">
+             <property name="value">
+              <double>1.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QToolButton" name="p_abg_view">
+             <property name="text">
+              <string>...</string>
+             </property>
+             <property name="icon">
+              <iconset>
+               <normaloff>../icons/visibility.ico</normaloff>../icons/visibility.ico</iconset>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="5">
+            <widget class="QLabel" name="label_56">
+             <property name="text">
+              <string>Faktor</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QLabel" name="label_58">
+             <property name="text">
+              <string>Mod</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="p_szufgang">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>400</width>
+         <height>1099</height>
+        </rect>
+       </property>
+       <attribute name="label">
+        <string>Seitliche Zuflussganglinie(n)</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_8">
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_63">
+          <property name="text">
+           <string>Gewässerabschnitt mit seitlichem Zufluss:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_39">
+          <property name="text">
+           <string>Lateral Inflows</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QSpinBox" name="p_latinf">
+          <property name="maximum">
+           <number>9999</number>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0" colspan="2">
+         <widget class="QTableWidget" name="p_lie_table">
+          <property name="sizeAdjustPolicy">
+           <enum>QAbstractScrollArea::AdjustToContents</enum>
+          </property>
+          <property name="alternatingRowColors">
+           <bool>true</bool>
+          </property>
+          <attribute name="verticalHeaderVisible">
+           <bool>false</bool>
+          </attribute>
+          <column>
+           <property name="text">
+            <string>Knoten</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Datei</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Mod</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Faktor</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Schalter</string>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Schlater (Latcom) für dir Brechnung des seitlichen Zuflusses&lt;/p&gt;&lt;p&gt;über GW-Modell&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Latcom = 0: Keine Berechnung&lt;/p&gt;&lt;p&gt;Latcom = 1: Berechnung über Drainage-modell&lt;/p&gt;&lt;p&gt;Latcom = 2: Berechnung der seitlichen Zuflussganglinie über Einheitsganglinienverfahren&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>View</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="page">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>400</width>
+         <height>1099</height>
+        </rect>
+       </property>
+       <attribute name="label">
+        <string>Wehre und Steuerbare Durchlässe</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_30">
+        <item row="4" column="0">
+         <widget class="QLabel" name="label_41">
+          <property name="text">
+           <string>Gates</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QSpinBox" name="p_nweirs">
+          <property name="maximum">
+           <number>99999</number>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_40">
+          <property name="text">
+           <string>Weirs</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0" colspan="2">
+         <widget class="QTableWidget" name="p_weir_table">
+          <property name="alternatingRowColors">
+           <bool>true</bool>
+          </property>
+          <column>
+           <property name="text">
+            <string>Knoten</string>
+           </property>
+           <property name="toolTip">
+            <string>Knoten Nummer</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Höhe</string>
+           </property>
+           <property name="toolTip">
+            <string>Höhe</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Breite</string>
+           </property>
+           <property name="toolTip">
+            <string>Breite</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>μ</string>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;μ &amp;lt;0: beliebiger Querschnitt&lt;/p&gt;&lt;p&gt;μ &amp;gt;0: Trapezquerschnitt mit Böschungsneigung links und rechts&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>wneil</string>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;wenn μ&amp;gt;0&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Trapezquerschnitt mit Böschungsneigung links&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>wneir</string>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;wenn μ&amp;gt;0&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Trapezquerschnitt mit Böschungsneigung rechts&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>iraus</string>
+           </property>
+           <property name="toolTip">
+            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;iraus = 0: Funktion ausgeschaltet&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;iraus = 1: &lt;span style=&quot; font-family:'Calibri,sans-serif';&quot;&gt;wird gesetzt, wenn das Wehr rausgeworfen werden darf (für den Fall ,dass es rückgestaut wird)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>v2co</string>
-              </property>
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;beiwert&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>ccfak</string>
-              </property>
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;wehr beiwert&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>HQ-Dat</string>
-              </property>
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Datei&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </column>
-            </widget>
-           </item>
-           <item>
-            <layout class="QFormLayout" name="formLayout_16">
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_41">
-               <property name="text">
-                <string>Gates</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QSpinBox" name="p_ngates">
-               <property name="maximum">
-                <number>9999</number>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <widget class="QTableWidget" name="p_gate_table">
-             <property name="alternatingRowColors">
-              <bool>true</bool>
-             </property>
-             <column>
-              <property name="text">
-               <string>Knoten</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Mod</string>
-              </property>
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wenn Gate openning &amp;gt; Maximum Depth:&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Gate wird nur nachgeführt, wenn Mod = 'N'&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Max Öffnung [m]</string>
-              </property>
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Maximale Durchlassöffnunf für den ersten Durchlass [m], &lt;/p&gt;&lt;p&gt;bleibt die Öffnung konstant, so ist dieser Wert mit negativem&lt;/p&gt;&lt;p&gt;Vorzeichen anzugeben&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Q Min</string>
-              </property>
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Q Min, &lt;/p&gt;&lt;p&gt;Default: 0.010&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Q Max</string>
-              </property>
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Q Max,&lt;/p&gt;&lt;p&gt;Default: -0.010&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Tol</string>
-              </property>
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Tol,&lt;/p&gt;&lt;p&gt;Default: 0.05&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>μ</string>
-              </property>
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;mue,&lt;/p&gt;&lt;p&gt;Default: 0.75&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Gatmin</string>
-              </property>
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gatmin,&lt;/p&gt;&lt;p&gt;Default: 0.01&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Gatwso</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Datei</string>
-              </property>
-             </column>
-            </widget>
-           </item>
-          </layout>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>v2co</string>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;beiwert&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>ccfak</string>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;wehr beiwert&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>HQ-Dat</string>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Datei&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>View</string>
+           </property>
+          </column>
          </widget>
-        </widget>
-       </item>
-      </layout>
+        </item>
+        <item row="5" column="0" colspan="2">
+         <widget class="QTableWidget" name="p_gate_table">
+          <property name="alternatingRowColors">
+           <bool>true</bool>
+          </property>
+          <column>
+           <property name="text">
+            <string>Knoten</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Mod</string>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Wenn Gate openning &amp;gt; Maximum Depth:&lt;/p&gt;&lt;p&gt;wenn Mod= 'N' wird Schützöffnung nachgeführt, so dass&lt;/p&gt;&lt;p&gt;das Schütz immer leicht eingetaucht ist.&lt;/p&gt;&lt;p&gt;wenn Mod= 'DE' wird QCHECK mit Energiedifferenz berechnet.&lt;/p&gt;&lt;p&gt;wenn Mod = 'DW' wird mit Wasserspiegeldifferenz gerechnet.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>D Max</string>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Maximale Durchlassöffnung für den ersten Durchlass [m], bleibt die Öffnung konstant, so ist dieser Wert mit negativem Vorzeichen anzugeben&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Q Min</string>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Q Min, &lt;/p&gt;&lt;p&gt;Default: 0.010&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Q Max</string>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Q Max,&lt;/p&gt;&lt;p&gt;Default: -0.010&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Tol</string>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Tol,&lt;/p&gt;&lt;p&gt;Default: 0.05&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>μ</string>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;mue,&lt;/p&gt;&lt;p&gt;Default: 0.75&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Gatmin</string>
+           </property>
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Gatmin,&lt;/p&gt;&lt;p&gt;Default: 0.01&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Gatwso</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>knwsOW</string>
+           </property>
+           <property name="toolTip">
+            <string>Knoten Oberwasser</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>knwsUW</string>
+           </property>
+           <property name="toolTip">
+            <string>Knoten Unterwasser</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Datei</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>View</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QSpinBox" name="p_ngates">
+          <property name="maximum">
+           <number>9999</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QTextBrowser" name="logWindow">
+      <property name="maximumSize">
+       <size>
+        <width>500</width>
+        <height>120</height>
+       </size>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Box</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <property name="autoFormatting">
+       <set>QTextEdit::AutoAll</set>
+      </property>
+      <property name="placeholderText">
+       <string>Log Window</string>
+      </property>
      </widget>
     </item>
    </layout>
@@ -1649,7 +1933,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1891</width>
+     <width>1878</width>
      <height>21</height>
     </rect>
    </property>
@@ -1657,13 +1941,25 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>File</string>
     </property>
+    <widget class="QMenu" name="menuSave">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="title">
+      <string>Save...</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>../icons/save.ico</normaloff>../icons/save.ico</iconset>
+     </property>
+     <addaction name="saveprojekt"/>
+     <addaction name="savehyd"/>
+     <addaction name="savestart"/>
+     <addaction name="saverun"/>
+    </widget>
     <addaction name="newp"/>
     <addaction name="openp"/>
-    <addaction name="savep"/>
-    <addaction name="savehyd"/>
-    <addaction name="savepro"/>
-    <addaction name="saveasp"/>
-    <addaction name="closef"/>
+    <addaction name="menuSave"/>
     <addaction name="settings"/>
     <addaction name="closeall"/>
    </widget>
@@ -1671,18 +1967,14 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>Edit</string>
     </property>
-    <addaction name="start_editing"/>
-    <addaction name="stop_editing"/>
+    <addaction name="proEditor"/>
+    <addaction name="rauEditor"/>
    </widget>
    <widget class="QMenu" name="menuJunctions">
     <property name="title">
      <string>Nodes</string>
     </property>
-    <addaction name="node_delete"/>
-    <addaction name="node_gen"/>
-    <addaction name="node_rau"/>
     <addaction name="node_renumber"/>
-    <addaction name="n_starttab"/>
    </widget>
    <widget class="QMenu" name="menuRun">
     <property name="title">
@@ -1690,12 +1982,7 @@ p, li { white-space: pre-wrap; }
     </property>
     <addaction name="run"/>
     <addaction name="actionTest_Run"/>
-   </widget>
-   <widget class="QMenu" name="menuLoad">
-    <property name="title">
-     <string>Load</string>
-    </property>
-    <addaction name="loadwsp_2"/>
+    <addaction name="reload"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -1710,22 +1997,33 @@ p, li { white-space: pre-wrap; }
     <addaction name="qp_view"/>
     <addaction name="ls_view"/>
     <addaction name="lp_view"/>
+    <addaction name="lk_view"/>
+    <addaction name="wq_view"/>
+   </widget>
+   <widget class="QMenu" name="menuExport">
+    <property name="title">
+     <string>Export</string>
+    </property>
+    <addaction name="HQ_excel"/>
+    <addaction name="BW_excel"/>
+   </widget>
+   <widget class="QMenu" name="menuConvert">
+    <property name="title">
+     <string>Convert</string>
+    </property>
+    <addaction name="p2s"/>
+    <addaction name="s2p"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuJunctions"/>
-   <addaction name="menuLoad"/>
    <addaction name="menuRun"/>
    <addaction name="menuView"/>
+   <addaction name="menuConvert"/>
+   <addaction name="menuExport"/>
    <addaction name="menuAbout"/>
   </widget>
   <widget class="QDockWidget" name="qp_dock">
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-     <horstretch>0</horstretch>
-     <verstretch>0</verstretch>
-    </sizepolicy>
-   </property>
    <property name="font">
     <font>
      <family>Segoe UI</family>
@@ -1739,7 +2037,7 @@ p, li { white-space: pre-wrap; }
     <set>QDockWidget::AllDockWidgetFeatures</set>
    </property>
    <property name="allowedAreas">
-    <set>Qt::AllDockWidgetAreas</set>
+    <set>Qt::BottomDockWidgetArea|Qt::RightDockWidgetArea|Qt::TopDockWidgetArea</set>
    </property>
    <property name="windowTitle">
     <string>Querschnitt</string>
@@ -1756,7 +2054,7 @@ p, li { white-space: pre-wrap; }
        </property>
        <property name="maximumSize">
         <size>
-         <width>400</width>
+         <width>300</width>
          <height>16777215</height>
         </size>
        </property>
@@ -1774,405 +2072,110 @@ p, li { white-space: pre-wrap; }
          <string>Profil Info</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout_9">
-         <item row="1" column="1" colspan="2">
-          <widget class="QLabel" name="label_88">
-           <property name="text">
-            <string>Station [m]</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1" colspan="2">
-          <widget class="QLabel" name="label_4">
-           <property name="font">
-            <font>
-             <family>Segoe UI</family>
-             <pointsize>9</pointsize>
-             <underline>false</underline>
-            </font>
-           </property>
-           <property name="text">
-            <string>Profilauswertung:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="3" colspan="2">
-          <widget class="QLineEdit" name="edit_knoten">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="3">
-          <widget class="QLineEdit" name="pro_rw">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="3" colspan="2">
-          <widget class="QComboBox" name="modus_label">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Querprofil:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;V = wie eingegeben&lt;/p&gt;&lt;p&gt;R = Reduziert zwischen linkem und rechtem Hochpunkt &lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Breitflächiger Abfluss (bQ):&lt;/span&gt;&lt;/p&gt;&lt;p&gt;K = Kernquerschnitt, bQ erst wenn WSP&amp;gt;K&lt;/p&gt;&lt;p&gt;F = vollen Querschnitt, bQ von Anfang an&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;DF = Abfluss nur innerhalb des Bauwerks (Für die Ermittlung der Leistungsfähigkeit eines Bauwerks)&lt;/p&gt;&lt;p&gt;OF = (&lt;span style=&quot; font-weight:600;&quot;&gt;O&lt;/span&gt;verland&lt;span style=&quot; font-weight:600;&quot;&gt;F&lt;/span&gt;low) Bauwerk wird als komplett verklaust angenommen, Der gesamte Abfluss fließt über das Gelände ab&lt;/p&gt;&lt;p&gt;H2 = Rauhigkeitsprofil mit negativer Knotennummer&lt;/p&gt;&lt;p&gt;ZS = Schaltprofil&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <item>
-            <property name="text">
-             <string>VK</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>RK</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>VF</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>RF</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>DF</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>OF</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>H2</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>RS</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>ZS</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="4" column="1" colspan="2">
-          <widget class="QLabel" name="label_5">
-           <property name="font">
-            <font>
-             <family>Segoe UI</family>
-             <pointsize>9</pointsize>
-             <underline>false</underline>
-            </font>
-           </property>
-           <property name="text">
-            <string>Querschnittsparameter:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="1">
-          <widget class="QLabel" name="ddddd">
-           <property name="text">
-            <string>X:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="1" colspan="4">
-          <widget class="QGroupBox" name="plot_editor_box">
+         <item row="1" column="1">
+          <widget class="QGroupBox" name="groupBox">
            <property name="title">
-            <string>Profil</string>
+            <string/>
            </property>
-           <layout class="QGridLayout" name="gridLayout_7" columnstretch="1,0,0,0">
-            <item row="4" column="0" colspan="4">
-             <widget class="QTableWidget" name="coords_table">
-              <property name="minimumSize">
-               <size>
-                <width>140</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="toolTipDuration">
-               <number>-8</number>
-              </property>
-              <property name="editTriggers">
-               <set>QAbstractItemView::NoEditTriggers</set>
-              </property>
-              <property name="showDropIndicator" stdset="0">
+           <layout class="QGridLayout" name="gridLayout_3">
+            <item row="0" column="2">
+             <widget class="QRadioButton" name="_rschalter">
+              <property name="enabled">
                <bool>false</bool>
               </property>
-              <property name="dragDropOverwriteMode">
-               <bool>false</bool>
+              <property name="text">
+               <string>Schalt</string>
               </property>
-              <property name="alternatingRowColors">
+              <attribute name="buttonGroup">
+               <string notr="true">buttonGroup_4</string>
+              </attribute>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QRadioButton" name="_rquer">
+              <property name="enabled">
                <bool>true</bool>
               </property>
-              <property name="selectionMode">
-               <enum>QAbstractItemView::ExtendedSelection</enum>
+              <property name="text">
+               <string>Quer</string>
               </property>
-              <property name="selectionBehavior">
-               <enum>QAbstractItemView::SelectRows</enum>
+              <property name="checked">
+               <bool>true</bool>
               </property>
-              <property name="columnCount">
-               <number>2</number>
-              </property>
-              <column>
-               <property name="text">
-                <string>X</string>
-               </property>
-              </column>
-              <column>
-               <property name="text">
-                <string>Y</string>
-               </property>
-              </column>
+              <attribute name="buttonGroup">
+               <string notr="true">buttonGroup_4</string>
+              </attribute>
              </widget>
             </item>
-            <item row="1" column="0" colspan="3">
-             <widget class="QGroupBox" name="groupBox">
-              <property name="title">
-               <string/>
-              </property>
-              <layout class="QGridLayout" name="gridLayout_3">
-               <item row="0" column="2">
-                <widget class="QRadioButton" name="_rschalter">
-                 <property name="enabled">
-                  <bool>false</bool>
-                 </property>
-                 <property name="text">
-                  <string>Schalt</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="0">
-                <widget class="QRadioButton" name="_rquer">
-                 <property name="enabled">
-                  <bool>true</bool>
-                 </property>
-                 <property name="text">
-                  <string>Quer</string>
-                 </property>
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QRadioButton" name="_rrau">
-                 <property name="enabled">
-                  <bool>false</bool>
-                 </property>
-                 <property name="text">
-                  <string>Rau</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item row="1" column="3">
-             <widget class="QGroupBox" name="groupBox_2">
-              <property name="title">
-               <string/>
-              </property>
-              <property name="flat">
+            <item row="0" column="1">
+             <widget class="QRadioButton" name="_rrau">
+              <property name="enabled">
                <bool>false</bool>
               </property>
-              <layout class="QGridLayout" name="gridLayout_19">
-               <item row="0" column="1">
-                <widget class="QPushButton" name="redo">
-                 <property name="enabled">
-                  <bool>false</bool>
-                 </property>
-                 <property name="toolTip">
-                  <string>redo</string>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="icon">
-                  <iconset>
-                   <normaloff>../icons/redo3.ico</normaloff>../icons/redo3.ico</iconset>
-                 </property>
-                 <property name="shortcut">
-                  <string>Ctrl+Y</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="0">
-                <widget class="QPushButton" name="undo">
-                 <property name="enabled">
-                  <bool>false</bool>
-                 </property>
-                 <property name="toolTip">
-                  <string>undo</string>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="icon">
-                  <iconset>
-                   <normaloff>../icons/undo3.ico</normaloff>../icons/undo3.ico</iconset>
-                 </property>
-                 <property name="shortcut">
-                  <string>Ctrl+Z</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="3">
-                <widget class="QPushButton" name="copy_clip">
-                 <property name="toolTip">
-                  <string>Copy</string>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="icon">
-                  <iconset>
-                   <normaloff>../icons/copy.ico</normaloff>../icons/copy.ico</iconset>
-                 </property>
-                 <property name="shortcut">
-                  <string>Ctrl+C</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="4">
-                <widget class="QPushButton" name="paste_clip">
-                 <property name="enabled">
-                  <bool>false</bool>
-                 </property>
-                 <property name="toolTip">
-                  <string>Paste</string>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="icon">
-                  <iconset>
-                   <normaloff>../icons/Paste.ico</normaloff>../icons/Paste.ico</iconset>
-                 </property>
-                 <property name="shortcut">
-                  <string>Ctrl+V</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="2">
-                <widget class="QPushButton" name="delete_rows">
-                 <property name="enabled">
-                  <bool>false</bool>
-                 </property>
-                 <property name="toolTip">
-                  <string>Delete rows</string>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="icon">
-                  <iconset>
-                   <normaloff>../icons/delete.ico</normaloff>../icons/delete.ico</iconset>
-                 </property>
-                 <property name="shortcut">
-                  <string>Del</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
+              <property name="text">
+               <string>Rau</string>
+              </property>
+              <attribute name="buttonGroup">
+               <string notr="true">buttonGroup_4</string>
+              </attribute>
+             </widget>
+            </item>
+            <item row="0" column="3">
+             <widget class="QPushButton" name="copy_clip">
+              <property name="toolTip">
+               <string>Copy</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset>
+                <normaloff>../icons/copy.ico</normaloff>../icons/copy.ico</iconset>
+              </property>
+              <property name="shortcut">
+               <string>Ctrl+C</string>
+              </property>
              </widget>
             </item>
            </layout>
           </widget>
          </item>
-         <item row="2" column="3" colspan="2">
-          <widget class="QLineEdit" name="edit_pname">
-           <property name="enabled">
+         <item row="2" column="1">
+          <widget class="QTableWidget" name="coords_table">
+           <property name="toolTipDuration">
+            <number>-8</number>
+           </property>
+           <property name="editTriggers">
+            <set>QAbstractItemView::NoEditTriggers</set>
+           </property>
+           <property name="showDropIndicator" stdset="0">
             <bool>false</bool>
            </property>
-          </widget>
-         </item>
-         <item row="5" column="1" colspan="2">
-          <widget class="QLabel" name="label_6">
-           <property name="font">
-            <font>
-             <family>Segoe UI</family>
-             <pointsize>9</pointsize>
-             <underline>false</underline>
-            </font>
-           </property>
-           <property name="text">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Maximale Höhe:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1" colspan="2">
-          <widget class="QLabel" name="label_73">
-           <property name="text">
-            <string>Knoten Nummer</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1" colspan="2">
-          <widget class="QLabel" name="label_90">
-           <property name="text">
-            <string>Profil Name</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="3" colspan="2">
-          <widget class="QComboBox" name="ctab_label">
-           <property name="enabled">
+           <property name="dragDropOverwriteMode">
             <bool>false</bool>
            </property>
-           <property name="toolTip">
-            <string>&quot;CTAB&quot;, Wenn &quot;ON&quot;, werden Details der Profilauswetung in *.OUT geschrieben</string>
+           <property name="alternatingRowColors">
+            <bool>true</bool>
            </property>
-           <property name="currentIndex">
-            <number>0</number>
+           <property name="selectionMode">
+            <enum>QAbstractItemView::ExtendedSelection</enum>
            </property>
-           <item>
+           <property name="selectionBehavior">
+            <enum>QAbstractItemView::SelectRows</enum>
+           </property>
+           <property name="columnCount">
+            <number>2</number>
+           </property>
+           <column>
             <property name="text">
-             <string>OFF</string>
+             <string>X</string>
             </property>
-           </item>
-           <item>
+           </column>
+           <column>
             <property name="text">
-             <string>ON</string>
+             <string>Y</string>
             </property>
-           </item>
-          </widget>
-         </item>
-         <item row="5" column="3" colspan="2">
-          <widget class="QLineEdit" name="maxHeight_label">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="3" colspan="2">
-          <widget class="QLineEdit" name="edit_station">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="1">
-          <widget class="QLabel" name="label_82">
-           <property name="text">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Y:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="3">
-          <widget class="QLineEdit" name="pro_hw">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
+           </column>
           </widget>
          </item>
         </layout>
@@ -2191,67 +2194,24 @@ p, li { white-space: pre-wrap; }
             <string/>
            </property>
            <layout class="QGridLayout" name="gridLayout_15">
-            <item row="2" column="1">
-             <widget class="QLineEdit" name="gi_width">
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Kreis: Durchmesser&lt;/p&gt;&lt;p&gt;Rechteck, Trapez: Sohlbreite&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_68">
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_70">
               <property name="text">
-               <string>Profil Typ:</string>
+               <string>Querschnittshöhe [m]</string>
               </property>
              </widget>
             </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_69">
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_80">
               <property name="text">
-               <string>Querschnittsbreite [m]</string>
+               <string>Gewässer ID</string>
               </property>
              </widget>
-            </item>
-            <item row="6" column="1">
-             <widget class="QLineEdit" name="gi_xl">
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Entfernung bis zum nächsten stromabwärts liegenden Verb. knoten&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="1">
-             <widget class="QLineEdit" name="gi_kstime"/>
-            </item>
-            <item row="1" column="1">
-             <widget class="QLineEdit" name="gi_id"/>
-            </item>
-            <item row="5" column="0">
-             <widget class="QLabel" name="label_87">
-              <property name="text">
-               <string>Verkrautung</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="QLineEdit" name="gi_heit"/>
             </item>
             <item row="6" column="0">
              <widget class="QLabel" name="label_89">
               <property name="text">
                <string>Entfernung</string>
-              </property>
-             </widget>
-            </item>
-            <item row="7" column="0" colspan="2">
-             <widget class="QLabel" name="label_8">
-              <property name="font">
-               <font>
-                <weight>75</weight>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>Neigung der Böschung (beim Profil Typ: Trapez)</string>
               </property>
              </widget>
             </item>
@@ -2307,15 +2267,56 @@ p, li { white-space: pre-wrap; }
               </item>
              </widget>
             </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="label_70">
+            <item row="12" column="1">
+             <widget class="QLineEdit" name="gi_ztl"/>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_68">
               <property name="text">
-               <string>Querschnittshöhe [m]</string>
+               <string>Profil Typ:</string>
               </property>
              </widget>
             </item>
-            <item row="4" column="1">
-             <widget class="QLineEdit" name="gi_zo"/>
+            <item row="8" column="1">
+             <widget class="QLineEdit" name="pro_rw">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_69">
+              <property name="text">
+               <string>Querschnittsbreite [m]</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="1">
+             <widget class="QLineEdit" name="gi_xl">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Entfernung bis zum nächsten stromabwärts liegenden Verb. knoten&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item row="12" column="0">
+             <widget class="QLabel" name="label_72">
+              <property name="text">
+               <string>Links</string>
+              </property>
+             </widget>
+            </item>
+            <item row="10" column="0" colspan="2">
+             <widget class="QLabel" name="label_8">
+              <property name="font">
+               <font>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Neigung der Böschung (beim Profil Typ: Trapez)</string>
+              </property>
+             </widget>
             </item>
             <item row="4" column="0">
              <widget class="QLabel" name="label_74">
@@ -2324,32 +2325,83 @@ p, li { white-space: pre-wrap; }
               </property>
              </widget>
             </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_80">
+            <item row="4" column="1">
+             <widget class="QLineEdit" name="gi_zo"/>
+            </item>
+            <item row="11" column="1">
+             <widget class="QLineEdit" name="gi_ztr"/>
+            </item>
+            <item row="8" column="0">
+             <widget class="QLabel" name="ddddd">
               <property name="text">
-               <string>Gewässer ID</string>
+               <string>X:</string>
               </property>
              </widget>
             </item>
-            <item row="8" column="0">
+            <item row="5" column="0">
+             <widget class="QLabel" name="label_87">
+              <property name="text">
+               <string>Verkrautung</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLineEdit" name="gi_id"/>
+            </item>
+            <item row="7" column="1">
+             <widget class="QLineEdit" name="maxHeight_label">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLineEdit" name="gi_width">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Kreis: Durchmesser&lt;/p&gt;&lt;p&gt;Rechteck, Trapez: Sohlbreite&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QLineEdit" name="gi_kstime"/>
+            </item>
+            <item row="11" column="0">
              <widget class="QLabel" name="label_71">
               <property name="text">
                <string>Rechts                            </string>
               </property>
              </widget>
             </item>
-            <item row="8" column="1">
-             <widget class="QLineEdit" name="gi_ztr"/>
+            <item row="7" column="0">
+             <widget class="QLabel" name="label_6">
+              <property name="font">
+               <font>
+                <family>Segoe UI</family>
+                <pointsize>9</pointsize>
+                <underline>false</underline>
+               </font>
+              </property>
+              <property name="text">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Maximale Höhe:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QLineEdit" name="gi_heit"/>
             </item>
             <item row="9" column="0">
-             <widget class="QLabel" name="label_72">
+             <widget class="QLabel" name="label_82">
               <property name="text">
-               <string>Links</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Y:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
              </widget>
             </item>
             <item row="9" column="1">
-             <widget class="QLineEdit" name="gi_ztl"/>
+             <widget class="QLineEdit" name="pro_hw">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -2472,11 +2524,24 @@ p, li { white-space: pre-wrap; }
            </layout>
           </widget>
          </item>
+         <item>
+          <spacer name="verticalSpacer_4">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
         </layout>
        </widget>
        <widget class="QWidget" name="wsp_rau_box2">
         <attribute name="title">
-         <string>WSP-Rauhigkeit Info</string>
+         <string>Rauhigkeit Info</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_3">
          <item>
@@ -2633,62 +2698,63 @@ p, li { white-space: pre-wrap; }
        </widget>
       </widget>
      </item>
-     <item row="0" column="0" colspan="2">
+     <item row="1" column="0" colspan="3">
+      <widget class="QGroupBox" name="groupBox_5">
+       <property name="title">
+        <string/>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_21">
+        <item row="0" column="0">
+         <widget class="QSplitter" name="splitter">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <widget class="PlotWidget" name="graphicsView"/>
+          <widget class="PlotWidget" name="graphicsView2">
+           <property name="backgroundBrush">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>222</red>
+              <green>222</green>
+              <blue>222</blue>
+             </color>
+            </brush>
+           </property>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="0" column="0" colspan="3">
       <widget class="QGroupBox" name="groupBox_4">
        <property name="maximumSize">
         <size>
          <width>16777215</width>
-         <height>50</height>
+         <height>59</height>
         </size>
        </property>
        <property name="title">
         <string/>
        </property>
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <widget class="QLabel" name="label">
-          <property name="font">
-           <font>
-            <family>Segoe UI</family>
-            <pointsize>9</pointsize>
-            <underline>false</underline>
-           </font>
-          </property>
-          <property name="text">
-           <string>Knoten</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="knotenNr">
-          <property name="minimumSize">
-           <size>
-            <width>80</width>
-            <height>0</height>
-           </size>
-          </property>
+       <layout class="QGridLayout" name="gridLayout_26">
+        <item row="0" column="6">
+         <widget class="QLineEdit" name="ctab_label">
           <property name="maximumSize">
            <size>
-            <width>80</width>
+            <width>30</width>
             <height>16777215</height>
            </size>
           </property>
-          <property name="editable">
-           <bool>false</bool>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&amp;quot;CTAB&amp;quot;, Wenn &amp;quot;ON&amp;quot;, werden Details der Profilauswetung in *.OUT geschrieben&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
-          <property name="maxVisibleItems">
-           <number>100</number>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_15">
-          <property name="text">
-           <string>Station [m]</string>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
-        <item>
+        <item row="0" column="8">
          <widget class="QComboBox" name="station_label">
           <property name="minimumSize">
            <size>
@@ -2710,14 +2776,146 @@ p, li { white-space: pre-wrap; }
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="QLabel" name="label_7">
-          <property name="text">
-           <string>Profil Name:</string>
+        <item row="0" column="4">
+         <widget class="QLineEdit" name="modus_label">
+          <property name="maximumSize">
+           <size>
+            <width>30</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Querprofil:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;V = wie eingegeben&lt;/p&gt;&lt;p&gt;R = Reduziert zwischen linkem und rechtem Hochpunkt &lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Breitflächiger Abfluss (bQ):&lt;/span&gt;&lt;/p&gt;&lt;p&gt;K = Kernquerschnitt, bQ erst wenn WSP&amp;gt;K&lt;/p&gt;&lt;p&gt;F = vollen Querschnitt, bQ von Anfang an&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;DF = Abfluss nur innerhalb des Bauwerks (Für die Ermittlung der Leistungsfähigkeit eines Bauwerks)&lt;/p&gt;&lt;p&gt;OF = (&lt;span style=&quot; font-weight:600;&quot;&gt;O&lt;/span&gt;verland&lt;span style=&quot; font-weight:600;&quot;&gt;F&lt;/span&gt;low) Bauwerk wird als komplett verklaust angenommen, Der gesamte Abfluss fließt über das Gelände ab&lt;/p&gt;&lt;p&gt;H2 = Rauhigkeitsprofil mit negativer Knotennummer&lt;/p&gt;&lt;p&gt;ZS = Schaltprofil&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
-        <item>
+        <item row="0" column="7">
+         <widget class="QLabel" name="label_15">
+          <property name="text">
+           <string>Station [m]</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="14">
+         <widget class="QCheckBox" name="arbox">
+          <property name="text">
+           <string>Aspect Ratio</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QComboBox" name="knotenNr">
+          <property name="minimumSize">
+           <size>
+            <width>80</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>80</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="editable">
+           <bool>false</bool>
+          </property>
+          <property name="maxVisibleItems">
+           <number>100</number>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="label">
+          <property name="font">
+           <font>
+            <family>Segoe UI</family>
+            <pointsize>9</pointsize>
+            <underline>false</underline>
+           </font>
+          </property>
+          <property name="text">
+           <string>Knoten</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="9">
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string>Profil Name</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="12">
+         <widget class="QLCDNumber" name="Punkte_label">
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="segmentStyle">
+           <enum>QLCDNumber::Flat</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="11">
+         <widget class="QLabel" name="label_3">
+          <property name="font">
+           <font>
+            <family>Segoe UI</family>
+            <pointsize>9</pointsize>
+            <underline>false</underline>
+           </font>
+          </property>
+          <property name="text">
+           <string>Profil Punkte</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="15">
+         <widget class="QDoubleSpinBox" name="AspectRatio">
+          <property name="decimals">
+           <number>2</number>
+          </property>
+          <property name="minimum">
+           <double>0.100000000000000</double>
+          </property>
+          <property name="value">
+           <double>1.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="5">
+         <widget class="QLabel" name="label_4">
+          <property name="font">
+           <font>
+            <family>Segoe UI</family>
+            <pointsize>9</pointsize>
+            <underline>false</underline>
+           </font>
+          </property>
+          <property name="text">
+           <string>CTab</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="10">
          <widget class="QComboBox" name="schnittName_label">
           <property name="minimumSize">
            <size>
@@ -2739,8 +2937,8 @@ p, li { white-space: pre-wrap; }
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="QLabel" name="label_3">
+        <item row="0" column="3">
+         <widget class="QLabel" name="label_5">
           <property name="font">
            <font>
             <family>Segoe UI</family>
@@ -2749,90 +2947,22 @@ p, li { white-space: pre-wrap; }
            </font>
           </property>
           <property name="text">
-           <string>Anzahl der Punkte:</string>
+           <string>Modus:</string>
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="QLCDNumber" name="Punkte_label">
-          <property name="font">
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="segmentStyle">
-           <enum>QLCDNumber::Flat</enum>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QGroupBox" name="arbox">
-       <property name="maximumSize">
-        <size>
-         <width>100</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="title">
-        <string>Aspect Ratio</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-       <property name="checked">
-        <bool>false</bool>
-       </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <item>
-         <widget class="QDoubleSpinBox" name="AspectRatio">
-          <property name="decimals">
-           <number>2</number>
-          </property>
-          <property name="minimum">
-           <double>0.100000000000000</double>
-          </property>
-          <property name="value">
-           <double>1.000000000000000</double>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item row="1" column="0" colspan="3">
-      <widget class="QGroupBox" name="groupBox_5">
-       <property name="title">
-        <string/>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_21">
-        <item row="0" column="0">
-         <widget class="QSplitter" name="splitter">
+        <item row="0" column="13">
+         <spacer name="horizontalSpacer">
           <property name="orientation">
-           <enum>Qt::Vertical</enum>
+           <enum>Qt::Horizontal</enum>
           </property>
-          <widget class="PlotWidget" name="graphicsView"/>
-          <widget class="PlotWidget" name="graphicsView2">
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>300</height>
-            </size>
-           </property>
-           <property name="backgroundBrush">
-            <brush brushstyle="SolidPattern">
-             <color alpha="255">
-              <red>222</red>
-              <green>222</green>
-              <blue>222</blue>
-             </color>
-            </brush>
-           </property>
-          </widget>
-         </widget>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </widget>
@@ -2841,12 +2971,6 @@ p, li { white-space: pre-wrap; }
    </widget>
   </widget>
   <widget class="QDockWidget" name="lp_dock">
-   <property name="minimumSize">
-    <size>
-     <width>1400</width>
-     <height>409</height>
-    </size>
-   </property>
    <property name="font">
     <font>
      <family>Segoe UI</family>
@@ -2860,7 +2984,7 @@ p, li { white-space: pre-wrap; }
     <set>QDockWidget::AllDockWidgetFeatures</set>
    </property>
    <property name="allowedAreas">
-    <set>Qt::AllDockWidgetAreas</set>
+    <set>Qt::BottomDockWidgetArea|Qt::RightDockWidgetArea|Qt::TopDockWidgetArea</set>
    </property>
    <property name="windowTitle">
     <string>Lageplan</string>
@@ -2870,100 +2994,144 @@ p, li { white-space: pre-wrap; }
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_6">
     <layout class="QGridLayout" name="gridLayout_10">
-     <item row="2" column="4">
-      <widget class="QGroupBox" name="groupBox_13">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>200</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>250</width>
-         <height>16777215</height>
-        </size>
-       </property>
+     <item row="2" column="2">
+      <widget class="QGroupBox" name="groupBox_11">
        <property name="title">
-        <string>View</string>
+        <string/>
        </property>
-       <layout class="QGridLayout" name="gridLayout_4">
-        <item row="1" column="1">
-         <widget class="QPushButton" name="lp_adddata">
-          <property name="text">
-           <string>Dateset hinzufügen</string>
+       <layout class="QGridLayout" name="gridLayout_25">
+        <item row="0" column="0">
+         <widget class="QSplitter" name="splitter_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
           </property>
-         </widget>
-        </item>
-        <item row="1" column="2">
-         <widget class="QPushButton" name="lp_removedata">
-          <property name="text">
-           <string>Dataset löschen</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1" colspan="2">
-         <widget class="QListWidget" name="lp_listWidget">
-          <property name="dragEnabled">
-           <bool>true</bool>
-          </property>
-          <property name="defaultDropAction">
-           <enum>Qt::TargetMoveAction</enum>
-          </property>
-          <property name="alternatingRowColors">
-           <bool>true</bool>
-          </property>
-          <property name="movement">
-           <enum>QListView::Snap</enum>
-          </property>
-          <property name="viewMode">
-           <enum>QListView::ListMode</enum>
-          </property>
-          <property name="sortingEnabled">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <widget class="QRadioButton" name="nodeplanview">
-          <property name="text">
-           <string>Plan View</string>
-          </property>
-          <attribute name="buttonGroup">
-           <string notr="true">buttonGroup</string>
-          </attribute>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QRadioButton" name="nodemapview">
-          <property name="text">
-           <string>Map View</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-          <attribute name="buttonGroup">
-           <string notr="true">buttonGroup</string>
-          </attribute>
+          <widget class="PlotWidget" name="nodeView"/>
+          <widget class="QGroupBox" name="lp_layers">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>350</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="baseSize">
+            <size>
+             <width>250</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="title">
+            <string>Layers</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_4">
+            <item row="0" column="1">
+             <widget class="QRadioButton" name="nodemapview">
+              <property name="text">
+               <string>Map</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+              <attribute name="buttonGroup">
+               <string notr="true">buttonGroup</string>
+              </attribute>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QRadioButton" name="nodeplanview">
+              <property name="text">
+               <string>Plan</string>
+              </property>
+              <attribute name="buttonGroup">
+               <string notr="true">buttonGroup</string>
+              </attribute>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>Layers</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="3">
+             <widget class="QPushButton" name="lp_adddata">
+              <property name="toolTip">
+               <string>Add Layer (*.shp, *.dbf)</string>
+              </property>
+              <property name="text">
+               <string>Add</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QRadioButton" name="ityp">
+              <property name="text">
+               <string>nach Knoten Typ</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+              <attribute name="buttonGroup">
+               <string notr="true">buttonGroup_2</string>
+              </attribute>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QRadioButton" name="gewid">
+              <property name="text">
+               <string>nach GEW ID</string>
+              </property>
+              <attribute name="buttonGroup">
+               <string notr="true">buttonGroup_2</string>
+              </attribute>
+             </widget>
+            </item>
+            <item row="1" column="3">
+             <widget class="QPushButton" name="lp_removedata">
+              <property name="toolTip">
+               <string>Delete Imported Data, or hide selected Data</string>
+              </property>
+              <property name="text">
+               <string>Delete/Hide</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1" colspan="3">
+             <widget class="QListWidget" name="lp_listWidget">
+              <property name="editTriggers">
+               <set>QAbstractItemView::DoubleClicked</set>
+              </property>
+              <property name="dragEnabled">
+               <bool>true</bool>
+              </property>
+              <property name="dragDropMode">
+               <enum>QAbstractItemView::InternalMove</enum>
+              </property>
+              <property name="defaultDropAction">
+               <enum>Qt::MoveAction</enum>
+              </property>
+              <property name="alternatingRowColors">
+               <bool>true</bool>
+              </property>
+              <property name="selectionMode">
+               <enum>QAbstractItemView::SingleSelection</enum>
+              </property>
+              <property name="selectionBehavior">
+               <enum>QAbstractItemView::SelectRows</enum>
+              </property>
+              <property name="selectionRectVisible">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
          </widget>
         </item>
        </layout>
-      </widget>
-     </item>
-     <item row="2" column="1" colspan="2">
-      <widget class="PlotWidget" name="nodeView">
-       <property name="minimumSize">
-        <size>
-         <width>200</width>
-         <height>200</height>
-        </size>
-       </property>
       </widget>
      </item>
     </layout>
@@ -2971,9 +3139,6 @@ p, li { white-space: pre-wrap; }
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QToolBar" name="toolBar">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
    <property name="windowTitle">
     <string>toolBar</string>
    </property>
@@ -2981,29 +3146,43 @@ p, li { white-space: pre-wrap; }
     <enum>Qt::ToolButtonTextUnderIcon</enum>
    </property>
    <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
+    <enum>LeftToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
    <addaction name="newp"/>
    <addaction name="openp"/>
-   <addaction name="savep"/>
-   <addaction name="savepro"/>
+   <addaction name="saveprojekt"/>
    <addaction name="savehyd"/>
-   <addaction name="run"/>
+   <addaction name="savestart"/>
+   <addaction name="saverun"/>
    <addaction name="separator"/>
-   <addaction name="start_editing"/>
-   <addaction name="stop_editing"/>
+   <addaction name="run"/>
+   <addaction name="reload"/>
+   <addaction name="separator"/>
+   <addaction name="proEditor"/>
+   <addaction name="rauEditor"/>
    <addaction name="separator"/>
    <addaction name="qp_view"/>
    <addaction name="ls_view"/>
    <addaction name="lp_view"/>
+   <addaction name="lk_view"/>
+   <addaction name="wq_view"/>
    <addaction name="separator"/>
   </widget>
   <widget class="QDockWidget" name="ls_dock">
+   <property name="font">
+    <font>
+     <family>Segoe UI</family>
+     <pointsize>9</pointsize>
+    </font>
+   </property>
    <property name="floating">
     <bool>false</bool>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::BottomDockWidgetArea|Qt::RightDockWidgetArea|Qt::TopDockWidgetArea</set>
    </property>
    <property name="windowTitle">
     <string>Längsschnitt</string>
@@ -3012,19 +3191,368 @@ p, li { white-space: pre-wrap; }
     <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents">
-    <layout class="QGridLayout" name="gridLayout_20">
-     <item row="0" column="0">
+    <layout class="QGridLayout" name="gridLayout_7">
+     <item row="0" column="2">
       <widget class="QLabel" name="label_93">
        <property name="text">
         <string>Gewässer ID</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QComboBox" name="lang_ID"/>
+     <item row="0" column="3">
+      <widget class="QComboBox" name="lang_ID">
+       <property name="minimumSize">
+        <size>
+         <width>200</width>
+         <height>0</height>
+        </size>
+       </property>
+      </widget>
      </item>
-     <item row="1" column="0" colspan="2">
-      <widget class="PlotWidget" name="langView"/>
+     <item row="0" column="1">
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="1" column="0" colspan="4">
+      <widget class="QTabWidget" name="tabWidget_12">
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <widget class="QWidget" name="tabWidget_12Page1">
+        <attribute name="title">
+         <string>2D-Längsschnitt</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_20">
+         <item row="0" column="1">
+          <widget class="QSplitter" name="splitter_3">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <widget class="PlotWidget" name="langView"/>
+           <widget class="PlotWidget" name="qlangView"/>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab">
+        <attribute name="title">
+         <string>3D-Viewer</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_34">
+         <item row="3" column="0">
+          <widget class="QGroupBox" name="groupBox_14">
+           <property name="maximumSize">
+            <size>
+             <width>200</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="title">
+            <string/>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_32">
+            <item row="5" column="0">
+             <widget class="QLabel" name="label_88">
+              <property name="text">
+               <string>ColorMap:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QComboBox" name="colorMap">
+              <item>
+               <property name="text">
+                <string>blue_to_red</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>thermal</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>flame</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>yellowy</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>bipolar</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>grey</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="7" column="0" colspan="2">
+             <widget class="QTableWidget" name="levelTable">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="editTriggers">
+               <set>QAbstractItemView::NoEditTriggers</set>
+              </property>
+              <property name="rowCount">
+               <number>30</number>
+              </property>
+              <property name="columnCount">
+               <number>2</number>
+              </property>
+              <attribute name="horizontalHeaderVisible">
+               <bool>false</bool>
+              </attribute>
+              <attribute name="horizontalHeaderDefaultSectionSize">
+               <number>50</number>
+              </attribute>
+              <attribute name="horizontalHeaderStretchLastSection">
+               <bool>true</bool>
+              </attribute>
+              <attribute name="verticalHeaderVisible">
+               <bool>false</bool>
+              </attribute>
+              <attribute name="verticalHeaderDefaultSectionSize">
+               <number>20</number>
+              </attribute>
+              <attribute name="verticalHeaderStretchLastSection">
+               <bool>true</bool>
+              </attribute>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <row/>
+              <column/>
+              <column/>
+             </widget>
+            </item>
+            <item row="6" column="1">
+             <widget class="QSpinBox" name="color_dis">
+              <property name="minimum">
+               <number>2</number>
+              </property>
+              <property name="value">
+               <number>30</number>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="0">
+             <widget class="QLabel" name="label_90">
+              <property name="text">
+               <string>Discretization</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item row="6" column="0">
+          <widget class="QGroupBox" name="groupBox_16">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="title">
+            <string>Pan Camera</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_33">
+            <item row="3" column="1">
+             <widget class="QComboBox" name="comboBox_4">
+              <item>
+               <property name="text">
+                <string>global</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>view</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>view-upright</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox">
+              <property name="decimals">
+               <number>5</number>
+              </property>
+              <property name="minimum">
+               <double>-99999999999.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>99999999999.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_101">
+              <property name="text">
+               <string>dx</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_92">
+              <property name="text">
+               <string>dz</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_100">
+              <property name="text">
+               <string>dy</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_102">
+              <property name="text">
+               <string>relative</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
+              <property name="decimals">
+               <number>5</number>
+              </property>
+              <property name="minimum">
+               <double>-99999999999.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>99999999999.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_3">
+              <property name="decimals">
+               <number>5</number>
+              </property>
+              <property name="minimum">
+               <double>-99999999999.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>99999999999.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item row="5" column="0">
+          <widget class="QGroupBox" name="groupBox_12">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="title">
+            <string>Orbit</string>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_31">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_67">
+              <property name="text">
+               <string>Azimuth</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_73">
+              <property name="text">
+               <string>Elevation</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_4"/>
+            </item>
+            <item row="1" column="1">
+             <widget class="QDoubleSpinBox" name="doubleSpinBox_5"/>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item row="0" column="1" rowspan="7">
+          <widget class="GLViewWidget" name="viewer3d"/>
+         </item>
+         <item row="0" column="0">
+          <widget class="QCheckBox" name="drawEdges">
+           <property name="text">
+            <string>draw Edges</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QCheckBox" name="drawFaces">
+           <property name="text">
+            <string>draw Faces</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QCheckBox" name="maxwsp3d">
+           <property name="text">
+            <string>max WSP</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -3056,16 +3584,13 @@ p, li { white-space: pre-wrap; }
     <string>Ctrl+O</string>
    </property>
   </action>
-  <action name="savep">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
+  <action name="saveprojekt">
    <property name="icon">
     <iconset>
-     <normaloff>../icons/save.bmp</normaloff>../icons/save.bmp</iconset>
+     <normaloff>../icons/savemodell.bmp</normaloff>../icons/savemodell.bmp</iconset>
    </property>
    <property name="text">
-    <string>Save</string>
+    <string>Projekt...</string>
    </property>
   </action>
   <action name="node_renumber">
@@ -3077,6 +3602,10 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="settings">
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/settings.ico</normaloff>../icons/settings.ico</iconset>
+   </property>
    <property name="text">
     <string>Settings</string>
    </property>
@@ -3087,38 +3616,6 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="text">
     <string>Exit</string>
-   </property>
-  </action>
-  <action name="saveasp">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Save As...</string>
-   </property>
-  </action>
-  <action name="start_editing">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="icon">
-    <iconset>
-     <normaloff>../icons/edit.ico</normaloff>../icons/edit.ico</iconset>
-   </property>
-   <property name="text">
-    <string>Start Editing...</string>
-   </property>
-  </action>
-  <action name="stop_editing">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="icon">
-    <iconset>
-     <normaloff>../icons/editfinish.ico</normaloff>../icons/editfinish.ico</iconset>
-   </property>
-   <property name="text">
-    <string>Stop Editing...</string>
    </property>
   </action>
   <action name="run">
@@ -3139,68 +3636,12 @@ p, li { white-space: pre-wrap; }
     <string>Ctrl+R</string>
    </property>
   </action>
-  <action name="closef">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Close</string>
-   </property>
-  </action>
-  <action name="loadwsp">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Load WSP</string>
-   </property>
-  </action>
-  <action name="node_gen">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Generate...</string>
-   </property>
-  </action>
-  <action name="node_delete">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Delete...</string>
-   </property>
-  </action>
-  <action name="node_rau">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Rauhigkeit...</string>
-   </property>
-  </action>
-  <action name="loadwsp_2">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>WSP...</string>
-   </property>
-  </action>
   <action name="actionTest_Run">
    <property name="enabled">
     <bool>false</bool>
    </property>
    <property name="text">
     <string>Test Run...</string>
-   </property>
-  </action>
-  <action name="n_starttab">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Tabelle...</string>
    </property>
   </action>
   <action name="checkver">
@@ -3216,6 +3657,9 @@ p, li { white-space: pre-wrap; }
    <property name="text">
     <string>Querschnitt...</string>
    </property>
+   <property name="iconText">
+    <string>Profil</string>
+   </property>
   </action>
   <action name="ls_view">
    <property name="icon">
@@ -3225,6 +3669,9 @@ p, li { white-space: pre-wrap; }
    <property name="text">
     <string>Längsschnitt...</string>
    </property>
+   <property name="iconText">
+    <string>Channel</string>
+   </property>
   </action>
   <action name="lp_view">
    <property name="icon">
@@ -3232,40 +3679,124 @@ p, li { white-space: pre-wrap; }
      <normaloff>../icons/map.ico</normaloff>../icons/map.ico</iconset>
    </property>
    <property name="text">
-    <string>Lageplan...</string>
-   </property>
-  </action>
-  <action name="savepro">
-   <property name="checkable">
-    <bool>false</bool>
-   </property>
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="icon">
-    <iconset>
-     <normaloff>../icons/save_pro.bmp</normaloff>../icons/save_pro.bmp</iconset>
-   </property>
-   <property name="text">
-    <string>Save Pro...</string>
+    <string>Lageplan (Karte)...</string>
    </property>
    <property name="iconText">
-    <string>Pro</string>
+    <string>Karte</string>
    </property>
   </action>
   <action name="savehyd">
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/save_hyd.ico</normaloff>../icons/save_hyd.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Hyd...</string>
+   </property>
+   <property name="iconText">
+    <string>Hyd</string>
+   </property>
+  </action>
+  <action name="savestart">
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/savestart.bmp</normaloff>../icons/savestart.bmp</iconset>
+   </property>
+   <property name="text">
+    <string>Start...</string>
+   </property>
+  </action>
+  <action name="saverun">
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/saverun.bmp</normaloff>../icons/saverun.bmp</iconset>
+   </property>
+   <property name="text">
+    <string>Run...</string>
+   </property>
+  </action>
+  <action name="wq_view">
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/wq.png</normaloff>../icons/wq.png</iconset>
+   </property>
+   <property name="text">
+    <string>WQ Graph...</string>
+   </property>
+   <property name="iconText">
+    <string>WQ</string>
+   </property>
+  </action>
+  <action name="reload">
    <property name="enabled">
     <bool>false</bool>
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>../icons/save_hyd.bmp</normaloff>../icons/save_hyd.bmp</iconset>
+     <normaloff>../icons/reload.ico</normaloff>../icons/reload.ico</iconset>
    </property>
    <property name="text">
-    <string>Save Hyd...</string>
+    <string>Reload...</string>
+   </property>
+  </action>
+  <action name="lk_view">
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/nodes.png</normaloff>../icons/nodes.png</iconset>
+   </property>
+   <property name="text">
+    <string>Lageplan (Knoten)...</string>
    </property>
    <property name="iconText">
-    <string>Hyd</string>
+    <string>Knoten</string>
+   </property>
+  </action>
+  <action name="proToExcel">
+   <property name="text">
+    <string>Profil Worksheet</string>
+   </property>
+  </action>
+  <action name="HQ_excel">
+   <property name="text">
+    <string>HQ Tabelle</string>
+   </property>
+  </action>
+  <action name="proEditor">
+   <property name="icon">
+    <iconset>
+     <normaloff>../icons/proEditor.ico</normaloff>../icons/proEditor.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Profile</string>
+   </property>
+   <property name="iconText">
+    <string>Pro Editor</string>
+   </property>
+  </action>
+  <action name="rauEditor">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Rauheit</string>
+   </property>
+   <property name="iconText">
+    <string>μ Editor</string>
+   </property>
+  </action>
+  <action name="BW_excel">
+   <property name="text">
+    <string>BW und Zufluss Tabelle</string>
+   </property>
+  </action>
+  <action name="s2p">
+   <property name="text">
+    <string>Shape to Pro</string>
+   </property>
+  </action>
+  <action name="p2s">
+   <property name="text">
+    <string>Pro to Shape</string>
    </property>
   </action>
   <zorder>qp_dock</zorder>
@@ -3277,27 +3808,17 @@ p, li { white-space: pre-wrap; }
    <extends>QGraphicsView</extends>
    <header>pyqtgraph</header>
   </customwidget>
+  <customwidget>
+   <class>GLViewWidget</class>
+   <extends>QOpenGLWidget</extends>
+   <header>pyqtgraph.opengl</header>
+  </customwidget>
  </customwidgets>
  <resources/>
- <connections>
-  <connection>
-   <sender>arbox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>AspectRatio</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>1425</x>
-     <y>131</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>1425</x>
-     <y>139</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
  <buttongroups>
+  <buttongroup name="buttonGroup_4"/>
   <buttongroup name="buttonGroup"/>
+  <buttongroup name="buttonGroup_2"/>
  </buttongroups>
 </ui>

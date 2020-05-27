@@ -29,19 +29,28 @@ def riv_bed(Node):
             riv_bed_idx = Node['Y'].argmin()
             break
 
-    riv_bed_y   = Node['Y'][riv_bed_idx]
-    riv_bed_x   = Node['X'][riv_bed_idx]
+    try:
+        riv_bed_y   = Node['Y'][riv_bed_idx]
+        riv_bed_x   = Node['X'][riv_bed_idx]
+    except:
+        riv_bed_idx = Node['Y'].argmin()
+        riv_bed_y   = Node['Y'][riv_bed_idx]
+        riv_bed_x   = Node['X'][riv_bed_idx]
     
     return(riv_bed_y,riv_bed_idx,riv_bed_x)
 
-def cal_bank(Node,return_idx = False):
+def cal_bank(Node,Mode = None,MaxHt = None,return_idx = False):
     
     '''Modus: Uffer Ermittlung'''
     riv_bed_y,riv_bed_idx,riv_bed_x = riv_bed(Node)
     
-    if Node['Max Height'] == -1:
+    if Mode is None:
+        Mode = Node.Mode
+        MaxHt = Node['Max Height']
 
-        if Node['Mode'] in ['RF','RK','RS']:
+    if MaxHt == -1:
+
+        if Mode in ['RF','RK','RS']:
             if Node['Y'][:riv_bed_idx].size ==0: 
                 LOB_y = Node['Y'][riv_bed_idx]
                 LOB_x = Node['X'][riv_bed_idx]
@@ -60,7 +69,7 @@ def cal_bank(Node,return_idx = False):
                 midx2 = riv_bed_idx+Node['Y'][riv_bed_idx:].argmax()
                 ROB_x = Node['X'][midx2]
                 
-        elif Node['Mode'] in ['VF','VK','H2','DF','OF','ZS']:
+        elif Mode in ['VF','VK','H2','DF','OF','ZS']:
             midx1 = 0
             midx2 = -1
             LOB_y = Node['Y'][0]
@@ -71,13 +80,13 @@ def cal_bank(Node,return_idx = False):
     else:
         for i,y in enumerate(reversed(Node['Y'][:riv_bed_idx])):
             midx1 = -1*i-1
-            if y > Node['Max Height']:
+            if y > MaxHt:
                 break
         LOB_y = Node['Y'][:riv_bed_idx][midx1]
         LOB_x = Node['X'][:riv_bed_idx][midx1]
         for i,y in enumerate(Node['Y'][riv_bed_idx:]):
             midx2 = i
-            if y > Node['Max Height']:
+            if y > MaxHt:
                 midx2 = i-1
                 break
         ROB_y = Node['Y'][riv_bed_idx+midx2]
